@@ -1,0 +1,128 @@
+---
+import { SITE_CONFIG } from '../../config/site';
+import { NAV_LINKS, type Lang } from '../../lib/i18n';
+import PoliticalDisclaimer from '../conversion/PoliticalDisclaimer.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const isEs = lang === 'es';
+const links = NAV_LINKS[lang];
+const logoSrc = isEs ? '/images/logo-es.png' : '/images/logo-en.png';
+---
+
+<footer class="bg-navy-950 text-white pt-16 pb-24 md:pb-12 border-t-4 border-navy-800" role="contentinfo">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    
+    <!-- Top Footer: Lockup & Quick Links -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
+      
+      <!-- Brand & Mission -->
+      <div class="md:col-span-5 space-y-4">
+        <a href={isEs ? '/es/' : '/en/'} class="inline-block focus:outline-none focus:ring-2 focus:ring-red-cta rounded p-1">
+          <img
+            src={logoSrc}
+            alt={isEs ? 'Guadalupe Lupe Negrete - Precinto 4' : 'Guadalupe Lupe Negrete - Precinct 4'}
+            class="h-16 w-auto object-contain bg-white/95 p-2 rounded-lg"
+            width="220"
+            height="70"
+            loading="lazy"
+          />
+        </a>
+        <p class="text-base text-slate-300 font-medium">
+          "{isEs ? SITE_CONFIG.candidate.motto.es : SITE_CONFIG.candidate.motto.en}"
+        </p>
+        <p class="text-sm text-slate-400">
+          {isEs
+            ? 'Candidato a Comisionado del Condado por el Precinto 4 en Maverick County, Texas. Comprometido con la pavimentación justa, luminarias seguras y transparencia total en los recursos del contribuyente.'
+            : 'Candidate for County Commissioner, Precinct 4 in Maverick County, Texas. Committed to fair road paving, safe street lighting, and total taxpayer accountability.'}
+        </p>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="md:col-span-3 space-y-3">
+        <h4 class="text-xs font-black uppercase tracking-widest text-slate-400">
+          {isEs ? 'Navegación' : 'Navigation'}
+        </h4>
+        <ul class="space-y-2 text-sm font-semibold">
+          {links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="text-slate-200 hover:text-red-logo transition-colors py-1 inline-block focus:outline-none focus:ring-2 focus:ring-red-cta rounded"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a
+              href={isEs ? '/es/privacidad/' : '/en/privacy/'}
+              class="text-slate-400 hover:text-slate-200 transition-colors py-1 inline-block text-xs"
+            >
+              {isEs ? 'Política de Privacidad' : 'Privacy Policy'}
+            </a>
+          </li>
+          <li>
+            <a
+              href={isEs ? '/es/accesibilidad/' : '/en/accessibility/'}
+              class="text-slate-400 hover:text-slate-200 transition-colors py-1 inline-block text-xs"
+            >
+              {isEs ? 'Declaración de Accesibilidad' : 'Accessibility Statement'}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Campaign Contact & Social (Infrastructure of Trust) -->
+      <div class="md:col-span-4 space-y-4">
+        <h4 class="text-xs font-black uppercase tracking-widest text-slate-400">
+          {isEs ? 'Contacto Oficial de Campaña' : 'Official Campaign Contact'}
+        </h4>
+        <div class="space-y-2 text-sm text-slate-300">
+          <p class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-red-logo shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>{SITE_CONFIG.committee.address}</span>
+          </p>
+          <p class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-red-logo shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <a href={`mailto:${SITE_CONFIG.committee.email}`} class="hover:underline">{SITE_CONFIG.committee.email}</a>
+          </p>
+        </div>
+
+        <!-- Social Facebook Link -->
+        <div class="pt-2">
+          <a
+            href={SITE_CONFIG.social.facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-navy-800 hover:bg-navy-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg border border-navy-700 transition-colors"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              <path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.688 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z" />
+            </svg>
+            <span>Facebook Oficial</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mandatory Political Disclaimer & Copyright -->
+    <div class="pt-8 border-t border-navy-800/80 space-y-4">
+      <PoliticalDisclaimer />
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2">
+        <p>© 2026 {SITE_CONFIG.candidate.name}. {isEs ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
+        <p>{isEs ? 'Condado de Maverick, Texas' : 'Maverick County, Texas'}</p>
+      </div>
+    </div>
+
+  </div>
+</footer>

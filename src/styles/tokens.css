@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Navy Palette (Official Maverick County Campaign) */
+  --color-navy-950: #06132B;
+  --color-navy-900: #0B224E;
+  --color-navy-800: #102D66;
+  --color-navy-700: #1B3670;
+  --color-royal-600: #003399;
+  
+  /* Brand Red (Single Accent / CTA) */
+  --color-red-logo: #FF3131;
+  --color-red-cta: #D3151D;
+  --color-red-dark: #B50E15;
+  --color-red-light: #FEE2E2;
+
+  /* Neutrals & Surfaces */
+  --color-bone: #F7F5F0;
+  --color-surface: #FFFFFF;
+  --color-surface-subtle: #F0EDE6;
+  --color-ink: #14161A;
+  --color-slate-600: #475467;
+  --color-slate-500: #5B6470;
+  --color-slate-300: #D0D5DD;
+  --color-slate-200: #E4E7EC;
+
+  /* Semantic Urgency / State */
+  --color-amber-500: #F59E0B;
+  --color-amber-600: #D97706;
+  --color-amber-100: #FEF3C7;
+  --color-emerald-600: #059669;
+
+  /* Typography */
+  --font-heading: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}

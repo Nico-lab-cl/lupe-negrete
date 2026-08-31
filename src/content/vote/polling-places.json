@@ -1,0 +1,61 @@
+{
+  "lastVerified": "2026-08-30",
+  "verificationSource": "Oficina de Elecciones del Condado de Maverick / Maverick County Elections Office",
+  "earlyVoting": [
+    {
+      "id": "ev-1",
+      "nameEs": "Anexo del Palacio de Justicia del Condado de Maverick (Courthouse Annex)",
+      "nameEn": "Maverick County Courthouse Annex (Main Early Voting Center)",
+      "address": "501 E Main St, Eagle Pass, TX 78852",
+      "precinct": "Precinto 4 / Central",
+      "hoursEs": "Lunes a Viernes: 8:00 AM – 5:00 PM (Última semana: 7:00 AM – 7:00 PM)",
+      "hoursEn": "Monday to Friday: 8:00 AM – 5:00 PM (Final week: 7:00 AM – 7:00 PM)",
+      "mapsUrl": "https://maps.google.com/?q=501+E+Main+St,+Eagle+Pass,+TX+78852"
+    },
+    {
+      "id": "ev-2",
+      "nameEs": "Centro Comunitario Seco Mines (Sector Loma Bonita)",
+      "nameEn": "Seco Mines Community Center (Loma Bonita Sector)",
+      "address": "2989 N Veterans Blvd, Eagle Pass, TX 78852",
+      "precinct": "Precinto 4",
+      "hoursEs": "Lunes a Viernes: 8:00 AM – 5:00 PM",
+      "hoursEn": "Monday to Friday: 8:00 AM – 5:00 PM",
+      "mapsUrl": "https://maps.google.com/?q=Seco+Mines+Community+Center,+Eagle+Pass,+TX+78852"
+    }
+  ],
+  "electionDay": [
+    {
+      "id": "ed-4a",
+      "nameEs": "Casilla Precinto 4A — Centro Comunitario Seco Mines",
+      "nameEn": "Precinct 4A Polling Place — Seco Mines Community Center",
+      "address": "2989 N Veterans Blvd, Eagle Pass, TX 78852",
+      "hoursEs": "7:00 AM – 7:00 PM",
+      "hoursEn": "7:00 AM – 7:00 PM",
+      "notesEs": "Sirve a los residentes de Loma Bonita y colonias norte del Precinto 4.",
+      "notesEn": "Serves residents of Loma Bonita and northern Precinct 4 colonias.",
+      "mapsUrl": "https://maps.google.com/?q=Seco+Mines+Community+Center,+Eagle+Pass,+TX+78852"
+    },
+    {
+      "id": "ed-4b",
+      "nameEs": "Casilla Precinto 4B — Centro Cívico / Salón Comunitario",
+      "nameEn": "Precinct 4B Polling Place — Civic Community Hall",
+      "address": "450 Quarry St, Eagle Pass, TX 78852",
+      "hoursEs": "7:00 AM – 7:00 PM",
+      "hoursEn": "7:00 AM – 7:00 PM",
+      "notesEs": "Sirve a vecindarios centrales y cuadrantes sur del Precinto 4.",
+      "notesEn": "Serves central and southern quadrants of Precinct 4.",
+      "mapsUrl": "https://maps.google.com/?q=450+Quarry+St,+Eagle+Pass,+TX+78852"
+    },
+    {
+      "id": "ed-4c",
+      "nameEs": "Casilla Precinto 4C — Centro Multiusos del Condado de Maverick",
+      "nameEn": "Precinct 4C Polling Place — Maverick County Multipurpose Center",
+      "address": "480 E Main St, Eagle Pass, TX 78852",
+      "hoursEs": "7:00 AM – 7:00 PM",
+      "hoursEn": "7:00 AM – 7:00 PM",
+      "notesEs": "Ubicación céntrica con acceso preferencial para personas con movilidad reducida.",
+      "notesEn": "Central location with full ADA accessibility.",
+      "mapsUrl": "https://maps.google.com/?q=480+E+Main+St,+Eagle+Pass,+TX+78852"
+    }
+  ]
+}

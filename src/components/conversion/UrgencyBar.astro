@@ -1,0 +1,62 @@
+---
+import { getUrgencyState } from '../../config/election';
+import type { Lang } from '../../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const urgency = getUrgencyState();
+const message = lang === 'es' ? urgency.messageEs : urgency.messageEn;
+const link = lang === 'es' ? urgency.linkEs : urgency.linkEn;
+---
+
+{urgency.show && (
+  <aside
+    id="urgency-bar"
+    class={`relative z-40 px-4 py-2 text-xs md:text-sm font-semibold tracking-wide transition-all ${
+      urgency.highlight ? 'bg-navy-950 text-amber-300 border-b border-amber-400/30' : 'bg-navy-900 text-white border-b border-navy-700'
+    }`}
+    aria-label={lang === 'es' ? 'Aviso de calendario electoral' : 'Election calendar announcement'}
+  >
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <a
+        href={link}
+        class="flex-1 flex items-center justify-center gap-2 hover:underline focus:outline-none focus:ring-2 focus:ring-amber-400 rounded py-0.5 text-center"
+      >
+        <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse" aria-hidden="true"></span>
+        <span>{message}</span>
+        <span class="font-bold text-white ml-1 underline decoration-amber-400 underline-offset-2">
+          {lang === 'es' ? 'Ver detalles →' : 'View details →'}
+        </span>
+      </a>
+      <button
+        type="button"
+        id="close-urgency-bar"
+        class="text-slate-400 hover:text-white p-1 rounded focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
+        aria-label={lang === 'es' ? 'Cerrar aviso' : 'Close announcement'}
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </aside>
+)}
+
+<script>
+  const bar = document.getElementById('urgency-bar');
+  const closeBtn = document.getElementById('close-urgency-bar');
+
+  if (bar) {
+    if (sessionStorage.getItem('urgency_dismissed') === 'true') {
+      bar.style.display = 'none';
+    } else if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        bar.style.display = 'none';
+        sessionStorage.setItem('urgency_dismissed', 'true');
+      });
+    }
+  }
+</script>

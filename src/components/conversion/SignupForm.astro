@@ -1,0 +1,323 @@
+---
+import type { Lang } from '../../lib/i18n';
+import PoliticalDisclaimer from './PoliticalDisclaimer.astro';
+import WhatsAppCTA from './WhatsAppCTA.astro';
+
+interface Props {
+  lang: Lang;
+  formLocation?: 'hero' | 'mid' | 'footer' | 'contact';
+  isVolunteerForm?: boolean;
+  className?: string;
+}
+
+const {
+  lang,
+  formLocation = 'hero',
+  isVolunteerForm = false,
+  className = ''
+} = Astro.props;
+
+const formId = `signup-form-${formLocation}-${Math.random().toString(36).substring(2, 7)}`;
+const isEs = lang === 'es';
+---
+
+<div class={`bg-white rounded-2xl p-6 md:p-8 shadow-xl border border-slate-200/80 text-left ${className}`}>
+  <!-- State: Form active -->
+  <form id={formId} class="space-y-4" novalidate data-form-location={formLocation} data-lang={lang}>
+    <div class="space-y-1">
+      <h3 class="text-xl md:text-2xl font-black text-navy-950">
+        {isEs ? 'Súmate al cambio en el Precinto 4' : 'Join the change in Precinct 4'}
+      </h3>
+      <p class="text-sm text-slate-600">
+        {isEs
+          ? 'Recibe recordatorios de votación y propuestas para tu colonia.'
+          : 'Get election reminders and updates on proposals for your neighborhood.'}
+      </p>
+    </div>
+
+    <!-- Field: Full Name -->
+    <div>
+      <label for={`${formId}-name`} class="block text-sm font-bold text-navy-950 mb-1">
+        {isEs ? 'Nombre y Apellido' : 'Full Name'} <span class="text-red-cta" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="text"
+        id={`${formId}-name`}
+        name="name"
+        required
+        autocomplete="name"
+        placeholder={isEs ? 'Ej. Juan Rodríguez' : 'e.g. John Rodriguez'}
+        class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-slate-50 focus:bg-white text-ink text-base transition-colors focus:border-navy-900 focus:ring-2 focus:ring-navy-900/20"
+      />
+      <p class="text-xs text-red-cta font-medium mt-1 hidden" id={`${formId}-name-error`} role="alert"></p>
+    </div>
+
+    <!-- Field: Email -->
+    <div>
+      <label for={`${formId}-email`} class="block text-sm font-bold text-navy-950 mb-1">
+        {isEs ? 'Correo Electrónico' : 'Email Address'} <span class="text-red-cta" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="email"
+        id={`${formId}-email`}
+        name="email"
+        required
+        autocomplete="email"
+        placeholder={isEs ? 'ejemplo@correo.com' : 'example@email.com'}
+        class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-slate-50 focus:bg-white text-ink text-base transition-colors focus:border-navy-900 focus:ring-2 focus:ring-navy-900/20"
+      />
+      <p class="text-xs text-red-cta font-medium mt-1 hidden" id={`${formId}-email-error`} role="alert"></p>
+    </div>
+
+    <!-- Field: Phone (Optional with SMS Consent) -->
+    <div>
+      <label for={`${formId}-phone`} class="block text-sm font-bold text-navy-950 mb-1">
+        {isEs ? 'Teléfono Celular' : 'Cell Phone Number'} <span class="text-slate-500 font-normal text-xs">{isEs ? '(Opcional para alertas SMS)' : '(Optional for SMS alerts)'}</span>
+      </label>
+      <input
+        type="tel"
+        id={`${formId}-phone`}
+        name="phone"
+        inputmode="tel"
+        autocomplete="tel"
+        placeholder={isEs ? '(830) 000-0000' : '(830) 000-0000'}
+        class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-slate-50 focus:bg-white text-ink text-base transition-colors focus:border-navy-900 focus:ring-2 focus:ring-navy-900/20"
+      />
+      <p class="text-xs text-red-cta font-medium mt-1 hidden" id={`${formId}-phone-error`} role="alert"></p>
+    </div>
+
+    {isVolunteerForm && (
+      <div>
+        <label for={`${formId}-help`} class="block text-sm font-bold text-navy-950 mb-1">
+          {isEs ? '¿Cómo te gustaría colaborar?' : 'How would you like to help?'}
+        </label>
+        <select
+          id={`${formId}-help`}
+          name="helpType"
+          class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-slate-50 focus:bg-white text-ink text-base"
+        >
+          <option value="voluntario-general">{isEs ? 'Apoyo general en mi colonia' : 'General support in my neighborhood'}</option>
+          <option value="lona-cerca">{isEs ? 'Prestar mi cerca/reja para una lona' : 'Place a campaign sign on my yard/fence'}</option>
+          <option value="tocar-puertas">{isEs ? 'Caminar y tocar puertas con Lupe' : 'Canvass and knock doors with Lupe'}</option>
+          <option value="votacion-temprana">{isEs ? 'Apoyar en mesas de votación temprana' : 'Support at early voting locations'}</option>
+          <option value="redes">{isEs ? 'Difundir información en redes sociales' : 'Share info on social media'}</option>
+        </select>
+      </div>
+    )}
+
+    <!-- SMS TCPA Consent Disclosure -->
+    <div class="text-[11px] text-slate-500 leading-normal bg-slate-50 p-2.5 rounded border border-slate-200">
+      <p>
+        {isEs ? (
+          <>
+            Al ingresar tu teléfono, aceptas recibir mensajes de texto (SMS) informativos de la campaña de Guadalupe Lupe Negrete. Frecuencia de mensajes variable. Pueden aplicar tarifas de mensajes y datos. Responde <strong>STOP</strong> para cancelar o <strong>HELP</strong> para ayuda. Consulta nuestra{' '}
+            <a href="/es/privacidad/" class="underline font-semibold hover:text-navy-950">Política de Privacidad</a>.
+          </>
+        ) : (
+          <>
+            By providing your phone number, you agree to receive campaign text messages (SMS) from the Guadalupe Lupe Negrete Campaign. Msg frequency varies. Msg & data rates may apply. Reply <strong>STOP</strong> to cancel, <strong>HELP</strong> for help. See our{' '}
+            <a href="/en/privacy/" class="underline font-semibold hover:text-navy-950">Privacy Policy</a>.
+          </>
+        )}
+      </p>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      id={`${formId}-submit-btn`}
+      class="w-full bg-red-cta hover:bg-red-dark text-white font-black py-3.5 px-6 rounded-lg text-base tracking-wide shadow-lg shadow-red-cta/20 hover:shadow-red-cta/40 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer focus:ring-4 focus:ring-red-cta/40"
+    >
+      <span class="btn-text">{isEs ? 'QUIERO APOYAR A LUPE' : 'I WANT TO SUPPORT LUPE'}</span>
+      <svg class="w-5 h-5 hidden btn-spinner animate-spin" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </button>
+
+    <!-- General Error Banner -->
+    <div id={`${formId}-general-error`} class="hidden p-3 rounded bg-red-50 text-red-700 text-xs font-semibold border border-red-200" role="alert"></div>
+
+    <PoliticalDisclaimer className="mt-4" />
+  </form>
+
+  <!-- State: Success Screen -->
+  <div id={`${formId}-success`} class="hidden text-center py-6 space-y-5 animate-fade-in" aria-live="polite">
+    <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto shadow-inner">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+    <div class="space-y-2">
+      <h3 class="text-2xl font-black text-navy-950">
+        {isEs ? '¡Gracias por tu apoyo!' : 'Thank you for your support!'}
+      </h3>
+      <p class="text-slate-600 text-base max-w-md mx-auto">
+        {isEs
+          ? 'Tu registro quedó confirmado. Ahora ayúdanos con lo más importante para ganar la elección: comparte este mensaje con tres vecinos del Precinto 4.'
+          : 'Your registration is confirmed. Now help us with the most important step: share this message with three neighbors in Precinct 4.'}
+      </p>
+    </div>
+
+    <div class="pt-2">
+      <WhatsAppCTA
+        source="home"
+        lang={lang}
+        label={isEs ? 'Compartir por WhatsApp con vecinos' : 'Share on WhatsApp with neighbors'}
+        variant="primary"
+        className="w-full"
+      />
+    </div>
+
+    <PoliticalDisclaimer className="mt-4" />
+  </div>
+</div>
+
+<script>
+  import { submitLead } from '../../lib/leads';
+  import { trackEvent } from '../../lib/analytics';
+
+  function initForm(form: HTMLFormElement) {
+    const formId = form.id;
+    const lang = (form.getAttribute('data-lang') as 'es' | 'en') || 'es';
+    const formLocation = (form.getAttribute('data-form-location') as any) || 'hero';
+    const isEs = lang === 'es';
+
+    const nameInput = form.querySelector<HTMLInputElement>(`#${formId}-name`);
+    const emailInput = form.querySelector<HTMLInputElement>(`#${formId}-email`);
+    const phoneInput = form.querySelector<HTMLInputElement>(`#${formId}-phone`);
+    const helpInput = form.querySelector<HTMLSelectElement>(`#${formId}-help`);
+    const submitBtn = form.querySelector<HTMLButtonElement>(`#${formId}-submit-btn`);
+    const successBox = document.getElementById(`${formId}-success`);
+    const generalError = document.getElementById(`${formId}-general-error`);
+
+    const nameError = document.getElementById(`${formId}-name-error`);
+    const emailError = document.getElementById(`${formId}-email-error`);
+    const phoneError = document.getElementById(`${formId}-phone-error`);
+
+    function validateName(): boolean {
+      if (!nameInput) return true;
+      const val = nameInput.value.trim();
+      if (!val) {
+        showError(nameError, isEs ? 'Por favor escribe tu nombre completo.' : 'Please enter your full name.');
+        nameInput.classList.add('border-red-500');
+        return false;
+      }
+      hideError(nameError);
+      nameInput.classList.remove('border-red-500');
+      return true;
+    }
+
+    function validateEmail(): boolean {
+      if (!emailInput) return true;
+      const val = emailInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!val) {
+        showError(emailError, isEs ? 'El correo electrónico es obligatorio.' : 'Email address is required.');
+        emailInput.classList.add('border-red-500');
+        return false;
+      } else if (!emailRegex.test(val)) {
+        showError(emailError, isEs ? 'Por favor ingresa un correo válido (ej. nombre@correo.com).' : 'Please enter a valid email address.');
+        emailInput.classList.add('border-red-500');
+        return false;
+      }
+      hideError(emailError);
+      emailInput.classList.remove('border-red-500');
+      return true;
+    }
+
+    function validatePhone(): boolean {
+      if (!phoneInput) return true;
+      const val = phoneInput.value.trim();
+      if (val && val.replace(/\D/g, '').length < 10) {
+        showError(phoneError, isEs ? 'Ingresa un número de 10 dígitos (código de área + número).' : 'Enter a 10-digit phone number with area code.');
+        phoneInput.classList.add('border-red-500');
+        return false;
+      }
+      hideError(phoneError);
+      phoneInput.classList.remove('border-red-500');
+      return true;
+    }
+
+    function showError(el: HTMLElement | null, msg: string) {
+      if (el) {
+        el.textContent = msg;
+        el.classList.remove('hidden');
+      }
+    }
+
+    function hideError(el: HTMLElement | null) {
+      if (el) {
+        el.textContent = '';
+        el.classList.add('hidden');
+      }
+    }
+
+    // Attach blur validation
+    nameInput?.addEventListener('blur', validateName);
+    emailInput?.addEventListener('blur', validateEmail);
+    phoneInput?.addEventListener('blur', validatePhone);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (generalError) generalError.classList.add('hidden');
+
+      const isNameValid = validateName();
+      const isEmailValid = validateEmail();
+      const isPhoneValid = validatePhone();
+
+      if (!isNameValid || !isEmailValid || !isPhoneValid) {
+        return;
+      }
+
+      // UI Submitting state
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        const spinner = submitBtn.querySelector('.btn-spinner');
+        const btnText = submitBtn.querySelector('.btn-text');
+        spinner?.classList.remove('hidden');
+        if (btnText) btnText.textContent = isEs ? 'ENVIANDO...' : 'SUBMITTING...';
+      }
+
+      try {
+        const payload = {
+          name: nameInput?.value.trim() || '',
+          email: emailInput?.value.trim() || '',
+          phone: phoneInput?.value.trim() || undefined,
+          helpType: helpInput?.value || undefined,
+          formLocation,
+          lang
+        };
+
+        const res = await submitLead(payload);
+        trackEvent('lead_submit', { form_location: formLocation });
+
+        if (res.success) {
+          form.classList.add('hidden');
+          successBox?.classList.remove('hidden');
+        } else {
+          showError(generalError, res.message || (isEs ? 'Ocurrió un error al enviar. Intenta de nuevo.' : 'An error occurred. Please try again.'));
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            const spinner = submitBtn.querySelector('.btn-spinner');
+            const btnText = submitBtn.querySelector('.btn-text');
+            spinner?.classList.add('hidden');
+            if (btnText) btnText.textContent = isEs ? 'QUIERO APOYAR A LUPE' : 'I WANT TO SUPPORT LUPE';
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        showError(generalError, isEs ? 'Ocurrió un problema de conexión. Por favor intenta más tarde.' : 'Connection error. Please try again later.');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          const spinner = submitBtn.querySelector('.btn-spinner');
+          const btnText = submitBtn.querySelector('.btn-text');
+          spinner?.classList.add('hidden');
+          if (btnText) btnText.textContent = isEs ? 'QUIERO APOYAR A LUPE' : 'I WANT TO SUPPORT LUPE';
+        }
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLFormElement>('form[data-form-location]').forEach(initForm);
+</script>

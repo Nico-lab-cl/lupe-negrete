@@ -1,0 +1,80 @@
+@import "./tokens.css";
+
+/* Base HTML & Accessibility */
+html {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background-color: var(--color-bone);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.65;
+  font-size: 1.0625rem;
+}
+
+/* Headings Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  color: var(--color-navy-950);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Max Reading Line Measure */
+p, li {
+  max-width: 66ch;
+}
+
+/* Accessible Thick Focus Outlines (WCAG 2.2 AA) */
+:focus-visible {
+  outline: 3px solid var(--color-red-cta);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Interactive Touch Targets */
+button, a, input, select, textarea {
+  min-height: 44px;
+}
+
+/* Tabular numbers for dates and voting steps */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bone);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-slate-300);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-500);
+}

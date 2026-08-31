@@ -1,0 +1,44 @@
+---
+import { getEquivalentPath, type Lang } from '../../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  currentPath: string;
+}
+
+const { lang, currentPath } = Astro.props;
+const targetLang: Lang = lang === 'es' ? 'en' : 'es';
+const targetUrl = getEquivalentPath(currentPath, targetLang);
+---
+
+<div class="inline-flex items-center rounded-full border border-slate-300 bg-white/90 p-0.5 text-xs font-bold tracking-wider shadow-xs" role="group" aria-label={lang === 'es' ? 'Selector de idioma' : 'Language selector'}>
+  <a
+    href={lang === 'es' ? currentPath : targetUrl}
+    class={`px-2.5 py-1 rounded-full transition-colors ${lang === 'es' ? 'bg-navy-900 text-white font-black' : 'text-slate-600 hover:text-navy-950 hover:bg-slate-100'}`}
+    aria-current={lang === 'es' ? 'true' : undefined}
+    data-lang-btn="es"
+  >
+    ES
+  </a>
+  <a
+    href={lang === 'en' ? currentPath : targetUrl}
+    class={`px-2.5 py-1 rounded-full transition-colors ${lang === 'en' ? 'bg-navy-900 text-white font-black' : 'text-slate-600 hover:text-navy-950 hover:bg-slate-100'}`}
+    aria-current={lang === 'en' ? 'true' : undefined}
+    data-lang-btn="en"
+  >
+    EN
+  </a>
+</div>
+
+<script>
+  document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const targetLang = (e.currentTarget as HTMLElement).getAttribute('data-lang-btn');
+      if (targetLang) {
+        try {
+          localStorage.setItem('preferred_lang', targetLang);
+        } catch {}
+      }
+    });
+  });
+</script>
