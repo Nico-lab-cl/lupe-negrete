@@ -15,3 +15,9 @@ certs/
 # Material interno de campaña (presupuesto, grabaciones, fotos sin editar).
 # Este repositorio es público: se deja fuera a propósito.
 Campaña de marketing político _ Lupe Navarrete/
+
+# Documentos internos de planificacion (huecos de cumplimiento legal, grafia
+# de la boleta, inventario del material privado). Se quedan en local.
+INVENTARIO-ASSETS.md
+CONTENIDO-PENDIENTE.md
+src/_legacy-home/
