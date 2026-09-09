@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { serverEnv } from './env';
 
 // Prisma 7 ya no toma la URL desde schema.prisma: el cliente recibe un driver
 // adapter con la conexión. La URL solo se lee en el servidor.
-const connectionString = process.env.DATABASE_URL;
+const connectionString = serverEnv('DATABASE_URL');
 
 if (!connectionString) {
   throw new Error(

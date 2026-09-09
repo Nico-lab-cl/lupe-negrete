@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { createHash } from 'node:crypto';
 import { prisma } from '../../lib/prisma';
+import { serverEnv } from '../../lib/env';
 
 // Esta ruta corre en el servidor; el resto del sitio se sigue prerenderizando.
 export const prerender = false;
@@ -21,7 +22,7 @@ function str(value: unknown, max: number): string | null {
  */
 function hashIp(ip: string | null): string | null {
   if (!ip) return null;
-  const salt = import.meta.env.IP_HASH_SALT ?? 'lupe-negrete-p4';
+  const salt = serverEnv('IP_HASH_SALT') ?? 'lupe-negrete-p4';
   return createHash('sha256').update(`${salt}:${ip}`).digest('hex').slice(0, 32);
 }
 

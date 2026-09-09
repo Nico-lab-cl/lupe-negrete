@@ -1,0 +1,198 @@
+---
+// Página de contacto y voluntariado con el mismo lenguaje visual que la home
+// y la biografía: Saira Condensed en titulares, etiquetas en IBM Plex Mono,
+// cortes en diagonal y la paleta navy/rojo.
+import type { Lang } from '../../lib/i18n';
+import { CONTACT_COPY } from '../../lib/contact-copy';
+import { SITE_CONFIG } from '../../config/site';
+import { getWhatsAppUrl } from '../../lib/whatsapp';
+import TopBar from './TopBar.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import StickyBar from './StickyBar.astro';
+import { routes } from './SiteChrome';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = CONTACT_COPY[lang];
+const R = routes(lang);
+const waUrl = getWhatsAppUrl('voluntario', lang);
+
+const ayudas = [
+  { value: 'voluntario-general', label: t.help1 },
+  { value: 'lona-cerca', label: t.help2 },
+  { value: 'tocar-puertas', label: t.help3 },
+  { value: 'votacion-temprana', label: t.help4 },
+  { value: 'redes', label: t.help5 }
+];
+
+const campoBase =
+  'width:100%;padding:13px 14px;border:1px solid #D0D5DD;border-radius:5px;background:#F7F5F0;font-size:15px;color:#14161A;outline:none';
+const etiqueta =
+  'font-size:12.5px;font-weight:600;letter-spacing:.02em;color:#06132B';
+
+const datos = [
+  { label: t.infoAddress, value: SITE_CONFIG.committee.address, href: null, mono: false },
+  { label: t.infoEmail, value: SITE_CONFIG.committee.email, href: `mailto:${SITE_CONFIG.committee.email}`, mono: false },
+  { label: t.infoPhone, value: SITE_CONFIG.committee.phone, href: null, mono: true },
+  { label: t.infoCommittee, value: SITE_CONFIG.committee.legalName, href: null, mono: false }
+];
+---
+
+<div style="min-height:100vh;background:#F7F5F0">
+
+<TopBar lang={lang} />
+<SiteHeader lang={lang} />
+
+<main id="main-content">
+
+<section style="position:relative;background:#06132B;overflow:hidden">
+<div data-px="0.14" style="position:absolute;top:-120px;right:-60px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(0,51,153,.5),transparent 68%);pointer-events:none"></div>
+<div data-px="0.07" data-pxb="skewX(-12deg)" style="position:absolute;left:58%;top:0;bottom:0;width:180px;background:#FF3131;opacity:.1;transform:skewX(-12deg);pointer-events:none"></div>
+<div style="position:relative;max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,66px) clamp(16px,4vw,24px) clamp(44px,6vw,70px);animation:lnUp .6s cubic-bezier(.16,1,.3,1) both">
+
+<div style="display:inline-flex;align-items:stretch;margin-bottom:26px;transform:skewX(-12deg);box-shadow:0 8px 22px rgba(0,0,0,.32)">
+<span style="display:flex;align-items:center;background:#FF3131;padding:8px 13px 7px"><span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:23px;line-height:1;letter-spacing:.02em;color:#fff">P4</span></span>
+<span style="display:flex;align-items:center;background:#fff;padding:8px 15px 7px"><span style="display:block;transform:skewX(12deg);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:10px;line-height:1;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.kicker}</span></span>
+</div>
+
+<h1 style="margin:0;max-width:16ch;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(42px,8vw,96px);line-height:.86;letter-spacing:-.012em;text-transform:uppercase;color:#fff">
+<span style="display:block">{t.h1a}</span>
+<span style="display:block;color:#FF3131">{t.h1b}</span>
+</h1>
+
+<div style="display:flex;align-items:center;gap:clamp(12px,2.6vw,18px);margin:26px 0 18px">
+<span style="flex:none;width:46px;height:4px;background:#FF3131;transform:skewX(-12deg)"></span>
+</div>
+
+<p style="margin:0;max-width:620px;font-size:clamp(15px,3.6vw,17px);line-height:1.68;color:rgba(255,255,255,.72)">{t.heroSub}</p>
+</div>
+</section>
+
+<section id="voluntario" style="background:#0B224E;border-top:4px solid #FF3131">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,60px) clamp(16px,4vw,24px) clamp(44px,6vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));gap:clamp(32px,5vw,48px);align-items:center">
+
+<div data-rv="0">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#FF3131">{t.formKicker}</p>
+<h2 style="margin:0 0 14px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(34px,3.8vw,54px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;color:#fff">{t.formH}</h2>
+<p style="margin:0 0 26px;font-size:15.5px;line-height:1.68;color:rgba(255,255,255,.68)">{t.formSub}</p>
+
+<div style="border-left:4px solid #F59E0B;padding:2px 0 2px 18px">
+<p style="margin:0 0 6px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#F59E0B">{t.waKicker}</p>
+<p style="margin:0 0 14px;font-size:14px;line-height:1.62;color:rgba(255,255,255,.7);max-width:420px">{t.waBody}</p>
+<a href={waUrl} target="_blank" rel="noopener noreferrer" class="h-ghost-10" style="display:inline-flex;align-items:center;gap:9px;border:1.5px solid rgba(255,255,255,.32);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:clamp(15px,3.2vw,18px);letter-spacing:.03em;text-transform:uppercase;padding:12px 20px;border-radius:5px">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" style="flex:none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.174.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.82 9.82 0 016.988 2.896 9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.359.101 11.944c0 2.096.548 4.142 1.588 5.945L0 24l6.335-1.652a11.882 11.882 0 005.683 1.448h.005c6.582 0 11.941-5.359 11.944-11.945A11.86 11.86 0 0020.52 3.45"></path></svg>
+<span>{t.waBtn}</span>
+</a>
+</div>
+</div>
+
+<div data-rv="0.14" data-form-wrap style="background:#fff;border-radius:8px;padding:clamp(20px,4vw,30px);box-shadow:0 24px 60px rgba(0,0,0,.35)">
+
+<div data-thanks style="text-align:center;padding:18px 0">
+<div style="width:60px;height:60px;margin:0 auto 16px;border-radius:50%;background:#ECFDF5;color:#059669;display:flex;align-items:center;justify-content:center">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>
+</div>
+<h3 style="margin:0 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;text-transform:uppercase;color:#06132B">{t.thanksH}</h3>
+<p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#475467">{t.thanksBody}</p>
+<a href={R.home} class="h-navy" style="display:inline-block;background:#06132B;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:.03em;text-transform:uppercase;padding:13px 24px;border-radius:5px">{t.thanksCta}</a>
+</div>
+
+<form data-volunteer data-lang={lang} novalidate>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:14px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ct-nombre" style={etiqueta}>{t.fName}</label>
+<input id="ct-nombre" name="nombre" type="text" required autocomplete="name" placeholder={t.phName} class="fld" style={campoBase} />
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ct-email" style={etiqueta}>{t.fEmail}</label>
+<input id="ct-email" name="email" type="email" required autocomplete="email" placeholder={t.phEmail} class="fld" style={campoBase} />
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ct-tel" style={etiqueta}>{t.fPhone} <span style="font-weight:400;color:#5B6470">{t.fPhoneOpt}</span></label>
+<input id="ct-tel" name="telefono" type="tel" inputmode="tel" autocomplete="tel" placeholder="(830) 000-0000" class="fld" style={campoBase} />
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ct-zip" style={etiqueta}>{t.fZip}</label>
+<input id="ct-zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="78852" class="fld" style={`${campoBase};font-family:'IBM Plex Mono',monospace`} />
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:6px;margin-top:14px">
+<label for="ct-ayuda" style={etiqueta}>{t.fHelp}</label>
+<select id="ct-ayuda" name="ayuda" class="fld" style={`${campoBase};cursor:pointer`}>
+{ayudas.map((a) => <option value={a.value}>{a.label}</option>)}
+</select>
+</div>
+
+<button type="submit" class="h-cta" style="width:100%;margin-top:18px;background:#D3151D;color:#fff;border:none;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:21px;letter-spacing:.04em;text-transform:uppercase;padding:15px;border-radius:5px;cursor:pointer;box-shadow:0 8px 24px rgba(211,21,29,.3)">{t.submit}</button>
+
+<p style="margin:14px 0 0;font-size:11px;line-height:1.5;color:#5B6470">
+{t.tcpa1} <strong>{t.tcpaStop}</strong> {t.tcpa2} <strong>{t.tcpaHelp}</strong> {t.tcpa3} <a href={R.privacy}>{t.privacy}</a>.
+</p>
+</form>
+
+</div>
+</div>
+</section>
+
+<section style="background:#F7F5F0;border-bottom:1px solid #E4E7EC">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(44px,7vw,72px) clamp(16px,4vw,24px)">
+
+<div data-rv="0" style="max-width:820px;margin-bottom:34px">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.infoKicker}</p>
+<h2 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(32px,4.2vw,58px);line-height:.9;letter-spacing:-.012em;text-transform:uppercase;color:#06132B">{t.infoH}</h2>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:1px;background:#E4E7EC;border:1px solid #E4E7EC;border-radius:6px;overflow:hidden">
+{datos.map((d, i) => (
+<div data-rv={String(i * 0.09)} style="background:#fff;padding:24px 22px">
+<p style="margin:0 0 10px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#D3151D">{d.label}</p>
+{d.href ? (
+<a href={d.href} class="h-nav" style={`font-size:15px;font-weight:600;line-height:1.5;color:#06132B;word-break:break-word${d.mono ? ";font-family:'IBM Plex Mono',monospace" : ''}`}>{d.value}</a>
+) : (
+<p style={`margin:0;font-size:15px;font-weight:600;line-height:1.5;color:#06132B${d.mono ? ";font-family:'IBM Plex Mono',monospace" : ''}`}>{d.value}</p>
+)}
+</div>
+))}
+</div>
+
+<div data-rv="0.1" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:26px">
+<a href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer" class="h-navy" style="display:inline-flex;align-items:center;gap:9px;background:#102D66;color:#fff;font-size:13px;font-weight:600;padding:12px 18px;border-radius:5px">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.688 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"></path></svg>
+<span>{t.infoFacebook}</span>
+</a>
+</div>
+
+</div>
+</section>
+
+<section style="background:#06132B;border-top:4px solid #FF3131">
+<div data-rv="0" style="max-width:1280px;margin:0 auto;padding:clamp(44px,7vw,68px) clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:clamp(28px,5vw,48px);align-items:center">
+<div>
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#F59E0B">{t.ctaKicker}</p>
+<h2 style="margin:0 0 14px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(34px,4.4vw,58px);line-height:.9;letter-spacing:-.012em;text-transform:uppercase;color:#fff">{t.ctaH}</h2>
+<p style="margin:0;font-size:16px;line-height:1.68;color:rgba(255,255,255,.7);max-width:520px">{t.ctaBody}</p>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:12px">
+<a href={R.about} class="h-cta" style="background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:15px 26px;border-radius:5px;box-shadow:0 8px 26px rgba(211,21,29,.36)">{t.ctaBio}</a>
+<a href={R.issues} class="h-ghost" style="background:transparent;border:1.5px solid rgba(255,255,255,.34);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:15px 26px;border-radius:5px">{t.ctaIssues}</a>
+<a href={R.vote} class="h-ghost" style="background:transparent;border:1.5px solid rgba(255,255,255,.34);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:15px 26px;border-radius:5px">{t.ctaVote}</a>
+</div>
+</div>
+</section>
+
+</main>
+
+<SiteFooter lang={lang} />
+
+<StickyBar lang={lang} />
+
+</div>
+
+<script>
+  import '../../scripts/contact-page';
+</script>
