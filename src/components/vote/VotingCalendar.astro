@@ -1,0 +1,102 @@
+---
+import { ELECTION_CONFIG } from '../../config/election';
+import type { Lang } from '../../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const isEs = lang === 'es';
+const dates = ELECTION_CONFIG.keyDates;
+
+const today = new Date().toISOString().split('T')[0];
+
+function getStepStatus(stepIndex: number): 'past' | 'current' | 'future' {
+  if (stepIndex === 0) {
+    if (today > ELECTION_CONFIG.registrationDeadline) return 'past';
+    return 'current';
+  } else if (stepIndex === 1) {
+    if (today > ELECTION_CONFIG.earlyVotingEnd) return 'past';
+    if (today >= ELECTION_CONFIG.earlyVotingStart) return 'current';
+    return 'future';
+  } else {
+    if (today > ELECTION_CONFIG.electionDay) return 'past';
+    if (today === ELECTION_CONFIG.electionDay) return 'current';
+    return 'future';
+  }
+}
+---
+
+<div class="space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {dates.map((item, idx) => {
+      const status = getStepStatus(idx);
+      const isCurrent = status === 'current';
+      const isPast = status === 'past';
+
+      return (
+        <div
+          class={`relative rounded-2xl p-6 transition-all border-2 flex flex-col justify-between ${
+            isCurrent
+              ? 'bg-white border-red-cta shadow-xl ring-4 ring-red-cta/10 scale-102'
+              : isPast
+              ? 'bg-slate-100/80 border-slate-200 opacity-80'
+              : 'bg-white border-slate-200/90 shadow-sm'
+          }`}
+        >
+          {isCurrent && (
+            <div class="absolute -top-3 left-6 bg-red-cta text-white text-[11px] font-black uppercase tracking-wider px-3 py-0.5 rounded-full shadow-xs">
+              {isEs ? 'Hito Activo' : 'Current Window'}
+            </div>
+          )}
+
+          <div>
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-xs font-black uppercase tracking-widest text-slate-500">
+                {isEs ? `Etapa 0${item.step}` : `Phase 0${item.step}`}
+              </span>
+              <span class="text-2xl font-black font-heading text-navy-950 tabular-nums">
+                {item.dateFormatted}
+              </span>
+            </div>
+
+            <h4 class="text-lg font-bold text-navy-950 mb-2 leading-tight">
+              {isEs ? item.titleEs : item.titleEn}
+            </h4>
+
+            <p class="text-xs text-slate-500 mb-2 font-medium">
+              {isEs ? item.dateFullEs : item.dateFullEn}
+            </p>
+
+            <p class="text-sm text-slate-700 leading-relaxed">
+              {isEs ? item.descEs : item.descEn}
+            </p>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-bold">
+            {isCurrent && (
+              <span class="text-red-cta flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-red-cta animate-ping"></span>
+                {isEs ? 'En curso / Prioridad máxima' : 'Active / High Priority'}
+              </span>
+            )}
+            {isPast && (
+              <span class="text-slate-500 flex items-center gap-1">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                {isEs ? 'Concluido' : 'Completed'}
+              </span>
+            )}
+            {!isCurrent && !isPast && (
+              <span class="text-slate-500">
+                {isEs ? 'Próximamente' : 'Upcoming'}
+              </span>
+            )}
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</div>

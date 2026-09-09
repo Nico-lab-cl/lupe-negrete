@@ -1,0 +1,19 @@
+node_modules
+dist
+.astro
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+.claude
+*.log
+Dockerfile
+.dockerignore
+docker-compose.yml
+README.md
+web-v2
+src/_legacy-home
+Campaña de marketing político _ Lupe Navarrete
+
+

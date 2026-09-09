@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import WhatsAppCTA from '../../../components/conversion/WhatsAppCTA.astro';
+
+const proposals = [
+  {
+    slug: 'paving',
+    href: '/en/issues/paving/',
+    title: 'Equitable Road Paving for All Colonias',
+    shortDesc: 'Asphalt paving and flood drainage for Loma Bonita and underserved sectors with the same priority and urgency as downtown Eagle Pass.',
+    image: '/images/candidate-assembly.png',
+    badge: 'Priority 1'
+  },
+  {
+    slug: 'lighting',
+    href: '/en/issues/lighting/',
+    title: 'Street Lighting & Sheriff Support',
+    shortDesc: 'Functional lighting on every residential block to deter nighttime crime, paired with expanded patrol resources for the Maverick County Sheriff.',
+    image: '/images/candidate-listening.png',
+    badge: 'Priority 2'
+  },
+  {
+    slug: 'audit',
+    href: '/en/issues/audit/',
+    title: 'Full Audit of the County Budget',
+    shortDesc: 'Rigorous review of county spending and contracts to eliminate wasteful overhead and redirect taxpayer dollars directly into basic services.',
+    image: '/images/candidate-courthouse.png',
+    badge: 'Priority 3'
+  }
+];
+---
+
+<BaseLayout
+  title="Campaign Platform & Commitments · Precinct 4"
+  description="Lupe Negrete's three key priorities for Precinct 4, Maverick County, Texas: equitable paving, functional street lighting with public safety, and a county budget audit."
+  lang="en"
+>
+  <section class="bg-navy-950 text-white py-14 md:py-20 border-b-4 border-red-cta">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta bg-red-cta/20 px-3 py-1 rounded-full border border-red-cta/40">
+        Campaign Platform · Maverick County
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black font-heading text-white max-w-3xl leading-tight">
+        Three Clear Priorities for Precinct 4
+      </h1>
+      <p class="text-slate-300 text-base sm:text-lg max-w-2xl">
+        No empty promises or bureaucratic jargon. Three actionable commitments to address decades of neglect in our neighborhoods.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {proposals.map((item) => (
+        <article class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-lg hover:shadow-2xl transition-all flex flex-col justify-between group">
+          <div class="aspect-[16/10] overflow-hidden bg-slate-100 relative">
+            <img
+              src={item.image}
+              alt={item.title}
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+            <div class="absolute top-3 left-3 bg-navy-900 text-white font-black text-xs uppercase tracking-wider px-3 py-1 rounded shadow-xs">
+              {item.badge}
+            </div>
+          </div>
+
+          <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+            <div class="space-y-2">
+              <h2 class="text-xl md:text-2xl font-black text-navy-950 leading-snug">
+                {item.title}
+              </h2>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                {item.shortDesc}
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100">
+              <a
+                href={item.href}
+                class="inline-flex items-center justify-between w-full bg-navy-900 hover:bg-navy-950 text-white font-bold py-3 px-4 rounded-xl text-sm transition-colors shadow-md"
+              >
+                <span>Read full proposal</span>
+                <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Supplementary Sheriff Banner -->
+    <div class="bg-navy-900 text-white p-8 rounded-3xl border border-navy-700 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2 max-w-2xl">
+        <span class="text-xs font-black uppercase tracking-widest text-amber-400">
+          Border & Community Safety
+        </span>
+        <h3 class="text-2xl font-black font-heading text-white">
+          Full Support for the Maverick County Sheriff’s Office
+        </h3>
+        <p class="text-sm text-slate-300">
+          Increased patrols in outlying colonias, modern equipment for deputies, and tight coordination to maintain peace across our border community.
+        </p>
+      </div>
+
+      <WhatsAppCTA source="contacto" lang="en" label="Report neighborhood issue" variant="primary" />
+    </div>
+  </section>
+</BaseLayout>

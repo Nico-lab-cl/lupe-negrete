@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../../config/site';
+---
+
+<BaseLayout
+  title="Web Accessibility Statement (WCAG 2.2 AA)"
+  description="Official web accessibility statement and digital inclusion commitment for the Guadalupe 'Lupe' Negrete Campaign."
+  lang="en"
+>
+  <section class="bg-navy-950 text-white py-14 md:py-16 border-b-4 border-slate-700">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
+      <h1 class="text-3xl sm:text-4xl font-black font-heading text-white">
+        Web Accessibility Statement
+      </h1>
+      <p class="text-slate-400 text-sm">
+        Conformity with the Web Content Accessibility Guidelines (WCAG 2.2 Level AA)
+      </p>
+    </div>
+  </section>
+
+  <article class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-slate space-y-8 text-slate-800 text-base leading-relaxed">
+    
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+      <h2 class="text-xl font-bold text-navy-950">1. Commitment to Accessibility</h2>
+      <p>
+        The <strong>Guadalupe "Lupe" Negrete Campaign</strong> is committed to ensuring that all residents and voters in Precinct 4 and Maverick County have barrier-free access to our voting guides, policy proposals, and civic resources.
+      </p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+      <h2 class="text-xl font-bold text-navy-950">2. Standards & Technical Implementation</h2>
+      <ul class="list-disc pl-5 space-y-2 text-sm text-slate-700">
+        <li><strong>Keyboard Operability:</strong> Skip-to-content mechanism and prominent visible focus indicators on all interactive elements.</li>
+        <li><strong>Contrast Ratios:</strong> Meeting or exceeding 4.5:1 for body text and 3:1 for large headers and UI controls.</li>
+        <li><strong>Semantic Hierarchy:</strong> Clean HTML5 document outline with one H1 per page, descriptive field labels, and <code>aria-live</code> announcements for form errors.</li>
+        <li><strong>Touch Targets & Zoom:</strong> Minimum 44×44 px touch targets for easy one-handed mobile use and seamless 200% zoom support without layout disruption.</li>
+        <li><strong>Media Alternatives:</strong> Clear, informative alt attributes on all authentic campaign imagery.</li>
+      </ul>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+      <h2 class="text-xl font-bold text-navy-950">3. Contact & Feedback</h2>
+      <p>
+        If you experience any accessibility barrier while browsing this website, please let us know at <a href={`mailto:${SITE_CONFIG.committee.email}`} class="text-navy-900 font-bold underline">{SITE_CONFIG.committee.email}</a>.
+      </p>
+    </div>
+
+  </article>
+</BaseLayout>

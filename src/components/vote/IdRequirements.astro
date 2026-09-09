@@ -1,0 +1,116 @@
+---
+import type { Lang } from '../../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const isEs = lang === 'es';
+
+const photoIdsEs = [
+  'Licencia de conducir de Texas (emitida por DPS)',
+  'Certificado de identificación electoral de Texas (EIC emitido por DPS)',
+  'Tarjeta de identificación personal de Texas (emitida por DPS)',
+  'Licencia para portar armas de fuego de Texas (LTC emitida por DPS)',
+  'Tarjeta de identificación militar de EE.UU. con fotografía',
+  'Certificado de ciudadanía de EE.UU. con fotografía',
+  'Pasaporte de EE.UU. (libro o tarjeta)'
+];
+
+const photoIdsEn = [
+  'Texas Driver License issued by the Texas Department of Public Safety (DPS)',
+  'Texas Election Identification Certificate issued by DPS',
+  'Texas Personal Identification Card issued by DPS',
+  'Texas Handgun License issued by DPS',
+  'U.S. Military Identification Card containing the person’s photograph',
+  'U.S. Citizenship Certificate containing the person’s photograph',
+  'U.S. Passport (book or card)'
+];
+
+const secondaryIdsEs = [
+  'Certificado oficial de registro de votante del Condado de Maverick',
+  'Acta de nacimiento certificada por el gobierno',
+  'Factura de servicios públicos actual (luz, agua, gas) con tu nombre y dirección',
+  'Estado de cuenta bancario reciente',
+  'Cheque del gobierno o cheque de pago oficial',
+  'Documento oficial del gobierno que muestre tu nombre y dirección'
+];
+
+const secondaryIdsEn = [
+  'Official Maverick County Voter Registration Certificate',
+  'Certified government-issued birth certificate',
+  'Current utility bill (electricity, water, gas) showing your name and address',
+  'Recent bank statement',
+  'Government check or official paycheck',
+  'Certified official government document showing your name and address'
+];
+---
+
+<div class="space-y-4">
+  <!-- Primary Photo IDs Accordion -->
+  <details class="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" open>
+    <summary class="flex items-center justify-between p-5 cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors select-none">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 font-black text-sm flex items-center justify-center">✓</span>
+        <h4 class="text-base md:text-lg font-bold text-navy-950">
+          {isEs ? 'Las 7 formas aceptadas de identificación con foto (Texas)' : 'The 7 Acceptable Forms of Photo ID in Texas'}
+        </h4>
+      </div>
+      <svg class="w-5 h-5 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </summary>
+    <div class="p-6 space-y-4 border-t border-slate-200">
+      <p class="text-sm text-slate-600">
+        {isEs
+          ? 'Para votantes de 18 a 69 años, la identificación puede haber vencido hasta 4 años antes. Para votantes de 70 años o más, la identificación puede haber vencido en cualquier fecha si es válida.'
+          : 'For voters aged 18 to 69, photo ID may be expired up to 4 years. For voters aged 70 or older, photo ID may be expired for any length of time if otherwise valid.'}
+      </p>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-800">
+        {(isEs ? photoIdsEs : photoIdsEn).map((idName) => (
+          <li class="flex items-start gap-2 bg-slate-50 p-2.5 rounded border border-slate-200/80">
+            <span class="text-navy-900 font-bold">•</span>
+            <span>{idName}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </details>
+
+  <!-- Secondary IDs / Reasonable Impediment Declaration -->
+  <details class="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <summary class="flex items-center justify-between p-5 cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors select-none">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-full bg-amber-100 text-amber-900 font-black text-sm flex items-center justify-center">?</span>
+        <h4 class="text-base md:text-lg font-bold text-navy-950">
+          {isEs ? '¿Qué pasa si no tengo ninguna de las 7 identificaciones con foto?' : 'What if I do not possess any of the 7 Photo IDs?'}
+        </h4>
+      </div>
+      <svg class="w-5 h-5 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </summary>
+    <div class="p-6 space-y-4 border-t border-slate-200">
+      <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 text-xs md:text-sm text-amber-950">
+        <p class="font-bold mb-1">
+          {isEs ? 'Declaración de Impedimento Razonable (RID):' : 'Reasonable Impediment Declaration (RID):'}
+        </p>
+        <p>
+          {isEs
+            ? 'Si no puedes obtener razonablemente una identificación oficial con fotografía, tienes derecho legal en Texas a firmar una Declaración de Impedimento Razonable en la casilla y presentar uno de los siguientes documentos de apoyo:'
+            : 'If you cannot reasonably obtain an approved photo ID, Texas law allows you to sign a Reasonable Impediment Declaration at your polling site and present one of the following supporting documents:'}
+        </p>
+      </div>
+
+      <ul class="space-y-2 text-sm text-slate-800">
+        {(isEs ? secondaryIdsEs : secondaryIdsEn).map((item) => (
+          <li class="flex items-start gap-2 bg-slate-50 p-2.5 rounded border border-slate-200/80">
+            <span class="text-amber-600 font-bold">•</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </details>
+</div>

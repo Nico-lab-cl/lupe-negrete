@@ -1,0 +1,503 @@
+---
+// Portado 1:1 desde "Home Lupe Negrete.dc.html" (Claude Design).
+// Los estilos inline se conservan tal cual; los antiguos atributos
+// style-hover / style-focus viven ahora como clases en LandingLayout.astro
+// y los bloques <sc-if> como condicionales de Astro o toggles de CSS.
+import { SITE_CONFIG } from '../../config/site';
+import { COPY } from '../../lib/home-copy';
+import type { Lang } from '../../lib/i18n';
+import FlagIcon from './FlagIcon.astro';
+
+interface Props {
+  lang: Lang;
+  showDonaciones?: boolean;
+  showCountdown?: boolean;
+}
+
+const { lang, showDonaciones = true, showCountdown = true } = Astro.props;
+
+const t = COPY[lang];
+const isEs = lang === 'es';
+
+// Rutas reales del sitio (el diseño usaba anclas de marcador de posición).
+const R = isEs
+  ? {
+      about: '/es/biografia/',
+      contact: '/es/contacto/',
+      paving: '/es/propuestas/pavimentacion/',
+      lighting: '/es/propuestas/alumbrado/',
+      audit: '/es/propuestas/auditoria/',
+      vote: '/es/como-votar/',
+      privacy: '/es/privacidad/',
+      accessibility: '/es/accesibilidad/'
+    }
+  : {
+      about: '/en/about/',
+      contact: '/en/contact/',
+      paving: '/en/issues/paving/',
+      lighting: '/en/issues/lighting/',
+      audit: '/en/issues/audit/',
+      vote: '/en/how-to-vote/',
+      privacy: '/en/privacy/',
+      accessibility: '/en/accessibility/'
+    };
+
+// Un solo lockup en los dos idiomas: la campaña quiere que la versión en
+// inglés muestre exactamente la misma marca que el navbar en español.
+const logo = { src: '/images/logo-es-lockup.png', w: 1907, h: 791 };
+
+const langOptions = [
+  { code: 'es' as const, label: 'ES', flag: 'mx' as const, href: '/es/', name: 'Español', current: isEs },
+  { code: 'en' as const, label: 'EN', flag: 'us' as const, href: '/en/', name: 'English', current: !isEs }
+];
+
+// Valor renderizado en build; el script del cliente lo recalcula al cargar.
+const eleccion = new Date(2026, 10, 3);
+const diasRestantes = Math.max(0, Math.ceil((eleccion.getTime() - Date.now()) / 86400000));
+---
+
+<div style="min-height:100vh;background:#F7F5F0">
+
+<div style="background:#D3151D;color:#fff">
+<div style="max-width:1280px;margin:0 auto;padding:9px clamp(14px,4vw,24px);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px clamp(12px,2.5vw,22px);font-size:clamp(11px,2.6vw,12.5px);font-weight:600;letter-spacing:.06em;text-transform:uppercase">
+<span style="display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:#fff;animation:lnPulse 2s infinite"></span>{t.barEarly}</span>
+<span style="opacity:.45">/</span>
+<span>{t.barGeneral}</span>
+{showCountdown && (
+<span style="display:flex;align-items:center;gap:7px;background:rgba(6,19,43,.28);padding:3px 11px;border-radius:3px"><span data-days style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;letter-spacing:0">{diasRestantes}</span><span style="font-size:11px;letter-spacing:.08em">{t.days}</span></span>
+)}
+<a href="#votar" style="color:#fff;border-bottom:1.5px solid rgba(255,255,255,.55);padding-bottom:1px">{t.howToVoteArrow}</a>
+<span style="opacity:.45">/</span>
+<span style="display:flex;align-items:center;gap:2px;background:rgba(6,19,43,.28);padding:2px;border-radius:3px">
+{langOptions.map((o) => o.current ? (
+<span aria-current="true" style="display:flex;align-items:center;gap:6px;padding:2px 9px;border-radius:2px;background:#fff;color:#06132B;font-size:11.5px;font-weight:700;letter-spacing:.06em"><FlagIcon country={o.flag} />{o.label}</span>
+) : (
+<a href={o.href} data-lang-switch={o.code} lang={o.code} hreflang={o.code} aria-label={o.name} class="h-lang" style="display:flex;align-items:center;gap:6px;padding:2px 9px;border-radius:2px;color:rgba(255,255,255,.72);font-size:11.5px;font-weight:600;letter-spacing:.06em"><FlagIcon country={o.flag} />{o.label}</a>
+))}
+</span>
+</div>
+</div>
+
+<header data-hdr style="position:sticky;top:0;z-index:1100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid #E4E7EC;transition:box-shadow .35s cubic-bezier(.16,1,.3,1)">
+<div data-hdr-row style="max-width:1280px;margin:0 auto;padding:10px clamp(14px,4vw,24px);display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:72px;transition:min-height .35s cubic-bezier(.16,1,.3,1),padding .35s cubic-bezier(.16,1,.3,1)">
+<a href="#top" style="display:flex;align-items:center;flex:none"><img data-hdr-logo src={logo.src} alt={t.logoAlt} width={logo.w} height={logo.h} style="width:clamp(146px,34vw,238px);height:auto;display:block;transition:width .35s cubic-bezier(.16,1,.3,1)" /></a>
+<nav style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px 16px">
+<span class="nav-wide">
+<a href="#conoce" class="h-nav" style="color:#14161A;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap">{t.navMeet}</a>
+<a href="#propuestas" class="h-nav" style="color:#14161A;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap">{t.navIssues}</a>
+<a href="#votar" class="h-nav" style="color:#14161A;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap">{t.navVote}</a>
+<a href="#precinto" class="h-nav" style="color:#14161A;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap">{t.navPrecinct}</a>
+</span>
+<button type="button" data-menu-toggle aria-label={t.menu} aria-expanded="false" aria-controls="ln-mobile-menu" class="nav-narrow h-menubtn" style="flex-direction:column;justify-content:center;gap:5px;width:46px;height:44px;padding:0 11px;background:none;border:1.5px solid #D0D5DD;border-radius:5px;cursor:pointer">
+<span style="display:block;height:2px;background:#06132B;border-radius:2px"></span>
+<span style="display:block;height:2px;background:#06132B;border-radius:2px"></span>
+<span style="display:block;height:2px;background:#06132B;border-radius:2px"></span>
+</button>
+<a href="#votar" class="h-cta" style="background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:17px;letter-spacing:.03em;text-transform:uppercase;padding:11px 20px;border-radius:4px;white-space:nowrap;box-shadow:0 4px 14px rgba(211,21,29,.28)">{t.join}</a>
+</nav>
+</div>
+<nav id="ln-mobile-menu" data-mobile-menu style="border-top:1px solid #E4E7EC;background:#fff;padding:8px 16px 16px;flex-direction:column">
+<a href="#conoce" data-menu-close class="h-nav" style="display:flex;align-items:center;min-height:52px;font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#06132B;border-bottom:1px solid #EEF0F3">{t.navMeet}</a>
+<a href="#propuestas" data-menu-close class="h-nav" style="display:flex;align-items:center;min-height:52px;font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#06132B;border-bottom:1px solid #EEF0F3">{t.navIssues}</a>
+<a href="#votar" data-menu-close class="h-nav" style="display:flex;align-items:center;min-height:52px;font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#06132B;border-bottom:1px solid #EEF0F3">{t.navVote}</a>
+<a href="#precinto" data-menu-close class="h-nav" style="display:flex;align-items:center;min-height:52px;font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#06132B">{t.navPrecinct}</a>
+</nav>
+</header>
+
+<main id="main-content">
+
+<section id="top" style="position:relative;background:#06132B;overflow:hidden">
+<div data-px="0.14" style="position:absolute;top:-120px;right:-60px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(0,51,153,.5),transparent 68%);pointer-events:none"></div>
+<div data-px="0.07" data-pxb="skewX(-12deg)" style="position:absolute;left:52%;top:0;bottom:0;width:180px;background:#FF3131;opacity:.1;transform:skewX(-12deg);pointer-events:none"></div>
+<div style="position:relative;max-width:1280px;margin:0 auto;padding:0 clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:clamp(24px,4vw,48px);align-items:stretch">
+
+<div style="padding:clamp(38px,6vw,62px) 0 clamp(40px,6vw,74px);animation:lnUp .6s cubic-bezier(.16,1,.3,1) both">
+<div style="display:inline-flex;align-items:stretch;margin-bottom:28px;transform:skewX(-12deg);box-shadow:0 8px 22px rgba(0,0,0,.32)">
+<span style="display:flex;align-items:center;background:#FF3131;padding:8px 13px 7px"><span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:23px;line-height:1;letter-spacing:.02em;color:#fff">P4</span></span>
+<span style="display:flex;flex-direction:column;justify-content:center;gap:2px;background:#fff;padding:7px 15px 6px">
+<span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:15px;line-height:1;letter-spacing:.06em;text-transform:uppercase;color:#06132B">{t.badgeSeat}</span>
+<span style="display:block;transform:skewX(12deg);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:9.5px;line-height:1;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.badgeCounty}</span>
+</span>
+</div>
+
+<h1 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(44px,10vw,116px);line-height:.83;letter-spacing:-.012em;text-transform:uppercase;color:#fff">
+<span style="display:block">{t.h1a}</span>
+<span style="display:block">{t.h1b}</span>
+<span style="display:block;color:#FF3131">{t.h1c}</span>
+</h1>
+
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px clamp(12px,2.6vw,18px);margin:28px 0 18px">
+<span style="flex:none;width:46px;height:4px;background:#FF3131;transform:skewX(-12deg)"></span>
+<p style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:clamp(18px,4.4vw,23px);letter-spacing:.03em;text-transform:uppercase;color:#fff">{t.mottoA}</p>
+<span style="flex:none;width:2px;height:19px;background:#FF3131;transform:skewX(-12deg)"></span>
+<p style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:clamp(18px,4.4vw,23px);letter-spacing:.03em;text-transform:uppercase;color:#fff">{t.mottoB}</p>
+<span style="flex:none;width:2px;height:19px;background:#FF3131;transform:skewX(-12deg)"></span>
+<p style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:clamp(18px,4.4vw,23px);letter-spacing:.03em;text-transform:uppercase;color:#fff">{t.mottoC}</p>
+</div>
+
+<p style="margin:0;max-width:520px;font-size:clamp(15px,3.6vw,16.5px);line-height:1.65;color:rgba(255,255,255,.72)">{t.heroBody}</p>
+
+<div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:30px">
+<a href="#votar" class="h-cta" style="background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:15px 26px;border-radius:5px;box-shadow:0 8px 26px rgba(211,21,29,.36)">{t.heroCtaVote}</a>
+<a href="#conoce" class="h-ghost" style="background:transparent;border:1.5px solid rgba(255,255,255,.34);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:15px 26px;border-radius:5px">{t.navMeet}</a>
+</div>
+
+<p style="margin:34px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);font-size:12px;font-weight:500;letter-spacing:.03em;color:rgba(255,255,255,.5)">{t.heroId}</p>
+</div>
+
+<div style="position:relative;display:flex;align-items:flex-end;justify-content:center;min-height:clamp(340px,52vw,520px)">
+<div style="position:absolute;bottom:0;right:-24px;left:-24px;top:44px;background:#0B224E;clip-path:polygon(9% 0,100% 0,100% 100%,0 100%)"></div>
+<img data-px="-0.055" src="/images/hero-candidate-walking.png" alt="Lupe Negrete caminando con vecinos en las calles del Precinto 4" style="position:relative;width:100%;max-width:430px;height:auto;display:block;filter:drop-shadow(0 24px 50px rgba(0,0,0,.5))" />
+<div style="position:absolute;bottom:26px;left:0;background:#FF3131;color:#fff;padding:11px 18px;transform:skewX(-12deg)">
+<span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;letter-spacing:.03em;text-transform:uppercase;font-size:clamp(15px,3.8vw,19px)">{t.heroQuote}</span>
+</div>
+</div>
+
+</div>
+</section>
+
+<section id="sumate" style="background:#0B224E;border-top:4px solid #FF3131">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,56px) clamp(16px,4vw,24px) clamp(44px,6vw,60px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));gap:48px;align-items:center">
+<div data-rv="0">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#FF3131">{t.signupKicker}</p>
+<h2 style="margin:0 0 14px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(34px,3.6vw,52px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;color:#fff">{t.signupH2}</h2>
+<p style="margin:0;font-size:15.5px;line-height:1.65;color:rgba(255,255,255,.68)">{t.signupSub}</p>
+</div>
+<div data-rv="0.14" data-form-wrap style="background:#fff;border-radius:8px;padding:clamp(20px,4vw,30px);box-shadow:0 24px 60px rgba(0,0,0,.35)">
+<div data-thanks style="text-align:center;padding:18px 0">
+<div style="width:60px;height:60px;margin:0 auto 16px;border-radius:50%;background:#ECFDF5;color:#059669;display:flex;align-items:center;justify-content:center">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>
+</div>
+<h3 style="margin:0 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;text-transform:uppercase;color:#06132B">{t.thanksH}</h3>
+<p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#475467">{t.thanksBody}</p>
+<a href="#top" class="h-navy" style="display:inline-block;background:#06132B;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:.03em;text-transform:uppercase;padding:13px 24px;border-radius:5px">{t.share}</a>
+</div>
+<form data-signup data-lang={lang} novalidate>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:14px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ln-nombre" style="font-size:12.5px;font-weight:600;letter-spacing:.02em;color:#06132B">{t.fName}</label>
+<input id="ln-nombre" name="nombre" type="text" required autocomplete="name" placeholder={t.phName} class="fld" style="width:100%;padding:13px 14px;border:1px solid #D0D5DD;border-radius:5px;background:#F7F5F0;font-size:15px;color:#14161A;outline:none" />
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ln-email" style="font-size:12.5px;font-weight:600;letter-spacing:.02em;color:#06132B">{t.fEmail}</label>
+<input id="ln-email" name="email" type="email" required autocomplete="email" placeholder={t.phEmail} class="fld" style="width:100%;padding:13px 14px;border:1px solid #D0D5DD;border-radius:5px;background:#F7F5F0;font-size:15px;color:#14161A;outline:none" />
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ln-tel" style="font-size:12.5px;font-weight:600;letter-spacing:.02em;color:#06132B">{t.fPhone} <span style="font-weight:400;color:#5B6470">{t.fPhoneOpt}</span></label>
+<input id="ln-tel" name="telefono" type="tel" inputmode="tel" autocomplete="tel" placeholder="(830) 000-0000" class="fld" style="width:100%;padding:13px 14px;border:1px solid #D0D5DD;border-radius:5px;background:#F7F5F0;font-size:15px;color:#14161A;outline:none" />
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ln-zip" style="font-size:12.5px;font-weight:600;letter-spacing:.02em;color:#06132B">{t.fZip}</label>
+<input id="ln-zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="78852" class="fld" style="width:100%;padding:13px 14px;border:1px solid #D0D5DD;border-radius:5px;background:#F7F5F0;font-size:15px;font-family:'IBM Plex Mono',monospace;color:#14161A;outline:none" />
+</div>
+</div>
+<button type="submit" class="h-cta" style="width:100%;margin-top:18px;background:#D3151D;color:#fff;border:none;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:21px;letter-spacing:.04em;text-transform:uppercase;padding:15px;border-radius:5px;cursor:pointer;box-shadow:0 8px 24px rgba(211,21,29,.3)">{t.submit}</button>
+<p style="margin:14px 0 0;font-size:11px;line-height:1.5;color:#5B6470">{t.consent} <a href={R.privacy}>{t.privacy}</a>.</p>
+</form>
+</div>
+</div>
+</section>
+
+<section style="background:#F7F5F0;border-bottom:1px solid #E4E7EC">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(44px,7vw,64px) clamp(16px,4vw,24px)">
+<div data-rv="0" style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px;flex-wrap:wrap">
+<div>
+<p style="margin:0 0 8px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.vidKicker}</p>
+<h2 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(32px,3.8vw,54px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;color:#06132B">{t.vidH2}</h2>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:20px">
+<div data-rv="0" style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC">
+<img src="/images/candidate-assembly.png" alt="Lupe Negrete en asamblea vecinal" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:.5" />
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.86),rgba(6,19,43,.4))">
+<span style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{t.vid1}</span>
+</div>
+</div>
+<div data-rv="0.13" style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC">
+<img src="/images/candidate-listening.png" alt="Lupe Negrete escuchando a vecinos" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:.5" />
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.86),rgba(6,19,43,.4))">
+<span style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{t.vid2}</span>
+</div>
+</div>
+<div data-rv="0.26" style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC">
+<img src="/images/candidate-border.png" alt="Lupe Negrete con vista al Río Bravo y Eagle Pass al atardecer" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:.5" />
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.86),rgba(6,19,43,.4))">
+<span style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{t.vid3}</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="conoce" style="background:#fff;overflow:hidden">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:clamp(32px,5vw,60px);align-items:center">
+<div style="position:relative">
+<div data-px="0.11" style="position:absolute;top:-28px;left:-40px;width:210px;height:210px;border-radius:50%;background:#003399;opacity:.1"></div>
+<div data-px="0.17" data-pxb="skewX(-12deg)" style="position:absolute;bottom:-30px;right:-18px;width:120px;height:120px;background:#FF3131;opacity:.14;transform:skewX(-12deg)"></div>
+<img src="/images/candidate-portrait-navy.png" alt="Retrato oficial de Guadalupe Lupe Negrete" loading="lazy" width="1080" height="1350" style="position:relative;width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 22px 54px rgba(6,19,43,.22)" />
+</div>
+<div data-rv="0.08">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.meetKicker}</p>
+<h2 style="margin:0 0 6px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4.6vw,68px);line-height:.88;letter-spacing:-.012em;text-transform:uppercase;color:#06132B">{t.meetH2}</h2>
+<p style="margin:0 0 22px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:#003399">{t.positioning}</p>
+<p style="margin:0 0 16px;font-size:16.5px;line-height:1.72;color:#475467;max-width:600px;text-wrap:pretty">{t.meetP1}</p>
+<p style="margin:0 0 28px;font-size:16.5px;line-height:1.72;color:#475467;max-width:600px;text-wrap:pretty">{t.meetP2}</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:1px;background:#E4E7EC;border:1px solid #E4E7EC;border-radius:6px;overflow:hidden;margin-bottom:28px;max-width:600px">
+<div style="background:#fff;padding:18px 16px">
+<p style="margin:0;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:26px;color:#06132B">4</p>
+<p style="margin:4px 0 0;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6470">{t.statPrecinct}</p>
+</div>
+<div style="background:#fff;padding:18px 16px">
+<p style="margin:0;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:26px;color:#06132B">3</p>
+<p style="margin:4px 0 0;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6470">{t.statPriorities}</p>
+</div>
+<div style="background:#fff;padding:18px 16px">
+<p style="margin:0;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:26px;color:#D3151D" data-cu data-days>{diasRestantes}</p>
+<p style="margin:4px 0 0;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6470">{t.statDays}</p>
+</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:12px">
+<a href={R.about} class="h-navy" style="background:#06132B;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;border-radius:5px">{t.readStory}</a>
+<a href={R.contact} class="h-outline" style="border:1.5px solid #D0D5DD;color:#06132B;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;border-radius:5px">{t.contactTeam}</a>
+</div>
+</div>
+</div>
+</section>
+
+<section id="propuestas" style="background:#F7F5F0;border-top:1px solid #E4E7EC">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px)">
+<div data-rv="0" style="max-width:820px;margin-bottom:44px">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.issuesKicker}</p>
+<h2 style="margin:0 0 16px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,5vw,74px);line-height:.86;letter-spacing:-.015em;text-transform:uppercase;color:#06132B">{t.issuesH2}</h2>
+<p style="margin:0;font-size:17px;line-height:1.68;color:#475467;text-wrap:pretty">{t.issuesSub}</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:24px">
+
+<article data-rv="0" class="h-card" style="background:#fff;border:1px solid #E4E7EC;border-top:5px solid #D3151D;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s">
+<div style="position:relative;aspect-ratio:16/10;overflow:hidden;background:#E4E7EC">
+<img src="/images/candidate-assembly.png" alt="Lupe Negrete en asamblea comunitaria en calle sin pavimentar" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
+<span style="position:absolute;top:12px;left:0;background:#D3151D;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px 6px 14px">{t.issueLabel1}</span>
+</div>
+<div style="padding:24px;display:flex;flex-direction:column;gap:12px;flex:1">
+<h3 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase;color:#06132B">{t.issue1H}</h3>
+<p style="margin:0;font-size:14.5px;line-height:1.66;color:#475467;flex:1">{t.issue1P}</p>
+<a href={R.paving} class="h-nav" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#06132B;padding-top:12px;border-top:1px solid #E4E7EC">{t.issue1Link}</a>
+</div>
+</article>
+
+<article data-rv="0.13" class="h-card" style="background:#fff;border:1px solid #E4E7EC;border-top:5px solid #003399;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s">
+<div style="position:relative;aspect-ratio:16/10;overflow:hidden;background:#E4E7EC">
+<img src="/images/candidate-listening.png" alt="Lupe Negrete conversando con vecinos sobre seguridad" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
+<span style="position:absolute;top:12px;left:0;background:#003399;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px 6px 14px">{t.issueLabel2}</span>
+</div>
+<div style="padding:24px;display:flex;flex-direction:column;gap:12px;flex:1">
+<h3 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase;color:#06132B">{t.issue2H}</h3>
+<p style="margin:0;font-size:14.5px;line-height:1.66;color:#475467;flex:1">{t.issue2P}</p>
+<a href={R.lighting} class="h-nav" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#06132B;padding-top:12px;border-top:1px solid #E4E7EC">{t.issue2Link}</a>
+</div>
+</article>
+
+<article data-rv="0.26" class="h-card" style="background:#fff;border:1px solid #E4E7EC;border-top:5px solid #06132B;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s">
+<div style="position:relative;aspect-ratio:16/10;overflow:hidden;background:#E4E7EC">
+<img src="/images/candidate-border.png" alt="Lupe Negrete con vista al Río Bravo y Eagle Pass al atardecer" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
+<span style="position:absolute;top:12px;left:0;background:#06132B;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px 6px 14px">{t.issueLabel3}</span>
+</div>
+<div style="padding:24px;display:flex;flex-direction:column;gap:12px;flex:1">
+<h3 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase;color:#06132B">{t.issue3H}</h3>
+<p style="margin:0;font-size:14.5px;line-height:1.66;color:#475467;flex:1">{t.issue3P}</p>
+<a href={R.audit} class="h-nav" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#06132B;padding-top:12px;border-top:1px solid #E4E7EC">{t.issue3Link}</a>
+</div>
+</article>
+
+</div>
+</div>
+</section>
+
+{showDonaciones && (
+<section style="position:relative;background:#D3151D;overflow:hidden">
+<div data-px="0.13" style="position:absolute;top:-90px;left:-40px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.07)"></div>
+<div data-px="0.07" data-pxb="skewX(-12deg)" style="position:absolute;right:8%;top:0;bottom:0;width:130px;background:rgba(6,19,43,.14);transform:skewX(-12deg)"></div>
+<div style="position:relative;max-width:1280px;margin:0 auto;padding:clamp(44px,7vw,64px) clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:clamp(30px,5vw,52px);align-items:center">
+<div data-rv="0">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.78)">{t.donKicker}</p>
+<h2 style="margin:0 0 14px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4.6vw,66px);line-height:.88;letter-spacing:-.012em;text-transform:uppercase;color:#fff">{t.donH2}</h2>
+<p style="margin:0;font-size:16px;line-height:1.66;color:rgba(255,255,255,.86);max-width:460px">{t.donBody}</p>
+</div>
+<div data-rv="0.14" style="background:rgba(6,19,43,.28);border:1.5px solid rgba(255,255,255,.28);border-radius:8px;padding:clamp(20px,4vw,28px)">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px">
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:22px;letter-spacing:.03em;text-transform:uppercase;color:#fff">{t.pickAmount}</span>
+<span style="background:#FEF3C7;color:#8a5a00;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:100px">{t.comingSoon}</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:rgba(255,255,255,.55)">$10</span>
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:rgba(255,255,255,.55)">$25</span>
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:rgba(255,255,255,.55)">$50</span>
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:rgba(255,255,255,.55)">$100</span>
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:rgba(255,255,255,.55)">$250</span>
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center">{t.other}</span>
+</div>
+<span style="display:block;width:100%;text-align:center;background:rgba(255,255,255,.16);border:1.5px dashed rgba(255,255,255,.45);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:.05em;text-transform:uppercase;padding:14px;border-radius:5px">{t.donSoonBtn}</span>
+<p style="margin:14px 0 0;font-size:11px;line-height:1.5;color:rgba(255,255,255,.7)">{t.donNote}</p>
+</div>
+</div>
+</section>
+)}
+
+<section id="votar" style="background:#06132B;border-top:4px solid #FF3131;border-bottom:4px solid #FF3131">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px)">
+<div data-rv="0" style="text-align:center;max-width:720px;margin:0 auto 46px">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#F59E0B">{t.voteKicker}</p>
+<h2 style="margin:0 0 14px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(40px,5.4vw,80px);line-height:.86;letter-spacing:-.015em;text-transform:uppercase;color:#fff">{t.voteH2}</h2>
+<p style="margin:0;font-size:16.5px;line-height:1.66;color:rgba(255,255,255,.7)">{t.voteSub}</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:20px;max-width:1000px;margin:0 auto 40px">
+<div data-rv="0" style="background:#0B224E;border:1px solid #102D66;border-radius:8px;padding:28px 24px;text-align:center">
+<p style="margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:34px;letter-spacing:-.02em;color:#fff">{t.date1}</p>
+<p style="margin:0 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;color:#F59E0B">{t.date1L}</p>
+<p style="margin:0;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.62)">{t.date1P}</p>
+</div>
+<div data-rv="0.13" style="position:relative;background:#0B224E;border:2px solid #F59E0B;border-radius:8px;padding:28px 24px;text-align:center;box-shadow:0 12px 40px rgba(245,158,11,.16)">
+<span style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#F59E0B;color:#06132B;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 11px;border-radius:100px;white-space:nowrap">{t.mostTurnout}</span>
+<p style="margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:34px;letter-spacing:-.02em;color:#F59E0B">{t.date2}</p>
+<p style="margin:0 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;color:#fff">{t.date2L}</p>
+<p style="margin:0;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.72)">{t.date2P}</p>
+</div>
+<div data-rv="0.26" style="background:#0B224E;border:1px solid #102D66;border-radius:8px;padding:28px 24px;text-align:center">
+<p style="margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:34px;letter-spacing:-.02em;color:#fff">{t.date3}</p>
+<p style="margin:0 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;color:#fff">{t.date3L}</p>
+<p style="margin:0;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.62)">{t.date3P}</p>
+</div>
+</div>
+<div data-rv="0.1" style="max-width:1000px;margin:0 auto;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:clamp(18px,4vw,24px) clamp(18px,4vw,26px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px">
+<div>
+<p style="margin:0 0 4px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:21px;letter-spacing:.03em;text-transform:uppercase;color:#fff">{t.idH}</p>
+<p style="margin:0;font-size:13.5px;color:rgba(255,255,255,.62)">{t.idP}</p>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:10px">
+<a href="https://goelect.txelections.civixapps.com/ivis-mvp-ui/#/login" target="_blank" rel="noopener noreferrer" class="h-cta" style="display:inline-flex;align-items:center;gap:9px;background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;border-radius:5px;white-space:nowrap;box-shadow:0 8px 24px rgba(211,21,29,.34)">
+<span>{t.regBtn}</span>
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg>
+</a>
+<a href={R.vote} class="h-cta" style="background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;border-radius:5px;white-space:nowrap;box-shadow:0 8px 24px rgba(211,21,29,.34)">{t.findPolling}</a>
+</div>
+</div>
+
+<div data-rv="0.1" style="max-width:1000px;margin:20px auto 0;background:#0B224E;border:1px solid #102D66;border-left:5px solid #F59E0B;border-radius:8px;padding:clamp(18px,3.6vw,24px)">
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 20px">
+<p style="margin:0;flex:1 1 auto;min-width:min(220px,100%);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(22px,4.2vw,30px);line-height:1;letter-spacing:.02em;text-transform:uppercase;color:#fff">{t.remH}</p>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+<button type="button" data-ics class="h-amber" style="background:#F59E0B;color:#06132B;border:none;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(16px,3.4vw,19px);letter-spacing:.03em;text-transform:uppercase;padding:13px 20px;border-radius:5px;cursor:pointer;white-space:nowrap;box-shadow:0 8px 24px rgba(245,158,11,.3)">{t.remBtn}</button>
+<a href="#sumate" class="h-ghost-10" style="border:1.5px solid rgba(255,255,255,.32);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:clamp(15px,3.2vw,17px);letter-spacing:.03em;text-transform:uppercase;padding:12px 18px;border-radius:5px;white-space:nowrap">{t.remAlt}</a>
+<button type="button" data-rem-toggle aria-expanded="false" aria-controls="ln-rem-panel" class="h-amber-text" style="display:flex;align-items:center;gap:7px;background:none;border:none;padding:10px 4px;cursor:pointer;font-size:12.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.72);white-space:nowrap">
+<span>{t.remMore}</span>
+<span data-rem-caret style="display:block;transition:transform .3s cubic-bezier(.16,1,.3,1);transform:rotate(0deg)">
+<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+</span>
+</button>
+</div>
+</div>
+<p data-ics-done role="status" style="margin:14px 0 0;align-items:flex-start;gap:8px;font-size:12.5px;line-height:1.55;color:#F59E0B">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:2px"><path d="M5 13l4 4L19 7"></path></svg>
+<span>{t.remDone}</span>
+</p>
+<div id="ln-rem-panel" data-rem-panel style="margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14);grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:16px clamp(20px,4vw,32px)">
+<p style="margin:0;font-size:14px;line-height:1.62;color:rgba(255,255,255,.68)">{t.remBody}</p>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.82)"><span style="flex:none;width:5px;height:5px;background:#F59E0B;transform:skewX(-12deg)"></span>{t.remItem1}</span>
+<span style="display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.82)"><span style="flex:none;width:5px;height:5px;background:#F59E0B;transform:skewX(-12deg)"></span>{t.remItem2}</span>
+<span style="display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.82)"><span style="flex:none;width:5px;height:5px;background:#F59E0B;transform:skewX(-12deg)"></span>{t.remItem3}</span>
+<p style="margin:4px 0 0;font-size:11px;line-height:1.5;color:rgba(255,255,255,.5)">{t.remNote}</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="precinto" style="background:#fff">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:clamp(32px,5vw,52px);align-items:center">
+<div data-rv="0">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.terrKicker}</p>
+<h2 style="margin:0 0 16px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4.6vw,66px);line-height:.88;letter-spacing:-.012em;text-transform:uppercase;color:#06132B">{t.terrH2}</h2>
+<p style="margin:0 0 24px;font-size:16.5px;line-height:1.7;color:#475467;text-wrap:pretty">{t.terrBody}</p>
+<div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:26px">
+<span style="background:#F7F5F0;border:1px solid #E4E7EC;font-size:12.5px;font-weight:500;color:#06132B;padding:8px 13px;border-radius:100px">Loma Bonita</span>
+<span style="background:#F7F5F0;border:1px solid #E4E7EC;font-size:12.5px;font-weight:500;color:#06132B;padding:8px 13px;border-radius:100px">Seco Mines</span>
+<span style="background:#F7F5F0;border:1px solid #E4E7EC;font-size:12.5px;font-weight:500;color:#06132B;padding:8px 13px;border-radius:100px">Eagle Pass</span>
+</div>
+<a href="#sumate" class="h-cta" style="display:inline-flex;align-items:center;gap:8px;background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 26px;border-radius:5px;box-shadow:0 8px 24px rgba(211,21,29,.28)">{t.joinArrow}</a>
+</div>
+<div data-rv="0.14">
+<div style="position:relative;border-radius:8px;overflow:hidden;border:1px solid #102D66;box-shadow:0 22px 54px rgba(6,19,43,.24)">
+<div data-map style="width:100%;aspect-ratio:4/3;min-height:330px;background:#0B224E"></div>
+<div style="position:absolute;top:0;left:0;z-index:600;display:flex;align-items:stretch;transform:skewX(-12deg) translateX(-6px);pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.34)">
+<span style="display:flex;align-items:center;background:#D3151D;padding:8px 12px 7px 18px"><span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:17px;line-height:1;letter-spacing:.04em;text-transform:uppercase;color:#fff">{t.mapTitle}</span></span>
+<span style="display:flex;align-items:center;background:#06132B;padding:8px 15px 7px"><span style="display:block;transform:skewX(12deg);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:10px;line-height:1;letter-spacing:.14em;text-transform:uppercase;color:#F59E0B">{t.mapSat}</span></span>
+</div>
+</div>
+<p style="margin:12px 0 0;font-size:12.5px;line-height:1.6;color:#5B6470">{t.mapNote}</p>
+</div>
+</div>
+</section>
+
+</main>
+
+<footer id="footer" style="background:#06132B;color:#fff;border-top:4px solid #102D66">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(44px,7vw,64px) clamp(16px,4vw,24px) clamp(112px,18vw,124px)">
+<div data-rv="0" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:44px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.12)">
+<div>
+<span style="display:inline-block;background:rgba(255,255,255,.96);padding:10px 14px;border-radius:6px;margin-bottom:18px"><img src={logo.src} alt={t.logoAlt} loading="lazy" width={logo.w} height={logo.h} style="width:230px;height:auto;display:block" /></span>
+<p style="margin:0 0 12px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:#fff">{t.footMotto}</p>
+<p style="margin:0;font-size:14px;line-height:1.68;color:rgba(255,255,255,.62);max-width:400px">{t.footDesc}</p>
+</div>
+<div>
+<p style="margin:0 0 16px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45)">{t.footNav}</p>
+<div style="display:flex;flex-direction:column;gap:10px">
+<a href="#conoce" class="h-red-logo" style="font-size:14px;font-weight:500;color:rgba(255,255,255,.85)">{t.navMeet}</a>
+<a href="#propuestas" class="h-red-logo" style="font-size:14px;font-weight:500;color:rgba(255,255,255,.85)">{t.navIssues}</a>
+<a href="#votar" class="h-red-logo" style="font-size:14px;font-weight:500;color:rgba(255,255,255,.85)">{t.navVote}</a>
+<a href="#precinto" class="h-red-logo" style="font-size:14px;font-weight:500;color:rgba(255,255,255,.85)">{t.navPrecinct}</a>
+<a href={R.privacy} class="h-white-soft" style="font-size:12.5px;color:rgba(255,255,255,.5)">{t.privacy}</a>
+<a href={R.accessibility} class="h-white-soft" style="font-size:12.5px;color:rgba(255,255,255,.5)">{t.accessibility}</a>
+</div>
+</div>
+<div>
+<p style="margin:0 0 16px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45)">{t.footContact}</p>
+<div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:rgba(255,255,255,.8)">
+<span>{SITE_CONFIG.committee.address}</span>
+<a href={`mailto:${SITE_CONFIG.committee.email}`} class="h-red-logo" style="color:rgba(255,255,255,.8)">{SITE_CONFIG.committee.email}</a>
+<span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px">{SITE_CONFIG.committee.phone}</span>
+</div>
+<a href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer" class="h-navy" style="display:inline-flex;align-items:center;gap:9px;margin-top:18px;background:#102D66;border:1px solid rgba(255,255,255,.16);color:#fff;font-size:12.5px;font-weight:600;padding:10px 14px;border-radius:5px">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.688 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"></path></svg>
+<span>{t.fbOfficial}</span>
+</a>
+</div>
+</div>
+<div style="padding-top:26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px">
+<p style="margin:0;font-size:12px;letter-spacing:.02em;color:rgba(255,255,255,.55);text-transform:uppercase;font-weight:600">{SITE_CONFIG.committee.disclaimerTextEn}</p>
+<p style="margin:0;font-size:12px;color:rgba(255,255,255,.45)">{t.copyright}</p>
+</div>
+</div>
+</footer>
+
+<div data-bar style="position:fixed;left:0;right:0;bottom:0;z-index:1200;background:#06132B;border-top:3px solid #FF3131;transform:translateY(130%);transition:transform .55s cubic-bezier(.16,1,.3,1);box-shadow:0 -12px 40px rgba(0,0,0,.42)">
+<div style="max-width:1280px;margin:0 auto;padding:10px clamp(14px,4vw,24px) calc(10px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 12px">
+<div style="display:flex;align-items:center;gap:12px;min-width:0">
+<span style="width:8px;height:8px;border-radius:50%;background:#FF3131;animation:lnPulse 2s infinite;flex:none"></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:800;letter-spacing:.02em;text-transform:uppercase;color:#fff;font-size:clamp(16px,4.2vw,21px)">{t.barPre} <span data-days style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:#FF3131">{diasRestantes}</span> {t.barPost}</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:9px;flex:1;justify-content:flex-end;min-width:0">
+<a href="#votar" class="h-ghost-10" style="border:1.5px solid rgba(255,255,255,.35);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:17px;letter-spacing:.03em;text-transform:uppercase;padding:10px 18px;border-radius:4px;white-space:nowrap">{t.navVote}</a>
+<a href="#top" class="h-cta" style="background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:17px;letter-spacing:.03em;text-transform:uppercase;padding:10px 18px;border-radius:4px;white-space:nowrap;box-shadow:0 6px 18px rgba(211,21,29,.4)">{t.joinArrow}</a>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+  import '../../scripts/home-landing';
+</script>

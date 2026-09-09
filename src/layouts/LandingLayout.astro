@@ -1,0 +1,198 @@
+---
+// Shell para la landing "Home Lupe Negrete" portada desde Claude Design.
+// No importa global.css a propósito: el diseño trae su propio reset y su
+// propia escala tipográfica, y las reglas globales del sitio (max-width en
+// párrafos, font-family de headings, body flex) romperían la maqueta.
+import { SITE_CONFIG } from '../config/site';
+import { getEquivalentPath, type Lang } from '../lib/i18n';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  ogImage?: string;
+  jsonLd?: Record<string, any>[];
+}
+
+const {
+  title,
+  description,
+  lang,
+  ogImage = '/images/banner-campaign.png',
+  jsonLd = []
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+const siteUrl = SITE_CONFIG.siteUrl;
+const canonicalUrl = `${siteUrl}${currentPath}`;
+const esPath = lang === 'es' ? currentPath : getEquivalentPath(currentPath, 'es');
+const enPath = lang === 'en' ? currentPath : getEquivalentPath(currentPath, 'en');
+const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+
+const defaultJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: SITE_CONFIG.candidate.name,
+    alternateName: [SITE_CONFIG.candidate.alternateName, 'Lupe Negrete', 'Lupe Navarrete', 'Guadalupe Negrete'],
+    jobTitle: SITE_CONFIG.candidate.office[lang],
+    description: SITE_CONFIG.candidate.positioningLine[lang],
+    url: siteUrl,
+    image: `${siteUrl}/images/candidate-portrait-navy.png`,
+    affiliation: {
+      '@type': 'PoliticalParty',
+      name: SITE_CONFIG.candidate.party[lang]
+    },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Eagle Pass',
+      addressRegion: 'TX',
+      postalCode: '78852',
+      addressCountry: 'US'
+    }
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_CONFIG.committee.legalName,
+    url: siteUrl,
+    logo: `${siteUrl}/images/logo-es.png`,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Campaign Office',
+      email: SITE_CONFIG.committee.email,
+      availableLanguage: ['Spanish', 'English']
+    }
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Lupe Negrete · Comisionado Precinto 4',
+    url: siteUrl
+  },
+  ...jsonLd
+];
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Lupe Negrete</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/png" href="/images/logo-es.png" />
+
+    <link rel="alternate" hreflang="es" href={`${siteUrl}${esPath}`} />
+    <link rel="alternate" hreflang="en" href={`${siteUrl}${enPath}`} />
+    <link rel="alternate" hreflang="x-default" href={siteUrl} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={`${title} | Lupe Negrete`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullOgImage} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_US' : 'en_US'} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={`${title} | Lupe Negrete`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOgImage} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(defaultJsonLd)} />
+
+    <script>
+      import { saveUtmsFromUrl } from '../lib/leads';
+      saveUtmsFromUrl();
+    </script>
+
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+    <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  </body>
+</html>
+
+<style is:global>
+  /* Reset y base: copiado del <helmet> del diseño original. */
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: #F7F5F0;
+    color: #14161A;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: #D3151D; text-decoration: none; }
+  a:hover { color: #B50E15; }
+  * { box-sizing: border-box; }
+  input, button, select { font-family: inherit; }
+  @keyframes lnPulse { 0%, 100% { opacity: 1 } 50% { opacity: .35 } }
+  @keyframes lnUp { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: none } }
+  @keyframes lnRv { from { opacity: 0; transform: translateY(32px) } to { opacity: 1; transform: none } }
+  .leaflet-container { font-family: 'IBM Plex Sans', system-ui, sans-serif; background: #0B224E; }
+  .leaflet-control-attribution { font-size: 9.5px; }
+  .leaflet-bar a { color: #06132B; }
+
+  /* Estados hover/focus que en el diseño venían como style-hover / style-focus. */
+  .h-white:hover { color: #fff; }
+  .h-lang:hover { background: rgba(255, 255, 255, .14); color: #fff; }
+  .h-nav:hover { color: #D3151D; }
+  .h-menubtn:hover { border-color: #06132B; }
+  .h-cta:hover { background: #B50E15; color: #fff; }
+  .h-ghost:hover { background: rgba(255, 255, 255, .09); color: #fff; }
+  .h-ghost-10:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+  .h-navy:hover { background: #0B224E; color: #fff; }
+  .h-outline:hover { border-color: #06132B; color: #06132B; }
+  .h-card:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(6, 19, 43, .14); }
+  .h-amber:hover { background: #E08C04; }
+  .h-amber-text:hover { color: #F59E0B; }
+  .h-red-logo:hover { color: #FF3131; }
+  .h-white-soft:hover { color: rgba(255, 255, 255, .8); }
+  .fld:focus {
+    background: #fff;
+    border-color: #0B224E;
+    box-shadow: 0 0 0 3px rgba(11, 34, 78, .12);
+  }
+
+  /* Breakpoint de navegación: el diseño conmuta a 980px. */
+  .nav-wide { display: contents; }
+  .nav-narrow { display: none; }
+  @media (max-width: 979px) {
+    .nav-wide { display: none; }
+    .nav-narrow { display: flex; }
+  }
+
+  /* Paneles conmutables (menú móvil, recordatorio, gracias del formulario). */
+  [data-mobile-menu] { display: none; }
+  header[data-open] [data-mobile-menu] { display: flex; }
+  [data-rem-panel] { display: none; }
+  [data-rem-panel][data-open] { display: grid; }
+  [data-ics-done] { display: none; }
+  [data-ics-done][data-open] { display: flex; }
+  [data-thanks] { display: none; }
+  [data-form-wrap][data-sent] [data-thanks] { display: block; }
+  [data-form-wrap][data-sent] form { display: none; }
+
+  :focus-visible { outline: 3px solid #D3151D; outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+  }
+</style>

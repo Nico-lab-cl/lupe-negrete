@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F7F5F0;color:#14161A;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#D3151D;text-decoration:none}
+a:hover{color:#B50E15}
+*{box-sizing:border-box}
+input,button,select{font-family:inherit}
+@keyframes lnPulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes lnUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes lnRv{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:none}}
+.leaflet-container{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#0B224E}
+.leaflet-control-attribution{font-size:9.5px}
+.leaflet-bar a{color:#06132B}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#F7F5F0">
+
+<div style="background:#D3151D;color:#fff">
+<div style="max-width:1280px;margin:0 auto;padding:9px clamp(14px,4vw,24px);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px clamp(12px,2.5vw,22px);font-size:clamp(11px,2.6vw,12.5px);font-weight:600;letter-spacing:.06em;text-transform:uppercase">
+<span style="display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:#fff;animation:lnPulse 2s infinite"></span>{{ t.barEarly }}</span>
+<span style="opacity:.45">/</span>
+<span>{{ t.barGeneral }}</span>
+<sc-if value="{{ showCountdown }}" hint-placeholder-val="{{ true }}">
+<span style="display:flex;align-items:center;gap:7px;background:rgba(6,19,43,.28);padding:3px 11px;border-radius:3px"><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;letter-spacing:0">{{ diasRestantes }}</span><span style="font-size:11px;letter-spacing:.08em">{{ t.days }}</span></span>
+</sc-if>
+<a href="#votar" style="color:#fff;border-bottom:1.5px solid rgba(255,255,255,.55);padding-bottom:1px">{{ t.howToVoteArrow }}</a>
+<span style="opacity:.45">/</span>
+<sc-if value="{{ isEs }}" hint-placeholder-val="{{ true }}">
+<span style="display:flex;align-items:center;gap:6px;letter-spacing:.04em"><span style="color:#fff;font-weight:700">ES</span><span style="opacity:.5">|</span><button type="button" onClick="{{ setEn }}" style="background:none;border:none;padding:0;cursor:pointer;font-size:12.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.72)" style-hover="color:#fff">EN</button></span>
+</sc-if>
+<sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}">
+<span style="display:flex;align-items:center;gap:6px;letter-spacing:.04em"><button type="button" onClick="{{ setEs }}" style="background:none;border:none;padding:0;cursor:pointer;font-size:12.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.72)" style-hover="color:#fff">ES</button><span style="opacity:.5">|</span><span style="color:#fff;font-weight:700">EN</span></span>
+</sc-if>
+</div>
+</div>
+
+<header data-hdr style="position:sticky;top:0;z-index:1100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid #E4E7EC;transition:box-shadow .35s cubic-bezier(.16,1,.3,1)">
+<div data-hdr-row style="max-width:1280px;margin:0 auto;padding:10px clamp(14px,4vw,24px);display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:72px;transition:min-height .35s cubic-bezier(.16,1,.3,1),padding .35s cubic-bezier(.16,1,.3,1)">
+<a href="#top" style="display:flex;align-items:center;flex:none"><sc-if value="{{ isEs }}" hint-placeholder-val="{{ true }}">
+<img data-hdr-logo src="images/logo-es-lockup.png" alt="{{ t.logoAlt }}" style="width:clamp(146px,34vw,238px);height:auto;display:block;transition:width .35s cubic-bezier(.16,1,.3,1)">
+</sc-if>
+<sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}">
+<img data-hdr-logo src="images/logo-en-lockup.png" alt="{{ t.logoAlt }}" style="width:clamp(146px,34vw,238px);height:auto;display:block;transition:width .35s cubic-bezier(.16,1,.3,1)">
+</sc-if></a>
+<nav style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px 16px">
+<sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+<a href="#conoce" style="color:#14161A;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap" style-hover="color:#D3151D">{{ t.navMeet }}</a>
+<a href="#propuestas" style="color:#14161A;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap" style-hover="color:#D3151D">{{ t.navIssues }}</a>
+<a href="#votar" style="color:#14161A;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap" style-hover="color:#D3151D">{{ t.navVote }}</a>
+<a href="#precinto" style="color:#14161A;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap" style-hover="color:#D3151D">{{ t.navPrecinct }}</a>
+</sc-if>
+<sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{ toggleMenu }}" aria-label="{{ t.menu }}" aria-expanded="{{ menuOpen }}" style="display:flex;flex-direction:column;justify-content:center;gap:5px;width:46px;height:44px;padding:0 11px;background:none;border:1.5px solid #D0D5DD;border-radius:5px;cursor:pointer" style-hover="border-color:#06132B">
+<span style="display:block;height:2px;background:#06132B;border-radius:2px"></span>
+<span style="display:block;height:2px;background:#06132B;border-radius:2px"></span>
+<span style="display:block;height:2px;background:#06132B;border-radius:2px"></span>
+</button>
+</sc-if>
+<a href="#votar" style="background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:17px;letter-spacing:.03em;text-transform:uppercase;padding:11px 20px;border-radius:4px;white-space:nowrap;box-shadow:0 4px 14px rgba(211,21,29,.28)" style-hover="background:#B50E15;color:#fff">{{ t.join }}</a>
+</nav>
+</div>
+<sc-if value="{{ showMenu }}" hint-placeholder-val="{{ false }}">
+<nav style="border-top:1px solid #E4E7EC;background:#fff;padding:8px 16px 16px;display:flex;flex-direction:column">
+<a href="#conoce" onClick="{{ closeMenu }}" style="display:flex;align-items:center;min-height:52px;font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#06132B;border-bottom:1px solid #EEF0F3" style-hover="color:#D3151D">{{ t.navMeet }}</a>
+<a href="#propuestas" onClick="{{ closeMenu }}" style="display:flex;align-items:center;min-height:52px;font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#06132B;border-bottom:1px solid #EEF0F3" style-hover="color:#D3151D">{{ t.navIssues }}</a>
+<a href="#votar" onClick="{{ closeMenu }}" style="display:flex;align-items:center;min-height:52px;font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#06132B;border-bottom:1px solid #EEF0F3" style-hover="color:#D3151D">{{ t.navVote }}</a>
+<a href="#precinto" onClick="{{ closeMenu }}" style="display:flex;align-items:center;min-height:52px;font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#06132B" style-hover="color:#D3151D">{{ t.navPrecinct }}</a>
+</nav>
+</sc-if>
+</header>
+
+<section id="top" style="position:relative;background:#06132B;overflow:hidden">
+<div data-px="0.14" style="position:absolute;top:-120px;right:-60px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(0,51,153,.5),transparent 68%);pointer-events:none"></div>
+<div data-px="0.07" data-pxb="skewX(-12deg)" style="position:absolute;left:52%;top:0;bottom:0;width:180px;background:#FF3131;opacity:.1;transform:skewX(-12deg);pointer-events:none"></div>
+<div style="position:relative;max-width:1280px;margin:0 auto;padding:0 clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:clamp(24px,4vw,48px);align-items:stretch">
+
+<div style="padding:clamp(38px,6vw,62px) 0 clamp(40px,6vw,74px);animation:lnUp .6s cubic-bezier(.16,1,.3,1) both">
+<div style="display:inline-flex;align-items:stretch;margin-bottom:28px;transform:skewX(-12deg);box-shadow:0 8px 22px rgba(0,0,0,.32)">
+<span style="display:flex;align-items:center;background:#FF3131;padding:8px 13px 7px"><span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:23px;line-height:1;letter-spacing:.02em;color:#fff">P4</span></span>
+<span style="display:flex;flex-direction:column;justify-content:center;gap:2px;background:#fff;padding:7px 15px 6px">
+<span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:15px;line-height:1;letter-spacing:.06em;text-transform:uppercase;color:#06132B">{{ t.badgeSeat }}</span>
+<span style="display:block;transform:skewX(12deg);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:9.5px;line-height:1;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{{ t.badgeCounty }}</span>
+</span>
+</div>
+
+<h1 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(44px,10vw,116px);line-height:.83;letter-spacing:-.012em;text-transform:uppercase;color:#fff">
+<span style="display:block">{{ t.h1a }}</span>
+<span style="display:block">{{ t.h1b }}</span>
+<span style="display:block;color:#FF3131">{{ t.h1c }}</span>
+</h1>
+
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px clamp(12px,2.6vw,18px);margin:28px 0 18px">
+<span style="flex:none;width:46px;height:4px;background:#FF3131;transform:skewX(-12deg)"></span>
+<p style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:clamp(18px,4.4vw,23px);letter-spacing:.03em;text-transform:uppercase;color:#fff">{{ t.mottoA }}</p>
+<span style="flex:none;width:2px;height:19px;background:#FF3131;transform:skewX(-12deg)"></span>
+<p style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:clamp(18px,4.4vw,23px);letter-spacing:.03em;text-transform:uppercase;color:#fff">{{ t.mottoB }}</p>
+<span style="flex:none;width:2px;height:19px;background:#FF3131;transform:skewX(-12deg)"></span>
+<p style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:clamp(18px,4.4vw,23px);letter-spacing:.03em;text-transform:uppercase;color:#fff">{{ t.mottoC }}</p>
+</div>
+
+<p style="margin:0;max-width:520px;font-size:clamp(15px,3.6vw,16.5px);line-height:1.65;color:rgba(255,255,255,.72)">{{ t.heroBody }}</p>
+
+<div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:30px">
+<a href="#votar" style="background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:15px 26px;border-radius:5px;box-shadow:0 8px 26px rgba(211,21,29,.36)" style-hover="background:#B50E15;color:#fff">{{ t.heroCtaVote }}</a>
+<a href="#conoce" style="background:transparent;border:1.5px solid rgba(255,255,255,.34);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:15px 26px;border-radius:5px" style-hover="background:rgba(255,255,255,.09);color:#fff">{{ t.navMeet }}</a>
+</div>
+
+<p style="margin:34px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);font-size:12px;font-weight:500;letter-spacing:.03em;color:rgba(255,255,255,.5)">{{ t.heroId }}</p>
+</div>
+
+<div style="position:relative;display:flex;align-items:flex-end;justify-content:center;min-height:clamp(340px,52vw,520px)">
+<div style="position:absolute;bottom:0;right:-24px;left:-24px;top:44px;background:#0B224E;clip-path:polygon(9% 0,100% 0,100% 100%,0 100%)"></div>
+<img data-px="-0.055" src="images/hero-candidate-walking.png" alt="Lupe Negrete caminando con vecinos en las calles del Precinto 4" style="position:relative;width:100%;max-width:430px;height:auto;display:block;filter:drop-shadow(0 24px 50px rgba(0,0,0,.5))">
+<div style="position:absolute;bottom:26px;left:0;background:#FF3131;color:#fff;padding:11px 18px;transform:skewX(-12deg)">
+<span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;font-size:clamp(15px,3.8vw,19px)">{{ t.heroQuote }}</span>
+</div>
+</div>
+
+</div>
+</section>
+
+<section id="sumate" style="background:#0B224E;border-top:4px solid #FF3131">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,56px) clamp(16px,4vw,24px) clamp(44px,6vw,60px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));gap:48px;align-items:center">
+<div data-rv="0">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#FF3131">{{ t.signupKicker }}</p>
+<h2 style="margin:0 0 14px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(34px,3.6vw,52px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;color:#fff">{{ t.signupH2 }}</h2>
+<p style="margin:0;font-size:15.5px;line-height:1.65;color:rgba(255,255,255,.68)">{{ t.signupSub }}</p>
+</div>
+<div data-rv="0.14" style="background:#fff;border-radius:8px;padding:clamp(20px,4vw,30px);box-shadow:0 24px 60px rgba(0,0,0,.35)">
+<sc-if value="{{ formEnviado }}" hint-placeholder-val="{{ false }}">
+<div style="text-align:center;padding:18px 0">
+<div style="width:60px;height:60px;margin:0 auto 16px;border-radius:50%;background:#ECFDF5;color:#059669;display:flex;align-items:center;justify-content:center">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>
+</div>
+<h3 style="margin:0 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;text-transform:uppercase;color:#06132B">{{ t.thanksH }}</h3>
+<p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#475467">{{ t.thanksBody }}</p>
+<a href="#top" style="display:inline-block;background:#06132B;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:.03em;text-transform:uppercase;padding:13px 24px;border-radius:5px" style-hover="background:#0B224E;color:#fff">{{ t.share }}</a>
+</div>
+</sc-if>
+<sc-if value="{{ formPendiente }}" hint-placeholder-val="{{ true }}">
+<form onSubmit="{{ enviarForm }}">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:14px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ln-nombre" style="font-size:12.5px;font-weight:600;letter-spacing:.02em;color:#06132B">{{ t.fName }}</label>
+<input id="ln-nombre" name="nombre" type="text" required placeholder="{{ t.phName }}" style="width:100%;padding:13px 14px;border:1px solid #D0D5DD;border-radius:5px;background:#F7F5F0;font-size:15px;color:#14161A;outline:none" style-focus="background:#fff;border-color:#0B224E;box-shadow:0 0 0 3px rgba(11,34,78,.12)">
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ln-email" style="font-size:12.5px;font-weight:600;letter-spacing:.02em;color:#06132B">{{ t.fEmail }}</label>
+<input id="ln-email" name="email" type="email" required placeholder="{{ t.phEmail }}" style="width:100%;padding:13px 14px;border:1px solid #D0D5DD;border-radius:5px;background:#F7F5F0;font-size:15px;color:#14161A;outline:none" style-focus="background:#fff;border-color:#0B224E;box-shadow:0 0 0 3px rgba(11,34,78,.12)">
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ln-tel" style="font-size:12.5px;font-weight:600;letter-spacing:.02em;color:#06132B">{{ t.fPhone }} <span style="font-weight:400;color:#5B6470">{{ t.fPhoneOpt }}</span></label>
+<input id="ln-tel" name="telefono" type="tel" inputmode="tel" placeholder="(830) 000-0000" style="width:100%;padding:13px 14px;border:1px solid #D0D5DD;border-radius:5px;background:#F7F5F0;font-size:15px;color:#14161A;outline:none" style-focus="background:#fff;border-color:#0B224E;box-shadow:0 0 0 3px rgba(11,34,78,.12)">
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<label for="ln-zip" style="font-size:12.5px;font-weight:600;letter-spacing:.02em;color:#06132B">{{ t.fZip }}</label>
+<input id="ln-zip" name="zip" type="text" inputmode="numeric" placeholder="78852" style="width:100%;padding:13px 14px;border:1px solid #D0D5DD;border-radius:5px;background:#F7F5F0;font-size:15px;font-family:'IBM Plex Mono',monospace;color:#14161A;outline:none" style-focus="background:#fff;border-color:#0B224E;box-shadow:0 0 0 3px rgba(11,34,78,.12)">
+</div>
+</div>
+<button type="submit" style="width:100%;margin-top:18px;background:#D3151D;color:#fff;border:none;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:21px;letter-spacing:.04em;text-transform:uppercase;padding:15px;border-radius:5px;cursor:pointer;box-shadow:0 8px 24px rgba(211,21,29,.3)" style-hover="background:#B50E15">{{ t.submit }}</button>
+<p style="margin:14px 0 0;font-size:11px;line-height:1.5;color:#5B6470">{{ t.consent }} <a href="#footer">{{ t.privacy }}</a>.</p>
+</form>
+</sc-if>
+</div>
+</div>
+</section>
+
+<section style="background:#F7F5F0;border-bottom:1px solid #E4E7EC">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(44px,7vw,64px) clamp(16px,4vw,24px)">
+<div data-rv="0" style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px;flex-wrap:wrap">
+<div>
+<p style="margin:0 0 8px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{{ t.vidKicker }}</p>
+<h2 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(32px,3.8vw,54px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;color:#06132B">{{ t.vidH2 }}</h2>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:20px">
+<div data-rv="0" style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC">
+<img src="images/candidate-assembly.png" alt="Lupe Negrete en asamblea vecinal" style="width:100%;height:100%;object-fit:cover;opacity:.5">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.86),rgba(6,19,43,.4))">
+<span style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{{ t.vid1 }}</span>
+</div>
+</div>
+<div data-rv="0.13" style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC">
+<img src="images/candidate-listening.png" alt="Lupe Negrete escuchando a vecinos" style="width:100%;height:100%;object-fit:cover;opacity:.5">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.86),rgba(6,19,43,.4))">
+<span style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{{ t.vid2 }}</span>
+</div>
+</div>
+<div data-rv="0.26" style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC">
+<img src="images/candidate-border.png" alt="Lupe Negrete con vista al Río Bravo y Eagle Pass al atardecer" style="width:100%;height:100%;object-fit:cover;opacity:.5">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.86),rgba(6,19,43,.4))">
+<span style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{{ t.vid3 }}</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="conoce" style="background:#fff;overflow:hidden">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:clamp(32px,5vw,60px);align-items:center">
+<div style="position:relative">
+<div data-px="0.11" style="position:absolute;top:-28px;left:-40px;width:210px;height:210px;border-radius:50%;background:#003399;opacity:.1"></div>
+<div data-px="0.17" data-pxb="skewX(-12deg)" style="position:absolute;bottom:-30px;right:-18px;width:120px;height:120px;background:#FF3131;opacity:.14;transform:skewX(-12deg)"></div>
+<img src="images/candidate-portrait-navy.png" alt="Retrato oficial de Guadalupe Lupe Negrete" style="position:relative;width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 22px 54px rgba(6,19,43,.22)">
+</div>
+<div data-rv="0.08">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{{ t.meetKicker }}</p>
+<h2 style="margin:0 0 6px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4.6vw,68px);line-height:.88;letter-spacing:-.012em;text-transform:uppercase;color:#06132B">{{ t.meetH2 }}</h2>
+<p style="margin:0 0 22px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:#003399">{{ t.positioning }}</p>
+<p style="margin:0 0 16px;font-size:16.5px;line-height:1.72;color:#475467;max-width:600px;text-wrap:pretty">{{ t.meetP1 }}</p>
+<p style="margin:0 0 28px;font-size:16.5px;line-height:1.72;color:#475467;max-width:600px;text-wrap:pretty">{{ t.meetP2 }}</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:1px;background:#E4E7EC;border:1px solid #E4E7EC;border-radius:6px;overflow:hidden;margin-bottom:28px;max-width:600px">
+<div style="background:#fff;padding:18px 16px">
+<p style="margin:0;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:26px;color:#06132B">4</p>
+<p style="margin:4px 0 0;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6470">{{ t.statPrecinct }}</p>
+</div>
+<div style="background:#fff;padding:18px 16px">
+<p style="margin:0;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:26px;color:#06132B">3</p>
+<p style="margin:4px 0 0;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6470">{{ t.statPriorities }}</p>
+</div>
+<div style="background:#fff;padding:18px 16px">
+<p style="margin:0;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:26px;color:#D3151D" data-cu>{{ diasRestantes }}</p>
+<p style="margin:4px 0 0;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6470">{{ t.statDays }}</p>
+</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="#conoce" style="background:#06132B;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;border-radius:5px" style-hover="background:#0B224E;color:#fff">{{ t.readStory }}</a>
+<a href="#footer" style="border:1.5px solid #D0D5DD;color:#06132B;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;border-radius:5px" style-hover="border-color:#06132B;color:#06132B">{{ t.contactTeam }}</a>
+</div>
+</div>
+</div>
+</section>
+
+<section id="propuestas" style="background:#F7F5F0;border-top:1px solid #E4E7EC">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px)">
+<div data-rv="0" style="max-width:820px;margin-bottom:44px">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{{ t.issuesKicker }}</p>
+<h2 style="margin:0 0 16px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,5vw,74px);line-height:.86;letter-spacing:-.015em;text-transform:uppercase;color:#06132B">{{ t.issuesH2 }}</h2>
+<p style="margin:0;font-size:17px;line-height:1.68;color:#475467;text-wrap:pretty">{{ t.issuesSub }}</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:24px">
+
+<article data-rv="0" style="background:#fff;border:1px solid #E4E7EC;border-top:5px solid #D3151D;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s" style-hover="transform:translateY(-5px);box-shadow:0 18px 40px rgba(6,19,43,.14)">
+<div style="position:relative;aspect-ratio:16/10;overflow:hidden;background:#E4E7EC">
+<img src="images/candidate-assembly.png" alt="Lupe Negrete en asamblea comunitaria en calle sin pavimentar" style="width:100%;height:100%;object-fit:cover">
+<span style="position:absolute;top:12px;left:0;background:#D3151D;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px 6px 14px">{{ t.issueLabel1 }}</span>
+</div>
+<div style="padding:24px;display:flex;flex-direction:column;gap:12px;flex:1">
+<h3 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase;color:#06132B">{{ t.issue1H }}</h3>
+<p style="margin:0;font-size:14.5px;line-height:1.66;color:#475467;flex:1">{{ t.issue1P }}</p>
+<a href="#propuestas" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#06132B;padding-top:12px;border-top:1px solid #E4E7EC" style-hover="color:#D3151D">{{ t.issue1Link }}</a>
+</div>
+</article>
+
+<article data-rv="0.13" style="background:#fff;border:1px solid #E4E7EC;border-top:5px solid #003399;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s" style-hover="transform:translateY(-5px);box-shadow:0 18px 40px rgba(6,19,43,.14)">
+<div style="position:relative;aspect-ratio:16/10;overflow:hidden;background:#E4E7EC">
+<img src="images/candidate-listening.png" alt="Lupe Negrete conversando con vecinos sobre seguridad" style="width:100%;height:100%;object-fit:cover">
+<span style="position:absolute;top:12px;left:0;background:#003399;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px 6px 14px">{{ t.issueLabel2 }}</span>
+</div>
+<div style="padding:24px;display:flex;flex-direction:column;gap:12px;flex:1">
+<h3 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase;color:#06132B">{{ t.issue2H }}</h3>
+<p style="margin:0;font-size:14.5px;line-height:1.66;color:#475467;flex:1">{{ t.issue2P }}</p>
+<a href="#propuestas" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#06132B;padding-top:12px;border-top:1px solid #E4E7EC" style-hover="color:#D3151D">{{ t.issue2Link }}</a>
+</div>
+</article>
+
+<article data-rv="0.26" style="background:#fff;border:1px solid #E4E7EC;border-top:5px solid #06132B;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s" style-hover="transform:translateY(-5px);box-shadow:0 18px 40px rgba(6,19,43,.14)">
+<div style="position:relative;aspect-ratio:16/10;overflow:hidden;background:#E4E7EC">
+<img src="images/candidate-border.png" alt="Lupe Negrete con vista al Río Bravo y Eagle Pass al atardecer" style="width:100%;height:100%;object-fit:cover">
+<span style="position:absolute;top:12px;left:0;background:#06132B;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px 6px 14px">{{ t.issueLabel3 }}</span>
+</div>
+<div style="padding:24px;display:flex;flex-direction:column;gap:12px;flex:1">
+<h3 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase;color:#06132B">{{ t.issue3H }}</h3>
+<p style="margin:0;font-size:14.5px;line-height:1.66;color:#475467;flex:1">{{ t.issue3P }}</p>
+<a href="#propuestas" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#06132B;padding-top:12px;border-top:1px solid #E4E7EC" style-hover="color:#D3151D">{{ t.issue3Link }}</a>
+</div>
+</article>
+
+</div>
+</div>
+</section>
+
+<sc-if value="{{ showDonaciones }}" hint-placeholder-val="{{ true }}">
+<section style="position:relative;background:#D3151D;overflow:hidden">
+<div data-px="0.13" style="position:absolute;top:-90px;left:-40px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.07)"></div>
+<div data-px="0.07" data-pxb="skewX(-12deg)" style="position:absolute;right:8%;top:0;bottom:0;width:130px;background:rgba(6,19,43,.14);transform:skewX(-12deg)"></div>
+<div style="position:relative;max-width:1280px;margin:0 auto;padding:clamp(44px,7vw,64px) clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:clamp(30px,5vw,52px);align-items:center">
+<div data-rv="0">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.78)">{{ t.donKicker }}</p>
+<h2 style="margin:0 0 14px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4.6vw,66px);line-height:.88;letter-spacing:-.012em;text-transform:uppercase;color:#fff">{{ t.donH2 }}</h2>
+<p style="margin:0;font-size:16px;line-height:1.66;color:rgba(255,255,255,.86);max-width:460px">{{ t.donBody }}</p>
+</div>
+<div data-rv="0.14" style="background:rgba(6,19,43,.28);border:1.5px solid rgba(255,255,255,.28);border-radius:8px;padding:clamp(20px,4vw,28px)">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px">
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:22px;letter-spacing:.03em;text-transform:uppercase;color:#fff">{{ t.pickAmount }}</span>
+<span style="background:#FEF3C7;color:#8a5a00;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:100px">{{ t.comingSoon }}</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:rgba(255,255,255,.55)">$10</span>
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:rgba(255,255,255,.55)">$25</span>
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:rgba(255,255,255,.55)">$50</span>
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:rgba(255,255,255,.55)">$100</span>
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:rgba(255,255,255,.55)">$250</span>
+<span style="text-align:center;padding:16px 8px;border:1.5px solid rgba(255,255,255,.3);border-radius:5px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center">{{ t.other }}</span>
+</div>
+<span style="display:block;width:100%;text-align:center;background:rgba(255,255,255,.16);border:1.5px dashed rgba(255,255,255,.45);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:.05em;text-transform:uppercase;padding:14px;border-radius:5px">{{ t.donSoonBtn }}</span>
+<p style="margin:14px 0 0;font-size:11px;line-height:1.5;color:rgba(255,255,255,.7)">{{ t.donNote }}</p>
+</div>
+</div>
+</section>
+</sc-if>
+
+<section id="votar" style="background:#06132B;border-top:4px solid #FF3131;border-bottom:4px solid #FF3131">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px)">
+<div data-rv="0" style="text-align:center;max-width:720px;margin:0 auto 46px">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#F59E0B">{{ t.voteKicker }}</p>
+<h2 style="margin:0 0 14px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(40px,5.4vw,80px);line-height:.86;letter-spacing:-.015em;text-transform:uppercase;color:#fff">{{ t.voteH2 }}</h2>
+<p style="margin:0;font-size:16.5px;line-height:1.66;color:rgba(255,255,255,.7)">{{ t.voteSub }}</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:20px;max-width:1000px;margin:0 auto 40px">
+<div data-rv="0" style="background:#0B224E;border:1px solid #102D66;border-radius:8px;padding:28px 24px;text-align:center">
+<p style="margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:34px;letter-spacing:-.02em;color:#fff">{{ t.date1 }}</p>
+<p style="margin:0 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;color:#F59E0B">{{ t.date1L }}</p>
+<p style="margin:0;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.62)">{{ t.date1P }}</p>
+</div>
+<div data-rv="0.13" style="position:relative;background:#0B224E;border:2px solid #F59E0B;border-radius:8px;padding:28px 24px;text-align:center;box-shadow:0 12px 40px rgba(245,158,11,.16)">
+<span style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#F59E0B;color:#06132B;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 11px;border-radius:100px;white-space:nowrap">{{ t.mostTurnout }}</span>
+<p style="margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:34px;letter-spacing:-.02em;color:#F59E0B">{{ t.date2 }}</p>
+<p style="margin:0 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;color:#fff">{{ t.date2L }}</p>
+<p style="margin:0;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.72)">{{ t.date2P }}</p>
+</div>
+<div data-rv="0.26" style="background:#0B224E;border:1px solid #102D66;border-radius:8px;padding:28px 24px;text-align:center">
+<p style="margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:34px;letter-spacing:-.02em;color:#fff">{{ t.date3 }}</p>
+<p style="margin:0 0 8px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.04em;text-transform:uppercase;color:#fff">{{ t.date3L }}</p>
+<p style="margin:0;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.62)">{{ t.date3P }}</p>
+</div>
+</div>
+<div data-rv="0.1" style="max-width:1000px;margin:0 auto;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:clamp(18px,4vw,24px) clamp(18px,4vw,26px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px">
+<div>
+<p style="margin:0 0 4px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:21px;letter-spacing:.03em;text-transform:uppercase;color:#fff">{{ t.idH }}</p>
+<p style="margin:0;font-size:13.5px;color:rgba(255,255,255,.62)">{{ t.idP }}</p>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:10px">
+<a href="https://goelect.txelections.civixapps.com/ivis-mvp-ui/#/login" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:9px;background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;border-radius:5px;white-space:nowrap;box-shadow:0 8px 24px rgba(211,21,29,.34)" style-hover="background:#B50E15;color:#fff">
+<span>{{ t.regBtn }}</span>
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg>
+</a>
+<a href="#votar" style="background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;border-radius:5px;white-space:nowrap;box-shadow:0 8px 24px rgba(211,21,29,.34)" style-hover="background:#B50E15;color:#fff">{{ t.findPolling }}</a>
+</div>
+</div>
+
+<div data-rv="0.1" style="max-width:1000px;margin:20px auto 0;background:#0B224E;border:1px solid #102D66;border-left:5px solid #F59E0B;border-radius:8px;padding:clamp(18px,3.6vw,24px)">
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 20px">
+<p style="margin:0;flex:1 1 auto;min-width:min(220px,100%);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(22px,4.2vw,30px);line-height:1;letter-spacing:.02em;text-transform:uppercase;color:#fff">{{ t.remH }}</p>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+<button type="button" onClick="{{ descargarIcs }}" style="background:#F59E0B;color:#06132B;border:none;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(16px,3.4vw,19px);letter-spacing:.03em;text-transform:uppercase;padding:13px 20px;border-radius:5px;cursor:pointer;white-space:nowrap;box-shadow:0 8px 24px rgba(245,158,11,.3)" style-hover="background:#E08C04">{{ t.remBtn }}</button>
+<a href="#sumate" style="border:1.5px solid rgba(255,255,255,.32);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:clamp(15px,3.2vw,17px);letter-spacing:.03em;text-transform:uppercase;padding:12px 18px;border-radius:5px;white-space:nowrap" style-hover="background:rgba(255,255,255,.1);color:#fff">{{ t.remAlt }}</a>
+<button type="button" onClick="{{ toggleRem }}" aria-expanded="{{ remAbierto }}" style="display:flex;align-items:center;gap:7px;background:none;border:none;padding:10px 4px;cursor:pointer;font-size:12.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.72);white-space:nowrap" style-hover="color:#F59E0B">
+<span>{{ t.remMore }}</span>
+<span style="display:block;transition:transform .3s cubic-bezier(.16,1,.3,1);transform:{{ remCaret }}">
+<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+</span>
+</button>
+</div>
+</div>
+<sc-if value="{{ icsListo }}" hint-placeholder-val="{{ false }}">
+<p style="margin:14px 0 0;display:flex;align-items:flex-start;gap:8px;font-size:12.5px;line-height:1.55;color:#F59E0B">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:2px"><path d="M5 13l4 4L19 7"></path></svg>
+<span>{{ t.remDone }}</span>
+</p>
+</sc-if>
+<sc-if value="{{ remAbierto }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:16px clamp(20px,4vw,32px)">
+<p style="margin:0;font-size:14px;line-height:1.62;color:rgba(255,255,255,.68)">{{ t.remBody }}</p>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.82)"><span style="flex:none;width:5px;height:5px;background:#F59E0B;transform:skewX(-12deg)"></span>{{ t.remItem1 }}</span>
+<span style="display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.82)"><span style="flex:none;width:5px;height:5px;background:#F59E0B;transform:skewX(-12deg)"></span>{{ t.remItem2 }}</span>
+<span style="display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.82)"><span style="flex:none;width:5px;height:5px;background:#F59E0B;transform:skewX(-12deg)"></span>{{ t.remItem3 }}</span>
+<p style="margin:4px 0 0;font-size:11px;line-height:1.5;color:rgba(255,255,255,.5)">{{ t.remNote }}</p>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</section>
+
+<section id="precinto" style="background:#fff">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:clamp(32px,5vw,52px);align-items:center">
+<div data-rv="0">
+<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{{ t.terrKicker }}</p>
+<h2 style="margin:0 0 16px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4.6vw,66px);line-height:.88;letter-spacing:-.012em;text-transform:uppercase;color:#06132B">{{ t.terrH2 }}</h2>
+<p style="margin:0 0 24px;font-size:16.5px;line-height:1.7;color:#475467;text-wrap:pretty">{{ t.terrBody }}</p>
+<div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:26px">
+<span style="background:#F7F5F0;border:1px solid #E4E7EC;font-size:12.5px;font-weight:500;color:#06132B;padding:8px 13px;border-radius:100px">Loma Bonita</span>
+<span style="background:#F7F5F0;border:1px solid #E4E7EC;font-size:12.5px;font-weight:500;color:#06132B;padding:8px 13px;border-radius:100px">Seco Mines</span>
+<span style="background:#F7F5F0;border:1px solid #E4E7EC;font-size:12.5px;font-weight:500;color:#06132B;padding:8px 13px;border-radius:100px">Eagle Pass</span>
+</div>
+<a href="#sumate" style="display:inline-flex;align-items:center;gap:8px;background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 26px;border-radius:5px;box-shadow:0 8px 24px rgba(211,21,29,.28)" style-hover="background:#B50E15;color:#fff">{{ t.joinArrow }}</a>
+</div>
+<div data-rv="0.14">
+<div style="position:relative;border-radius:8px;overflow:hidden;border:1px solid #102D66;box-shadow:0 22px 54px rgba(6,19,43,.24)">
+<div data-map style="width:100%;aspect-ratio:4/3;min-height:330px;background:#0B224E"></div>
+<div style="position:absolute;top:0;left:0;z-index:600;display:flex;align-items:stretch;transform:skewX(-12deg) translateX(-6px);pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.34)">
+<span style="display:flex;align-items:center;background:#D3151D;padding:8px 12px 7px 18px"><span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:17px;line-height:1;letter-spacing:.04em;text-transform:uppercase;color:#fff">{{ t.mapTitle }}</span></span>
+<span style="display:flex;align-items:center;background:#06132B;padding:8px 15px 7px"><span style="display:block;transform:skewX(12deg);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:10px;line-height:1;letter-spacing:.14em;text-transform:uppercase;color:#F59E0B">{{ t.mapSat }}</span></span>
+</div>
+</div>
+<p style="margin:12px 0 0;font-size:12.5px;line-height:1.6;color:#5B6470">{{ t.mapNote }}</p>
+</div>
+</div>
+</section>
+
+<footer id="footer" style="background:#06132B;color:#fff;border-top:4px solid #102D66">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(44px,7vw,64px) clamp(16px,4vw,24px) clamp(112px,18vw,124px)">
+<div data-rv="0" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:44px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.12)">
+<div>
+<span style="display:inline-block;background:rgba(255,255,255,.96);padding:10px 14px;border-radius:6px;margin-bottom:18px"><sc-if value="{{ isEs }}" hint-placeholder-val="{{ true }}">
+<img src="images/logo-es-lockup.png" alt="{{ t.logoAlt }}" style="width:230px;height:auto;display:block">
+</sc-if>
+<sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}">
+<img src="images/logo-en-lockup.png" alt="{{ t.logoAlt }}" style="width:230px;height:auto;display:block">
+</sc-if></span>
+<p style="margin:0 0 12px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:#fff">{{ t.footMotto }}</p>
+<p style="margin:0;font-size:14px;line-height:1.68;color:rgba(255,255,255,.62);max-width:400px">{{ t.footDesc }}</p>
+</div>
+<div>
+<p style="margin:0 0 16px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45)">{{ t.footNav }}</p>
+<div style="display:flex;flex-direction:column;gap:10px">
+<a href="#conoce" style="font-size:14px;font-weight:500;color:rgba(255,255,255,.85)" style-hover="color:#FF3131">{{ t.navMeet }}</a>
+<a href="#propuestas" style="font-size:14px;font-weight:500;color:rgba(255,255,255,.85)" style-hover="color:#FF3131">{{ t.navIssues }}</a>
+<a href="#votar" style="font-size:14px;font-weight:500;color:rgba(255,255,255,.85)" style-hover="color:#FF3131">{{ t.navVote }}</a>
+<a href="#precinto" style="font-size:14px;font-weight:500;color:rgba(255,255,255,.85)" style-hover="color:#FF3131">{{ t.navPrecinct }}</a>
+<a href="#footer" style="font-size:12.5px;color:rgba(255,255,255,.5)" style-hover="color:rgba(255,255,255,.8)">{{ t.privacy }}</a>
+<a href="#footer" style="font-size:12.5px;color:rgba(255,255,255,.5)" style-hover="color:rgba(255,255,255,.8)">{{ t.accessibility }}</a>
+</div>
+</div>
+<div>
+<p style="margin:0 0 16px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45)">{{ t.footContact }}</p>
+<div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:rgba(255,255,255,.8)">
+<span>Eagle Pass, TX 78852</span>
+<a href="#footer" style="color:rgba(255,255,255,.8)" style-hover="color:#FF3131">contacto@lupenegrete.com</a>
+<span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px">(830) 000-0000</span>
+</div>
+<a href="#footer" style="display:inline-flex;align-items:center;gap:9px;margin-top:18px;background:#102D66;border:1px solid rgba(255,255,255,.16);color:#fff;font-size:12.5px;font-weight:600;padding:10px 14px;border-radius:5px" style-hover="background:#0B224E;color:#fff">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.688 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"></path></svg>
+<span>{{ t.fbOfficial }}</span>
+</a>
+</div>
+</div>
+<div style="padding-top:26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px">
+<p style="margin:0;font-size:12px;letter-spacing:.02em;color:rgba(255,255,255,.55);text-transform:uppercase;font-weight:600">Political advertising paid for by Guadalupe Lupe Negrete Campaign Committee</p>
+<p style="margin:0;font-size:12px;color:rgba(255,255,255,.45)">{{ t.copyright }}</p>
+</div>
+</div>
+</footer>
+
+<div data-bar style="position:fixed;left:0;right:0;bottom:0;z-index:1200;background:#06132B;border-top:3px solid #FF3131;transform:translateY(130%);transition:transform .55s cubic-bezier(.16,1,.3,1);box-shadow:0 -12px 40px rgba(0,0,0,.42)">
+<div style="max-width:1280px;margin:0 auto;padding:10px clamp(14px,4vw,24px) calc(10px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 12px">
+<div style="display:flex;align-items:center;gap:12px;min-width:0">
+<span style="width:8px;height:8px;border-radius:50%;background:#FF3131;animation:lnPulse 2s infinite;flex:none"></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:800;letter-spacing:.02em;text-transform:uppercase;color:#fff;font-size:clamp(16px,4.2vw,21px)">{{ t.barPre }} <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:#FF3131">{{ diasRestantes }}</span> {{ t.barPost }}</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:9px;flex:1;justify-content:flex-end;min-width:0">
+<a href="#votar" style="border:1.5px solid rgba(255,255,255,.35);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:17px;letter-spacing:.03em;text-transform:uppercase;padding:10px 18px;border-radius:4px;white-space:nowrap" style-hover="background:rgba(255,255,255,.1);color:#fff">{{ t.navVote }}</a>
+<a href="#top" style="background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:17px;letter-spacing:.03em;text-transform:uppercase;padding:10px 18px;border-radius:4px;white-space:nowrap;box-shadow:0 6px 18px rgba(211,21,29,.4)" style-hover="background:#B50E15;color:#fff">{{ t.joinArrow }}</a>
+</div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showDonaciones&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Secciones&quot;},&quot;showCountdown&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Secciones&quot;}}">
+const COPY = {
+  es: {
+    logoAlt: 'Guadalupe “Lupe” Negrete para Comisionado, Precinto 4',
+    barEarly: 'Votación temprana 19–30 oct', barGeneral: 'Elección general 3 nov 2026',
+    days: 'días', howToVoteArrow: 'Cómo votar →',
+    navMeet: 'Conoce a Lupe', navIssues: 'Propuestas', navVote: 'Cómo votar', navPrecinct: 'Precinto 4',
+    join: 'Súmate', joinArrow: 'Súmate →', menu: 'Abrir menú',
+    badgeSeat: 'Candidato a Comisionado', badgeCounty: 'Condado de Maverick · Elección 2026',
+    h1a: 'Experiencia,', h1b: 'Integridad', h1c: 'y Honestidad',
+    mottoA: 'Escuchar', mottoB: 'Atender', mottoC: 'Cumplir',
+    heroBody: 'Un comisionado presente en las colonias, comprometido a dar la cara por nuestras familias, fiscalizar cada dólar público y exigir pavimentación justa para el Precinto 4.',
+    heroCtaVote: 'Dónde y cómo votar →',
+    heroId: 'Guadalupe “Lupe” Negrete · Candidato a Comisionado, Precinto 4 · Condado de Maverick, Texas',
+    heroQuote: 'Servicio real · Trabajo de palabra',
+    signupKicker: 'Súmate a la campaña',
+    signupH2: 'El cambio en el Precinto 4 se construye con tu apoyo',
+    signupSub: 'Deja tus datos y te avisamos dónde votar, cuándo abren las urnas y qué pasa con las calles de tu colonia. Además, entérate primero de todas las novedades de la campaña y de la agenda de Lupe en el Precinto 4.',
+    thanksH: '¡Gracias por tu apoyo!',
+    thanksBody: 'Tu registro quedó confirmado. Ahora ayúdanos con lo más importante: comparte este mensaje con tres vecinos del Precinto 4.',
+    share: 'Compartir con vecinos',
+    fName: 'Nombre y apellido *', fEmail: 'Correo electrónico *', fPhone: 'Número de teléfono', fPhoneOpt: '(avisos por WhatsApp)',
+    fZip: 'Código postal', phName: 'Ej. Juan Rodríguez', phEmail: 'ejemplo@correo.com',
+    submit: 'Quiero apoyar a Lupe →',
+    consent: 'Al ingresar tus datos aceptas recibir mensajes de WhatsApp y correos electrónicos informativos de la campaña. Frecuencia variable. Pueden aplicar tarifas de datos. Escribe BAJA en cualquier momento para cancelar. Consulta la',
+    privacy: 'Política de Privacidad', accessibility: 'Declaración de Accesibilidad',
+    vidKicker: 'La campaña en video', vidH2: 'Escucha a Lupe en sus palabras',
+    vid1: 'Spot principal', vid2: 'Voces del Precinto 4', vid3: 'Auditoría y transparencia',
+    meetKicker: 'Precinto 4 · Eagle Pass', meetH2: 'Conoce a Guadalupe “Lupe” Negrete',
+    positioning: 'Servicio real · Trabajo de palabra · Compromiso local',
+    meetP1: 'Nacido y formado en la frontera, Lupe conoce de primera mano el esfuerzo diario de las familias trabajadoras y comerciantes de Eagle Pass. Se postula a Comisionado porque las colonias del Precinto 4 no pueden seguir esperando soluciones que nunca llegan.',
+    meetP2: 'Su compromiso es claro: fiscalización de fondos públicos, gestión transparente del presupuesto y presencia constante en el terreno.',
+    statPrecinct: 'Precinto', statPriorities: 'Prioridades', statDays: 'Días a la elección',
+    readStory: 'Leer su historia completa →', contactTeam: 'Contactar al equipo',
+    issuesKicker: 'Dónde está Lupe', issuesH2: 'Nuestras calles merecen más',
+    issuesSub: 'Durante años las colonias del Precinto 4 han quedado al final de las prioridades. Estas son las tres acciones concretas que Lupe impulsará desde el primer día en la Corte de Comisionados.',
+    issueLabel1: 'Propuesta 01', issueLabel2: 'Propuesta 02', issueLabel3: 'Propuesta 03',
+    issue1H: 'Pavimentación equitativa', issue2H: 'Alumbrado y seguridad', issue3H: 'Auditoría al presupuesto',
+    issue1P: 'Basta de calles sin pavimentar y baches olvidados. Exigiremos que Loma Bonita y todas las colonias reciban asfalto y drenaje con la misma urgencia que el centro de Eagle Pass.',
+    issue2P: 'Calles iluminadas previenen el delito y protegen a nuestras familias. Luminarias permanentes y más patrullas y recursos para el Departamento del Alguacil en nuestros vecindarios.',
+    issue3P: 'Cuidar cada centavo del contribuyente. Revisión exhaustiva a los gastos de la corte de comisionados para recortar excesos y canalizar fondos a los servicios de las colonias.',
+    issue1Link: 'Ver compromisos →', issue2Link: 'Ver el plan →', issue3Link: 'Ver transparencia →',
+    donKicker: 'Aporta a la campaña', donH2: 'Apoya con lo que puedas',
+    donBody: 'Estamos habilitando el sistema de aportes en línea con todos los requisitos de la Texas Ethics Commission.',
+    pickAmount: 'Elige un monto', comingSoon: 'Próximamente', other: 'Otro',
+    donSoonBtn: 'Aportes habilitados pronto',
+    donNote: 'Mientras tanto, la mejor forma de aportar es registrarte, hablar con tus vecinos y salir a votar en la votación temprana.',
+    voteKicker: 'Tu voto cuenta · Elección 2026', voteH2: 'Cómo y cuándo votar',
+    voteSub: 'En una elección local la mayoría se decide en la votación temprana. Guarda estas tres fechas.',
+    date1: '5 OCT', date2: '19–30 OCT', date3: '3 NOV',
+    date1L: 'Cierre de registro', date2L: 'Votación temprana', date3L: 'Día de elección',
+    date1P: 'Último día para inscribirte en el padrón de votantes de Maverick County.',
+    date2P: 'Vota en el Courthouse Annex o en Seco Mines con horarios flexibles.',
+    date3P: 'Urnas abiertas de 7:00 AM a 7:00 PM en las casillas asignadas.',
+    mostTurnout: 'Mayor movilización', idH: 'Identificación requerida en Texas',
+    idP: 'Licencia de conducir de Texas, pasaporte de EE. UU., cédula electoral o certificado de ciudadanía.',
+    findPolling: 'Ver mi lugar de votación →', regBtn: 'Registro de votación',
+    remH: 'Activar recordatorio automático',
+    remBody: 'Descarga las tres fechas y quedan guardadas en tu calendario, con un aviso un día antes de cada fase. Funciona con Google Calendar, Outlook y el calendario del iPhone.',
+    remItem1: 'Cierre de registro — 5 de octubre',
+    remItem2: 'Apertura de votación temprana — 19 de octubre',
+    remItem3: 'Día de elección — 3 de noviembre',
+    remBtn: 'Agregar a mi calendario', remMore: 'Ver más',
+    remDone: 'Listo. Abre el archivo descargado y tu calendario guardará las tres fechas con aviso previo.',
+    remAlt: 'Prefiero avisos por WhatsApp',
+    remNote: 'No guardamos ningún dato: el archivo se genera en tu propio teléfono.',
+    terrKicker: 'El territorio', terrH2: 'El Precinto 4, calle por calle',
+    terrBody: 'El Precinto 4 abarca las colonias del sur y oriente del Condado de Maverick. Cada punto del mapa es una calle que Lupe ha caminado y un compromiso concreto de gestión.',
+    mapTitle: 'Mapa del Precinto 4', mapSat: 'Vista satelital',
+    mapNote: 'Vista satelital del Precinto 4 en el Condado de Maverick. Arrastra y acerca para recorrer las colonias. Para trazar el límite exacto del precinto sobre el mapa necesito el shapefile oficial de la Oficina de Elecciones del Condado.',
+    footMotto: 'Experiencia, integridad y honestidad',
+    footDesc: 'Candidato a Comisionado del Condado por el Precinto 4 en Maverick County, Texas. Comprometido con la pavimentación justa, luminarias seguras y transparencia total en los recursos del contribuyente.',
+    footNav: 'Navegación', footContact: 'Contacto oficial de campaña', fbOfficial: 'Facebook oficial',
+    copyright: '© 2026 Guadalupe “Lupe” Negrete · Condado de Maverick, Texas',
+    barPre: 'Faltan', barPost: 'días para votar'
+  },
+  en: {
+    logoAlt: 'Guadalupe “Lupe” Negrete for Commissioner, Precinct 4',
+    barEarly: 'Early voting Oct 19–30', barGeneral: 'General election Nov 3, 2026',
+    days: 'days', howToVoteArrow: 'How to vote →',
+    navMeet: 'Meet Lupe', navIssues: 'Issues', navVote: 'How to vote', navPrecinct: 'Precinct 4',
+    join: 'Join us', joinArrow: 'Join us →', menu: 'Open menu',
+    badgeSeat: 'Candidate for Commissioner', badgeCounty: 'Maverick County · 2026 Election',
+    h1a: 'Experience,', h1b: 'Integrity', h1c: 'and Honesty',
+    mottoA: 'Listen', mottoB: 'Respond', mottoC: 'Deliver',
+    heroBody: 'A commissioner who shows up in the colonias — standing up for our families, accounting for every taxpayer dollar and demanding that Precinct 4 finally gets its streets paved.',
+    heroCtaVote: 'Where and how to vote →',
+    heroId: 'Guadalupe “Lupe” Negrete · Candidate for County Commissioner, Precinct 4 · Maverick County, Texas',
+    heroQuote: 'Real service · A man of his word',
+    signupKicker: 'Join the campaign',
+    signupH2: 'It takes all of us to change Precinct 4',
+    signupSub: 'Sign up and we’ll let you know where to vote, when the polls open and what’s happening with the streets in your colonia. You’ll also be the first to hear campaign news and where Lupe will be across Precinct 4.',
+    thanksH: 'Thank you for stepping up!',
+    thanksBody: 'You’re signed up. Now here’s the part that matters most — share this with three neighbors here in Precinct 4.',
+    share: 'Share with neighbors',
+    fName: 'Full name *', fEmail: 'Email address *', fPhone: 'Phone number', fPhoneOpt: '(WhatsApp alerts)',
+    fZip: 'ZIP code', phName: 'e.g. Juan Rodríguez', phEmail: 'you@example.com',
+    submit: 'Count me in for Lupe →',
+    consent: 'By giving us your information, you agree to receive campaign updates by WhatsApp and email. Frequency varies and data rates may apply. Reply STOP anytime to unsubscribe. See our',
+    privacy: 'Privacy Policy', accessibility: 'Accessibility Statement',
+    vidKicker: 'The campaign on video', vidH2: 'Hear it straight from Lupe',
+    vid1: 'Main spot', vid2: 'Voices of Precinct 4', vid3: 'Accountability and transparency',
+    meetKicker: 'Precinct 4 · Eagle Pass', meetH2: 'Meet Guadalupe “Lupe” Negrete',
+    positioning: 'Real service · A man of his word · Rooted right here',
+    meetP1: 'Born and raised on the border, Lupe knows what it takes for the working families and small business owners of Eagle Pass to get by. He’s running for Commissioner because the colonias of Precinct 4 have waited long enough on promises that never showed up.',
+    meetP2: 'His commitment is simple: real oversight of public funds, a transparent budget and a commissioner you will actually see in your neighborhood.',
+    statPrecinct: 'Precinct', statPriorities: 'Priorities', statDays: 'Days to election',
+    readStory: 'Read his full story →', contactTeam: 'Contact the team',
+    issuesKicker: 'Where Lupe stands', issuesH2: 'Our streets deserve better',
+    issuesSub: 'For years the colonias of Precinct 4 have been last in line. These are the three things Lupe will take to the Commissioners Court on day one.',
+    issueLabel1: 'Issue 01', issueLabel2: 'Issue 02', issueLabel3: 'Issue 03',
+    issue1H: 'Paving that’s fair', issue2H: 'Lighting and safety', issue3H: 'Auditing the budget',
+    issue1P: 'No more unpaved streets and potholes nobody comes to fix. We will push for Loma Bonita and every colonia to get pavement and drainage with the same urgency as downtown Eagle Pass.',
+    issue2P: 'Lit streets keep crime down and our families safe. Permanent street lights, plus more patrols and resources for the Sheriff’s Department in our neighborhoods.',
+    issue3P: 'Every taxpayer dollar accounted for. A line-by-line review of Commissioners Court spending to cut the waste and put that money back into services in the colonias.',
+    issue1Link: 'See the commitments →', issue2Link: 'See the plan →', issue3Link: 'See the numbers →',
+    donKicker: 'Chip in', donH2: 'Give what you can',
+    donBody: 'We’re setting up online contributions in full compliance with Texas Ethics Commission rules.',
+    pickAmount: 'Pick an amount', comingSoon: 'Coming soon', other: 'Other',
+    donSoonBtn: 'Contributions opening soon',
+    donNote: 'In the meantime, the best thing you can do is sign up, talk to your neighbors and show up during early voting.',
+    voteKicker: 'Your vote counts · 2026 Election', voteH2: 'How and when to vote',
+    voteSub: 'Local elections are usually decided during early voting. Put these three dates on your calendar.',
+    date1: 'OCT 5', date2: 'OCT 19–30', date3: 'NOV 3',
+    date1L: 'Registration deadline', date2L: 'Early voting', date3L: 'Election day',
+    date1P: 'Last day to get registered to vote in Maverick County.',
+    date2P: 'Vote at the Courthouse Annex or Seco Mines — flexible hours.',
+    date3P: 'Polls are open 7:00 AM to 7:00 PM at your assigned precinct.',
+    mostTurnout: 'Highest turnout', idH: 'Photo ID is required in Texas',
+    idP: 'Texas driver license, U.S. passport, Texas Election Identification Certificate or certificate of citizenship.',
+    findPolling: 'Find my polling place →', regBtn: 'Voter registration',
+    remH: 'Set an automatic reminder',
+    remBody: 'Download all three dates straight to your calendar and get an alert the day before each one. Works with Google Calendar, Outlook and the iPhone calendar.',
+    remItem1: 'Registration deadline — October 5',
+    remItem2: 'Early voting opens — October 19',
+    remItem3: 'Election day — November 3',
+    remBtn: 'Add to my calendar', remMore: 'Learn more',
+    remDone: 'Done. Open the file you just downloaded and all three dates will be saved with an advance alert.',
+    remAlt: 'I’d rather get WhatsApp alerts',
+    remNote: 'We don’t store anything — the file is created right on your phone.',
+    terrKicker: 'The territory', terrH2: 'Precinct 4, street by street',
+    terrBody: 'Precinct 4 covers the colonias on the south and east side of Maverick County. Every point on this map is a street Lupe has walked and a commitment he intends to keep.',
+    mapTitle: 'Precinct 4 map', mapSat: 'Satellite view',
+    mapNote: 'Satellite view of Precinct 4 in Maverick County. Drag and zoom to move through the colonias. To trace the exact precinct line on the map, we need the official shapefile from the County Elections Office.',
+    footMotto: 'Experience, integrity and honesty',
+    footDesc: 'Candidate for Maverick County Commissioner, Precinct 4, in Texas. Committed to fair paving, safe street lighting and full transparency with taxpayer money.',
+    footNav: 'Navigation', footContact: 'Official campaign contact', fbOfficial: 'Official Facebook',
+    copyright: '© 2026 Guadalupe “Lupe” Negrete · Maverick County, Texas',
+    barPre: '', barPost: 'days left to vote'
+  }
+};
+
+class Component extends DCLogic {
+  state = { enviado: false, lang: 'es', narrow: false, menuOpen: false, icsListo: false, remAbierto: false };
+
+  dias() {
+    const eleccion = new Date(2026, 10, 3);
+    const hoy = new Date();
+    return Math.max(0, Math.ceil((eleccion - hoy) / 86400000));
+  }
+
+  componentDidMount() {
+    try {
+      const saved = localStorage.getItem('ln-lang');
+      if (saved === 'en' || saved === 'es') this.setState({ lang: saved });
+      document.documentElement.setAttribute('lang', saved === 'en' ? 'en' : 'es');
+    } catch (e) {}
+    this.wire();
+  }
+  componentDidUpdate() { this.wire(); }
+  componentWillUnmount() {
+    if (this._io) this._io.disconnect();
+    clearTimeout(this._fsT);
+    if (this._onScroll) {
+      window.removeEventListener('scroll', this._onScroll);
+      window.removeEventListener('resize', this._onScroll);
+      document.removeEventListener('scroll', this._onScroll, true);
+    }
+    if (this._onResize) {
+      window.removeEventListener('resize', this._onResize);
+      window.removeEventListener('orientationchange', this._onResize);
+    }
+  }
+
+  measure() {
+    const narrow = (window.innerWidth || 1280) < 980;
+    if (narrow !== this.state.narrow) {
+      this.setState({ narrow: narrow, menuOpen: narrow ? this.state.menuOpen : false });
+    }
+  }
+
+  wire() {
+    this._reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.measure();
+    if (!this._onResize) {
+      this._onResize = () => this.measure();
+      window.addEventListener('resize', this._onResize, { passive: true });
+      window.addEventListener('orientationchange', this._onResize, { passive: true });
+    }
+    this.setupReveal();
+    this.setupCount();
+    this.setupScroll();
+    this.setupMap();
+  }
+
+  setupMap() {
+    const host = document.querySelector('[data-map]');
+    if (!host || host.dataset.mapReady) return;
+    if (!window.L) { setTimeout(() => this.setupMap(), 200); return; }
+    host.dataset.mapReady = '1';
+    const L = window.L;
+    const map = L.map(host, {
+      center: [28.705, -100.49], zoom: 13, minZoom: 9, maxZoom: 18,
+      scrollWheelZoom: false, attributionControl: true, zoomControl: false
+    });
+    L.control.zoom({ position: 'bottomleft' }).addTo(map);
+    this._map = map;
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 18, attribution: 'Imágenes: Esri, Maxar, Earthstar Geographics'
+    }).addTo(map);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 18, opacity: 0.9
+    }).addTo(map);
+    L.marker([28.7091, -100.4995], {
+      icon: L.divIcon({
+        className: '',
+        iconSize: [16, 16],
+        iconAnchor: [8, 8],
+        html: '<span style="display:block;width:16px;height:16px;border-radius:50%;background:#FF3131;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5)"></span>'
+      })
+    }).addTo(map).bindPopup('Eagle Pass, Condado de Maverick');
+    // Click to engage the wheel, so scrolling the page never gets trapped.
+    map.on('click', () => map.scrollWheelZoom.enable());
+    map.on('mouseout', () => map.scrollWheelZoom.disable());
+    setTimeout(() => map.invalidateSize(), 250);
+  }
+
+  ics() {
+    const pad = (n) => (n < 10 ? '0' + n : '' + n);
+    const now = new Date();
+    const stamp = now.getUTCFullYear() + pad(now.getUTCMonth() + 1) + pad(now.getUTCDate()) +
+      'T' + pad(now.getUTCHours()) + pad(now.getUTCMinutes()) + pad(now.getUTCSeconds()) + 'Z';
+    const es = this.state.lang !== 'en';
+    const ev = [
+      { uid: 'ln-registro', s: '20261005', e: '20261006',
+        t: es ? 'Cierre de registro de votantes · Condado de Maverick'
+              : 'Voter registration deadline · Maverick County',
+        d: es ? 'Último día para inscribirte en el padrón para la elección del 3 de noviembre de 2026.'
+              : 'Last day to register to vote in the November 3, 2026 election.' },
+      { uid: 'ln-temprana', s: '20261019', e: '20261031',
+        t: es ? 'Votación temprana · Precinto 4' : 'Early voting · Precinct 4',
+        d: es ? 'Votación temprana del 19 al 30 de octubre en el Courthouse Annex o Seco Mines.'
+              : 'Early voting October 19–30 at the Courthouse Annex or Seco Mines.' },
+      { uid: 'ln-eleccion', s: '20261103', e: '20261104',
+        t: es ? 'Día de elección · Comisionado Precinto 4' : 'Election day · Precinct 4 Commissioner',
+        d: es ? 'Urnas abiertas de 7:00 AM a 7:00 PM. Lleva identificación válida de Texas.'
+              : 'Polls open 7:00 AM to 7:00 PM. Bring valid Texas photo ID.' }
+    ];
+    const esc = (s) => String(s).replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
+    let out = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Lupe Negrete Precinto 4//ES', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+    ev.forEach((x) => {
+      out = out.concat([
+        'BEGIN:VEVENT',
+        'UID:' + x.uid + '-2026@lupenegrete.com',
+        'DTSTAMP:' + stamp,
+        'DTSTART;VALUE=DATE:' + x.s,
+        'DTEND;VALUE=DATE:' + x.e,
+        'SUMMARY:' + esc(x.t),
+        'DESCRIPTION:' + esc(x.d),
+        'LOCATION:' + esc('Eagle Pass, TX'),
+        'BEGIN:VALARM',
+        'TRIGGER:-P1D',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:' + esc(x.t),
+        'END:VALARM',
+        'END:VEVENT'
+      ]);
+    });
+    out.push('END:VCALENDAR');
+    return out.join('\r\n');
+  }
+
+  bajarIcs() {
+    try {
+      const blob = new Blob([this.ics()], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'elecciones-2026-precinto-4.ics';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      this.setState({ icsListo: true });
+    } catch (e) {}
+  }
+
+  reveal(el) {
+    if (el.dataset.rvDone) return;
+    el.dataset.rvDone = '1';
+    const d = parseFloat(el.getAttribute('data-rv')) || 0;
+    el.style.animation = 'lnRv .78s cubic-bezier(.16,1,.3,1) ' + d + 's both';
+  }
+
+  // Reveal must never be able to strand content: anything the observer
+  // has not delivered within 1.4s is shown unconditionally.
+  failsafe() {
+    clearTimeout(this._fsT);
+    this._fsT = setTimeout(() => {
+      document.querySelectorAll('[data-rv]').forEach((el) => {
+        if (el.dataset.rvDone) return;
+        el.style.opacity = '';
+        el.style.animation = '';
+        el.dataset.rvDone = '1';
+      });
+    }, 1400);
+  }
+
+  setupReveal() {
+    if (this._reduce) return;
+    const supported = typeof IntersectionObserver === 'function';
+    if (supported && !this._io) {
+      this._io = new IntersectionObserver((ents) => {
+        this._ioAlive = true;
+        ents.forEach((en) => {
+          if (!en.isIntersecting) return;
+          this.reveal(en.target);
+          this._io.unobserve(en.target);
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+    }
+    document.querySelectorAll('[data-rv]').forEach((el) => {
+      if (el.dataset.rvSeen) return;
+      el.dataset.rvSeen = '1';
+      const top = el.getBoundingClientRect().top;
+      if (!supported || top < window.innerHeight * 0.9) { this.reveal(el); return; }
+      el.style.opacity = '0';
+      this._io.observe(el);
+    });
+    this.failsafe();
+  }
+
+  setupCount() {
+    const els = Array.prototype.filter.call(
+      document.querySelectorAll('[data-cu]'), (el) => !el.dataset.cuSeen);
+    if (!els.length) return;
+    const io = new IntersectionObserver((ents) => {
+      ents.forEach((en) => {
+        if (!en.isIntersecting) return;
+        const el = en.target;
+        io.unobserve(el);
+        const target = parseInt(el.textContent, 10);
+        if (!isFinite(target)) return;
+        if (this._reduce) return;
+        const t0 = performance.now();
+        const step = (t) => {
+          const p = Math.min(1, (t - t0) / 1100);
+          el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.6 });
+    els.forEach((el) => { el.dataset.cuSeen = '1'; io.observe(el); });
+  }
+
+  setupScroll() {
+    if (!this._onScroll) {
+      this._onScroll = () => {
+        if (this._raf) return;
+        this._raf = requestAnimationFrame(() => { this._raf = null; this.tick(); });
+      };
+      window.addEventListener('scroll', this._onScroll, { passive: true });
+      window.addEventListener('resize', this._onScroll, { passive: true });
+      document.addEventListener('scroll', this._onScroll, { passive: true, capture: true });
+    }
+    this.tick();
+  }
+
+  scrollY() {
+    const de = document.documentElement;
+    const y = window.scrollY || window.pageYOffset ||
+      (de && de.scrollTop) || (document.body && document.body.scrollTop) || 0;
+    if (y) return y;
+    // Some embedded hosts scroll an ancestor instead of the document: fall back
+    // to the drift of a fixed reference point.
+    const hdr = document.querySelector('[data-hdr]');
+    if (hdr) {
+      const t = hdr.getBoundingClientRect().top;
+      if (t < 0) return -t;
+    }
+    return 0;
+  }
+
+  tick() {
+    const y = this.scrollY();
+    const vh = window.innerHeight;
+    const small = y > 60;
+
+    const hdr = document.querySelector('[data-hdr]');
+    const row = document.querySelector('[data-hdr-row]');
+    const logo = document.querySelector('[data-hdr-logo]');
+    if (hdr) hdr.style.boxShadow = small ? '0 8px 28px rgba(6,19,43,.13)' : 'none';
+    if (row) {
+      row.style.minHeight = small ? '56px' : '72px';
+      row.style.paddingTop = small ? '4px' : '10px';
+      row.style.paddingBottom = small ? '4px' : '10px';
+    }
+    if (logo) logo.style.width = small ? 'clamp(142px,14vw,176px)' : 'clamp(180px,18vw,238px)';
+
+    if (!this._reduce) {
+      document.querySelectorAll('[data-px]').forEach((el) => {
+        const sp = parseFloat(el.getAttribute('data-px')) || 0;
+        const base = el.getAttribute('data-pxb') || '';
+        const r = el.getBoundingClientRect();
+        const off = (r.top + r.height / 2 - vh / 2) * -sp;
+        el.style.transform = base + ' translate3d(0,' + off.toFixed(1) + 'px,0)';
+      });
+    }
+
+    const bar = document.querySelector('[data-bar]');
+    if (bar) {
+      // In hosts where the document itself never scrolls, key the bar to the
+      // hero leaving the viewport instead of a scroll offset.
+      let past = y > vh * 0.9;
+      if (!y) {
+        const hero = document.getElementById('top');
+        if (hero) {
+          const r = hero.getBoundingClientRect();
+          past = r.bottom < vh * 0.5;
+        }
+      }
+      bar.style.transform = past ? 'translateY(0)' : 'translateY(130%)';
+    }
+  }
+
+  setLang(lang) {
+    this.setState({ lang: lang }, () => {
+      document.documentElement.setAttribute('lang', lang);
+      try { localStorage.setItem('ln-lang', lang); } catch (e) {}
+    });
+  }
+
+  renderVals() {
+    const lang = this.state.lang === 'en' ? 'en' : 'es';
+    return {
+      t: COPY[lang],
+      isEs: lang === 'es',
+      isEn: lang === 'en',
+      setEs: () => this.setLang('es'),
+      setEn: () => this.setLang('en'),
+      wide: !this.state.narrow,
+      narrow: this.state.narrow,
+      menuOpen: this.state.menuOpen,
+      showMenu: this.state.narrow && this.state.menuOpen,
+      toggleMenu: () => this.setState({ menuOpen: !this.state.menuOpen }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      icsListo: this.state.icsListo,
+      descargarIcs: () => this.bajarIcs(),
+      remAbierto: this.state.remAbierto,
+      remCaret: this.state.remAbierto ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggleRem: () => this.setState({ remAbierto: !this.state.remAbierto }),
+      diasRestantes: this.dias(),
+      showCountdown: this.props.showCountdown ?? true,
+      showDonaciones: this.props.showDonaciones ?? true,
+      formEnviado: this.state.enviado,
+      formPendiente: !this.state.enviado,
+      enviarForm: (e) => { e.preventDefault(); this.setState({ enviado: true }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

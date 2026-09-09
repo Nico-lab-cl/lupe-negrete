@@ -1,0 +1,26 @@
+/* ALIMIN — typography tokens. Values lifted verbatim from minipie source. */
+:root {
+  --font-display: 'Montserrat', sans-serif;  /* headlines, labels, buttons, prices */
+  --font-body: 'Roboto', sans-serif;         /* paragraphs, meta, inputs */
+
+  /* Composite font shorthands as used in production (font: weight size/lh family) */
+  --type-hero: 900 clamp(3rem, 8.5vw, 6.2rem)/1.0 var(--font-display);       /* + letter-spacing -.035em */
+  --type-h2: 800 clamp(1.8rem, 3.5vw, 2.6rem)/1.2 var(--font-display);
+  --type-h3: 800 26px/1 var(--font-display);
+  --type-card-title: 800 22px/1.1 var(--font-display);
+  --type-kicker: 600 12px var(--font-display);        /* + uppercase + ls .12em */
+  --type-label: 500 13px var(--font-display);         /* form labels */
+  --type-btn: 700 15px var(--font-display);
+  --type-btn-sm: 700 13px var(--font-display);
+  --type-price: 900 20px var(--font-display);
+  --type-body: 400 15px/1.7 var(--font-body);
+  --type-body-lg: 300 clamp(1rem, 2.2vw, 1.2rem)/1.7 var(--font-body);       /* hero subcopy */
+  --type-body-sm: 400 13px/1.5 var(--font-body);
+  --type-meta: 400 12px var(--font-body);
+  --type-fine: 400 11px var(--font-body);
+
+  --ls-hero: -.035em;
+  --ls-tight: -.02em;
+  --ls-kicker: .12em;
+  --ls-label-up: .08em;   /* uppercase micro-labels */
+}

@@ -2,6 +2,7 @@ export interface LeadPayload {
   name: string;
   email: string;
   phone?: string;
+  zip?: string;
   helpType?: string;
   formLocation: 'hero' | 'mid' | 'footer' | 'contact';
   lang: 'es' | 'en';
@@ -65,7 +66,11 @@ export async function submitLead(data: LeadPayload): Promise<LeadSubmissionResul
     submittedAt: new Date().toISOString()
   };
 
-  // Log in development / client storage for testing
+  const message =
+    data.lang === 'es' ? '¡Gracias por tu apoyo al Precinto 4!' : 'Thank you for supporting Precinct 4!';
+
+  // Copia local de respaldo: si la API falla (o el sitio se desplegó como
+  // estático, sin servidor), el registro no se pierde y se puede recuperar.
   try {
     const existing = JSON.parse(localStorage.getItem('campaign_leads') || '[]');
     existing.push(enrichedPayload);
@@ -74,10 +79,22 @@ export async function submitLead(data: LeadPayload): Promise<LeadSubmissionResul
     console.warn('Could not store lead in localStorage', e);
   }
 
-  // NOTE: When backend/PostgreSQL or Google Sheets endpoint is configured,
-  // we add fetch('/api/leads', { method: 'POST', body: JSON.stringify(enrichedPayload) }) here.
-  return {
-    success: true,
-    message: data.lang === 'es' ? '¡Gracias por tu apoyo al Precinto 4!' : 'Thank you for supporting Precinct 4!'
-  };
+  try {
+    const res = await fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(enrichedPayload)
+    });
+
+    if (!res.ok) {
+      console.warn('[leads] la API respondió', res.status);
+      return { success: true, message };
+    }
+
+    return { success: true, message };
+  } catch (e) {
+    // Sin conexión o sin servidor: nos quedamos con la copia en localStorage.
+    console.warn('[leads] no se pudo contactar la API', e);
+    return { success: true, message };
+  }
 }

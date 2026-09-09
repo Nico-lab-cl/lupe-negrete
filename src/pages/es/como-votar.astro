@@ -1,0 +1,199 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VotingCalendar from '../../components/vote/VotingCalendar.astro';
+import PollingPlaces from '../../components/vote/PollingPlaces.astro';
+import IdRequirements from '../../components/vote/IdRequirements.astro';
+import BallotGuide from '../../components/vote/BallotGuide.astro';
+import WhatsAppCTA from '../../components/conversion/WhatsAppCTA.astro';
+
+const faqs = [
+  {
+    q: '¿Dónde puedo votar en el Precinto 4 durante la votación temprana?',
+    a: 'Durante el período de votación temprana (del 19 al 30 de octubre de 2026), puedes votar en el Anexo del Palacio de Justicia de Maverick County (501 E Main St) o en el Centro Comunitario Seco Mines en Loma Bonita. Cualquier votante registrado en el condado puede acudir a cualquiera de estos centros.'
+  },
+  {
+    q: '¿Qué horario tienen las casillas el día de la elección general del 3 de noviembre?',
+    a: 'El martes 3 de noviembre de 2026, las casillas del Precinto 4 abren a las 7:00 AM y cierran a las 7:00 PM. Por ley en Texas, si llegas a la casilla y estás en la fila a las 7:00 PM, tienes derecho a emitir tu voto.'
+  },
+  {
+    q: '¿Puedo votar si no tengo una licencia de conducir de Texas con foto?',
+    a: 'Sí. Si no posees una de las 7 identificaciones oficiales con fotografía de Texas y no puedes obtenerla razonablemente, puedes firmar una Declaración de Impedimento Razonable en tu casilla y presentar un documento de apoyo como tu certificado de registro de votante o una factura de servicios públicos.'
+  },
+  {
+    q: '¿Cómo voto por Lupe Negrete si la boleta es muy larga?',
+    a: 'El cargo de Comisionado del Condado (County Commissioner, Precinct 4) se encuentra en la sección de elecciones locales del Condado de Maverick. En tu boleta o pantalla electrónica, desplázate hasta la sección de Comisionado del Precinto 4 y selecciona a Guadalupe "Lupe" Negrete (REP).'
+  }
+];
+
+const faqJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.a
+      }
+    }))
+  }
+];
+---
+
+<BaseLayout
+  title="Dónde y Cómo Votar · Guía Electoral Precinto 4"
+  description="Guía oficial de votación para el Precinto 4 del Condado de Maverick, Texas. Fechas de votación temprana, casillas en Eagle Pass y Loma Bonita, identificaciones requeridas e instructivo de boleta."
+  lang="es"
+  jsonLd={faqJsonLd}
+>
+  <!-- Hero Section -->
+  <section class="bg-navy-950 text-white py-14 md:py-20 border-b-4 border-red-cta relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 relative z-10">
+      <div class="inline-flex items-center gap-2 bg-navy-800/90 text-amber-400 text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full border border-navy-700">
+        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+        Centro de Información Electoral · Elección Noviembre 2026
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black font-heading text-white max-w-4xl leading-[1.05]">
+        Tu Guía para Votar en el Precinto 4
+      </h1>
+
+      <p class="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
+        En una elección de condado, cada voto en nuestras colonias define el futuro de las calles, el alumbrado y la seguridad. Consulta aquí las fechas oficiales, lugares de votación y requisitos.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 1: Voting Calendar -->
+  <section class="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="space-y-2 border-b border-slate-300 pb-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta">Paso 1 · Fechas Clave</span>
+      <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+        Calendario Electoral Oficial de Texas
+      </h2>
+      <p class="text-sm text-slate-600">
+        Conoce los tres momentos clave de la elección en Maverick County.
+      </p>
+    </div>
+
+    <VotingCalendar lang="es" />
+  </section>
+
+  <!-- Section 2: Voter Registration Verification -->
+  <section class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2">
+        <span class="text-xs font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
+          Verificación Oficial
+        </span>
+        <h3 class="text-xl md:text-2xl font-black text-navy-950">
+          ¿Estás registrado para votar en Maverick County?
+        </h3>
+        <p class="text-sm text-slate-600 max-w-2xl">
+          El registro cierra el 5 de octubre de 2026. Puedes consultar tu estatus de registro oficial de inmediato en el portal del Secretario de Estado de Texas.
+        </p>
+      </div>
+
+      <a
+        href="https://teamrv-mvp.sos.texas.gov/MVP/mvp.do"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="shrink-0 bg-navy-900 hover:bg-navy-950 text-white font-black px-6 py-3.5 rounded-xl text-sm tracking-wide shadow-md flex items-center gap-2 focus:ring-4 focus:ring-navy-900/30"
+      >
+        <span>Verificar mi registro oficial</span>
+        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Section 3: Polling Locations -->
+  <section class="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="space-y-2 border-b border-slate-300 pb-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta">Paso 2 · Ubicaciones</span>
+      <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+        ¿Dónde votar en el Precinto 4?
+      </h2>
+      <p class="text-sm text-slate-600">
+        Ubicaciones oficiales para votación temprana y día de la elección con enlaces a Google Maps.
+      </p>
+    </div>
+
+    <PollingPlaces lang="es" />
+  </section>
+
+  <!-- Section 4: ID Requirements -->
+  <section class="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="space-y-2 border-b border-slate-300 pb-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta">Paso 3 · Requisitos Legales</span>
+      <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+        ¿Qué identificación debes llevar a la urna?
+      </h2>
+      <p class="text-sm text-slate-600">
+        Leyes de identificación de votantes en Texas de acuerdo con la Secretaría de Estado.
+      </p>
+    </div>
+
+    <IdRequirements lang="es" />
+  </section>
+
+  <!-- Section 5: Visual Ballot Guide -->
+  <section class="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="space-y-2 border-b border-slate-300 pb-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta">Paso 4 · La Boleta</span>
+      <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+        Cómo encontrar a Lupe Negrete en la boleta
+      </h2>
+      <p class="text-sm text-slate-600">
+        Instrucción visual para no perder tu voto en la sección local de la papeleta.
+      </p>
+    </div>
+
+    <BallotGuide lang="es" />
+  </section>
+
+  <!-- Section 6: FAQs (Optimized for AI Search & Google Summaries) -->
+  <section class="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="space-y-2 border-b border-slate-300 pb-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta">Preguntas Frecuentes</span>
+      <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+        Respuestas Directas para Votantes de Eagle Pass
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {faqs.map((faq) => (
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <h3 class="text-lg font-bold text-navy-950">
+            {faq.q}
+          </h3>
+          <p class="text-sm text-slate-700 leading-relaxed">
+            {faq.a}
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- WhatsApp Help CTA Section -->
+  <section class="py-12 bg-navy-900 text-white border-t border-navy-800">
+    <div class="max-w-4xl mx-auto px-4 text-center space-y-6">
+      <h2 class="text-2xl sm:text-3xl font-black font-heading text-white">
+        ¿Tienes alguna duda sobre tu casilla o cómo votar?
+      </h2>
+      <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto">
+        Nuestro equipo de voluntarios del Precinto 4 te ayuda a verificar tu estatus de registro o ubicar tu casilla más cercana de inmediato.
+      </p>
+      <div>
+        <WhatsAppCTA
+          source="como-votar"
+          lang="es"
+          label="Preguntar por WhatsApp dónde me toca votar"
+          variant="primary"
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,188 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PhotoTriptych from '../../components/content/PhotoTriptych.astro';
+import SignupForm from '../../components/conversion/SignupForm.astro';
+import WhatsAppCTA from '../../components/conversion/WhatsAppCTA.astro';
+import { SITE_CONFIG } from '../../config/site';
+
+const triptych1 = [
+  {
+    src: '/images/candidate-border.png',
+    alt: 'Eagle Pass y el Río Bravo al atardecer',
+    caption: 'Arraigo fronterizo: el Río Bravo y la comunidad de Eagle Pass.'
+  },
+  {
+    src: '/images/hero-candidate-walking.png',
+    alt: 'Lupe caminando con vecinos',
+    caption: 'Cercanía permanente con las familias del Precinto 4.'
+  },
+  {
+    src: '/images/candidate-listening.png',
+    alt: 'Lupe escuchando a residentes locales',
+    caption: 'Atención directa y diálogo abierto con la comunidad.'
+  }
+];
+
+const triptych2 = [
+  {
+    src: '/images/candidate-assembly.png',
+    alt: 'Lupe en asamblea vecinal en Loma Bonita',
+    caption: 'Reuniones de trabajo directo en las calles de las colonias.'
+  },
+  {
+    src: '/images/candidate-courthouse.png',
+    alt: 'Lupe frente a la Corte del Condado de Maverick',
+    caption: 'Compromiso firme de fiscalización en la Corte de Comisionados.'
+  },
+  {
+    src: '/images/candidate-portrait-brown.png',
+    alt: 'Guadalupe Lupe Negrete',
+    caption: 'Experiencia, integridad y honestidad al servicio de Maverick County.'
+  }
+];
+---
+
+<BaseLayout
+  title="Biografía y Trayectoria · Guadalupe 'Lupe' Negrete"
+  description="Conoce la historia, raíces y trayectoria de Guadalupe 'Lupe' Negrete, candidato a Comisionado del Precinto 4 en Maverick County, Texas."
+  lang="es"
+>
+  <!-- Hero Section -->
+  <section class="bg-navy-950 text-white py-14 md:py-20 border-b-4 border-red-cta">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div class="inline-block bg-red-cta/20 border border-red-cta/40 text-red-logo text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full">
+        Historia y Arraigo Local
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black font-heading text-white leading-tight">
+        Su Historia
+      </h1>
+      <p class="text-xl md:text-2xl font-black text-amber-400 font-heading">
+        "{SITE_CONFIG.candidate.positioningLine.es}"
+      </p>
+    </div>
+  </section>
+
+  <article class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    
+    <!-- Lead Portrait & Opening Paragraph -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-lg">
+      <div class="md:col-span-5">
+        <div class="rounded-2xl overflow-hidden shadow-md border border-slate-200 aspect-[4/5]">
+          <img
+            src="/images/candidate-portrait-navy.png"
+            alt="Guadalupe Lupe Negrete"
+            class="w-full h-full object-cover object-top"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+      <div class="md:col-span-7 space-y-4">
+        <h2 class="text-2xl font-black text-navy-950">
+          Un ciudadano de la frontera al servicio de su comunidad
+        </h2>
+        <p class="text-base text-slate-700 leading-relaxed">
+          Guadalupe "Lupe" Negrete —conocido también con aprecio por muchos vecinos como Lupe Navarrete— es un hombre de trabajo formado en los valores tradicionales de esfuerzo, integridad y cercanía que caracterizan a las familias de Eagle Pass.
+        </p>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          Su vida y su trayectoria han estado profundamente ligadas a la realidad de nuestra región fronteriza, donde la palabra empeñada y el servicio a los demás son el pilar de la confianza.
+        </p>
+      </div>
+    </div>
+
+    <!-- ACTO 1 · RAÍCES -->
+    <div class="space-y-4">
+      <div class="border-b-2 border-slate-200 pb-2">
+        <span class="text-xs font-black uppercase tracking-widest text-red-cta">Acto 1</span>
+        <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+          Raíces y Formación en la Frontera
+        </h2>
+      </div>
+
+      <div class="space-y-4 text-slate-800 text-base leading-relaxed">
+        <p>
+          Crecer y formar un hogar en el Condado de Maverick enseña a valorar lo que cuesta cada logro. Desde joven, Lupe aprendió que una comunidad fuerte se levanta con trabajo honesto, respeto a la familia y solidaridad entre vecinos.
+        </p>
+        <p>
+          En el Precinto 4, las familias comparten el anhelo de ver progresar a sus hijos en vecindarios seguros, con servicios públicos dignos y calles transitables. Esas vivencias diarias son las que inspiran su vocación cívica.
+        </p>
+      </div>
+
+      <!-- Tríptico 1 -->
+      <PhotoTriptych photos={triptych1} />
+    </div>
+
+    <!-- ACTO 2 · LO QUE HA HECHO -->
+    <div class="space-y-4">
+      <div class="border-b-2 border-slate-200 pb-2">
+        <span class="text-xs font-black uppercase tracking-widest text-red-cta">Acto 2</span>
+        <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+          Trayectoria, Gestión y Compromiso Comunitario
+        </h2>
+      </div>
+
+      <div class="space-y-4 text-slate-800 text-base leading-relaxed">
+        <p>
+          A lo largo de los años, Lupe Negrete ha demostrado capacidad de gestión, liderazgo responsable y una constante disposición para escuchar las necesidades de los sectores más vulnerables.
+        </p>
+        <p>
+          Frente a la continuidad de administraciones que postergan a las colonias, Lupe ha mantenido una postura de fiscalización activa y defensa de los recursos del contribuyente, participando en iniciativas vecinales y exigiendo que la corte de comisionados responda a las demandas reales de los residentes.
+        </p>
+      </div>
+    </div>
+
+    <!-- ACTO 3 · POR QUÉ SE POSTULA AHORA -->
+    <div class="space-y-4">
+      <div class="border-b-2 border-slate-200 pb-2">
+        <span class="text-xs font-black uppercase tracking-widest text-red-cta">Acto 3</span>
+        <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+          Por Qué se Postula Ahora al Precinto 4
+        </h2>
+      </div>
+
+      <div class="space-y-4 text-slate-800 text-base leading-relaxed">
+        <p>
+          El Precinto 4 no puede esperar otros cuatro años. El deterioro de las calles de tierra en Loma Bonita, la falta de luminarias en esquinas conflictivas y la opacidad en el manejo del presupuesto del condado exigen una representación firme, honesta y sin ataduras políticas.
+        </p>
+        <p>
+          Lupe Negrete se postula para ser la voz de quienes pagan sus impuestos y no ven obras en su cuadra. Su compromiso en la Corte de Comisionados será trabajar incansablemente con un solo propósito: asegurar que los recursos del condado lleguen a donde más se necesitan.
+        </p>
+      </div>
+
+      <!-- Tríptico 2 -->
+      <PhotoTriptych photos={triptych2} />
+    </div>
+
+    <!-- CIERRE HUMANIZADOR -->
+    <div class="bg-bone p-6 md:p-8 rounded-3xl border-2 border-navy-900/20 text-center space-y-3">
+      <p class="text-xl md:text-2xl font-black font-heading text-navy-950">
+        "Mi compromiso no es con los grupos de poder; es con cada familia de Eagle Pass que sueña con un mejor futuro para sus hijos."
+      </p>
+      <p class="text-sm font-bold text-slate-600">
+        — Guadalupe "Lupe" Negrete
+      </p>
+    </div>
+
+    <!-- Bottom CTAs: Support Form & Proposals -->
+    <div class="pt-8 border-t border-slate-300 space-y-8">
+      <div class="max-w-xl mx-auto">
+        <SignupForm lang="es" formLocation="mid" />
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-4 pt-4">
+        <a
+          href="/es/propuestas/"
+          class="bg-navy-900 hover:bg-navy-950 text-white font-black px-6 py-3.5 rounded-xl text-sm shadow-md transition-all"
+        >
+          Conoce sus propuestas de gobierno →
+        </a>
+        <a
+          href="/es/como-votar/"
+          class="bg-red-cta hover:bg-red-dark text-white font-black px-6 py-3.5 rounded-xl text-sm shadow-md transition-all"
+        >
+          Guía de votación en Precinto 4 →
+        </a>
+      </div>
+    </div>
+
+  </article>
+</BaseLayout>

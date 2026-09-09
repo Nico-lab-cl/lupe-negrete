@@ -1,0 +1,49 @@
+// Esquema de la base de datos de la campaña.
+// Aplicar cambios:  npx prisma migrate dev --name <descripcion>
+// En producción:    npx prisma migrate deploy
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Registros del formulario "Súmate a la campaña" y de los demás formularios
+/// de captura del sitio.
+model Lead {
+  id String @id @default(cuid())
+
+  name  String
+  email String
+  phone String?
+  zip   String?
+
+  /// Opción elegida en el selector "en qué quieres ayudar" (SignupForm).
+  helpType String?
+
+  /// Dónde estaba el formulario: hero, mid, footer, contact.
+  formLocation String @default("hero")
+
+  /// Idioma en el que se registró la persona: es | en.
+  lang String @default("es")
+
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+
+  /// Metadatos de la petición, útiles para depurar y detectar abuso.
+  userAgent String?
+  ipHash    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([createdAt])
+  @@index([formLocation])
+  @@map("leads")
+}

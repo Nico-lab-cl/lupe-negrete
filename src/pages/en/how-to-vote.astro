@@ -1,0 +1,199 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VotingCalendar from '../../components/vote/VotingCalendar.astro';
+import PollingPlaces from '../../components/vote/PollingPlaces.astro';
+import IdRequirements from '../../components/vote/IdRequirements.astro';
+import BallotGuide from '../../components/vote/BallotGuide.astro';
+import WhatsAppCTA from '../../components/conversion/WhatsAppCTA.astro';
+
+const faqs = [
+  {
+    q: 'Where can I vote in Precinct 4 during Early Voting?',
+    a: 'During Early Voting (October 19–30, 2026), you can cast your ballot at the Maverick County Courthouse Annex (501 E Main St) or the Seco Mines Community Center in Loma Bonita. Any registered county voter can visit either designated location.'
+  },
+  {
+    q: 'What are the polling hours on General Election Day, November 3?',
+    a: 'On Tuesday, November 3, 2026, Precinct 4 polling locations open at 7:00 AM and close at 7:00 PM. Under Texas law, as long as you are in line by 7:00 PM, you have the legal right to cast your vote.'
+  },
+  {
+    q: 'Can I vote if I do not have a Texas driver license with photo?',
+    a: 'Yes. If you do not possess one of the 7 approved Texas photo IDs and cannot reasonably obtain one, you can sign a Reasonable Impediment Declaration at your polling location and present a supporting document such as your voter registration certificate or a recent utility bill.'
+  },
+  {
+    q: 'How do I locate Lupe Negrete on the long general election ballot?',
+    a: 'The County Commissioner, Precinct 4 race is located under the local Maverick County section on your ballot. Scroll down past federal and state offices to find the Precinct 4 contest and select Guadalupe "Lupe" Negrete (REP).'
+  }
+];
+
+const faqJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.a
+      }
+    }))
+  }
+];
+---
+
+<BaseLayout
+  title="Where & How to Vote · Precinct 4 Voting Guide"
+  description="Official voting guide for Precinct 4, Maverick County, Texas. Early voting dates, polling locations in Eagle Pass & Loma Bonita, ID requirements, and ballot instructions."
+  lang="en"
+  jsonLd={faqJsonLd}
+>
+  <!-- Hero Section -->
+  <section class="bg-navy-950 text-white py-14 md:py-20 border-b-4 border-red-cta relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 relative z-10">
+      <div class="inline-flex items-center gap-2 bg-navy-800/90 text-amber-400 text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full border border-navy-700">
+        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+        Voter Information Center · November 2026 Election
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black font-heading text-white max-w-4xl leading-[1.05]">
+        Your Guide to Voting in Precinct 4
+      </h1>
+
+      <p class="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
+        In a county commissioner election, every vote in our neighborhoods defines the quality of our streets, lighting, and community security. Review official dates, polling places, and requirements below.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 1: Voting Calendar -->
+  <section class="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="space-y-2 border-b border-slate-300 pb-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta">Step 1 · Key Dates</span>
+      <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+        Official Texas Election Calendar
+      </h2>
+      <p class="text-sm text-slate-600">
+        The three essential milestones of the election in Maverick County.
+      </p>
+    </div>
+
+    <VotingCalendar lang="en" />
+  </section>
+
+  <!-- Section 2: Voter Registration Verification -->
+  <section class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2">
+        <span class="text-xs font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
+          Official Verification
+        </span>
+        <h3 class="text-xl md:text-2xl font-black text-navy-950">
+          Are you registered to vote in Maverick County?
+        </h3>
+        <p class="text-sm text-slate-600 max-w-2xl">
+          Registration closes on October 5, 2026. Check your official registration status instantly on the Texas Secretary of State portal.
+        </p>
+      </div>
+
+      <a
+        href="https://teamrv-mvp.sos.texas.gov/MVP/mvp.do"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="shrink-0 bg-navy-900 hover:bg-navy-950 text-white font-black px-6 py-3.5 rounded-xl text-sm tracking-wide shadow-md flex items-center gap-2 focus:ring-4 focus:ring-navy-900/30"
+      >
+        <span>Check Registration Status</span>
+        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Section 3: Polling Locations -->
+  <section class="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="space-y-2 border-b border-slate-300 pb-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta">Step 2 · Polling Locations</span>
+      <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+        Where to Vote in Precinct 4
+      </h2>
+      <p class="text-sm text-slate-600">
+        Official locations for early voting and election day with directions and Google Maps links.
+      </p>
+    </div>
+
+    <PollingPlaces lang="en" />
+  </section>
+
+  <!-- Section 4: ID Requirements -->
+  <section class="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="space-y-2 border-b border-slate-300 pb-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta">Step 3 · Identification</span>
+      <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+        What ID do you need to bring to the polls?
+      </h2>
+      <p class="text-sm text-slate-600">
+        Texas voter identification requirements as established by the Texas Secretary of State.
+      </p>
+    </div>
+
+    <IdRequirements lang="en" />
+  </section>
+
+  <!-- Section 5: Visual Ballot Guide -->
+  <section class="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="space-y-2 border-b border-slate-300 pb-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta">Step 4 · Ballot Instructions</span>
+      <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+        How to Locate Lupe Negrete on the Ballot
+      </h2>
+      <p class="text-sm text-slate-600">
+        Step-by-step visual instruction to ensure your vote is counted in the local section.
+      </p>
+    </div>
+
+    <BallotGuide lang="en" />
+  </section>
+
+  <!-- Section 6: FAQs -->
+  <section class="py-12 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="space-y-2 border-b border-slate-300 pb-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta">Frequently Asked Questions</span>
+      <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+        Direct Answers for Eagle Pass Voters
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {faqs.map((faq) => (
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <h3 class="text-lg font-bold text-navy-950">
+            {faq.q}
+          </h3>
+          <p class="text-sm text-slate-700 leading-relaxed">
+            {faq.a}
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- WhatsApp Help CTA Section -->
+  <section class="py-12 bg-navy-900 text-white border-t border-navy-800">
+    <div class="max-w-4xl mx-auto px-4 text-center space-y-6">
+      <h2 class="text-2xl sm:text-3xl font-black font-heading text-white">
+        Need assistance finding your polling site?
+      </h2>
+      <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto">
+        Our team of Precinct 4 volunteers is ready to help you verify your registration status or find your nearest voting booth.
+      </p>
+      <div>
+        <WhatsAppCTA
+          source="como-votar"
+          lang="en"
+          label="Ask on WhatsApp where to vote"
+          variant="primary"
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

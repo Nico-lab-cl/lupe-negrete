@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import WhatsAppCTA from '../../../components/conversion/WhatsAppCTA.astro';
+
+const proposals = [
+  {
+    slug: 'pavimentacion',
+    href: '/es/propuestas/pavimentacion/',
+    title: 'Pavimentación Equitativa en las Colonias',
+    shortDesc: 'Asfalto y drenaje pluvial para Loma Bonita y sectores rezagados con la misma urgencia y presupuesto que el centro de Eagle Pass.',
+    image: '/images/candidate-assembly.png',
+    badge: 'Prioridad 1'
+  },
+  {
+    slug: 'alumbrado',
+    href: '/es/propuestas/alumbrado/',
+    title: 'Alumbrado Público y Apoyo al Sheriff',
+    shortDesc: 'Luminarias funcionales en cada cuadra para disuadir la delincuencia nocturna y mayor presupuesto de patrullaje para el Departamento del Alguacil.',
+    image: '/images/candidate-listening.png',
+    badge: 'Prioridad 2'
+  },
+  {
+    slug: 'auditoria',
+    href: '/es/propuestas/auditoria/',
+    title: 'Auditoría Integral al Presupuesto del Condado',
+    shortDesc: 'Revisión minuciosa de cada contrato y gasto de la corte de comisionados para recortar excesos y redirigir los fondos a servicios esenciales.',
+    image: '/images/candidate-courthouse.png',
+    badge: 'Prioridad 3'
+  }
+];
+---
+
+<BaseLayout
+  title="Propuestas y Compromisos de Campaña · Precinto 4"
+  description="Las tres prioridades de Lupe Negrete para el Precinto 4 de Maverick County: pavimentación equitativa, alumbrado público con seguridad, y auditoría al presupuesto."
+  lang="es"
+>
+  <section class="bg-navy-950 text-white py-14 md:py-20 border-b-4 border-red-cta">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <span class="text-xs font-black uppercase tracking-widest text-red-cta bg-red-cta/20 px-3 py-1 rounded-full border border-red-cta/40">
+        Plataforma Electoral · Maverick County
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black font-heading text-white max-w-3xl leading-tight">
+        Tres Compromisos Claros para el Precinto 4
+      </h1>
+      <p class="text-slate-300 text-base sm:text-lg max-w-2xl">
+        Sin promesas vacías ni discursos burocráticos. Tres ejes de trabajo concretos para responder al abandono histórico de nuestras colonias.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {proposals.map((item) => (
+        <article class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-lg hover:shadow-2xl transition-all flex flex-col justify-between group">
+          <div class="aspect-[16/10] overflow-hidden bg-slate-100 relative">
+            <img
+              src={item.image}
+              alt={item.title}
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+            <div class="absolute top-3 left-3 bg-navy-900 text-white font-black text-xs uppercase tracking-wider px-3 py-1 rounded shadow-xs">
+              {item.badge}
+            </div>
+          </div>
+
+          <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+            <div class="space-y-2">
+              <h2 class="text-xl md:text-2xl font-black text-navy-950 leading-snug">
+                {item.title}
+              </h2>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                {item.shortDesc}
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100">
+              <a
+                href={item.href}
+                class="inline-flex items-center justify-between w-full bg-navy-900 hover:bg-navy-950 text-white font-bold py-3 px-4 rounded-xl text-sm transition-colors shadow-md"
+              >
+                <span>Leer propuesta completa</span>
+                <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Supplementary Sheriff & Public Safety Banner -->
+    <div class="bg-navy-900 text-white p-8 rounded-3xl border border-navy-700 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2 max-w-2xl">
+        <span class="text-xs font-black uppercase tracking-widest text-amber-400">
+          Seguridad Fronteriza y Vecinal
+        </span>
+        <h3 class="text-2xl font-black font-heading text-white">
+          Apoyo Total al Departamento del Alguacil (Sheriff)
+        </h3>
+        <p class="text-sm text-slate-300">
+          Más patrullaje en colonias alejadas, equipamiento moderno para oficiales y estrecha coordinación para mantener la tranquilidad en nuestra frontera.
+        </p>
+      </div>
+
+      <WhatsAppCTA source="contacto" lang="es" label="Reportar situación de mi colonia" variant="primary" />
+    </div>
+  </section>
+</BaseLayout>

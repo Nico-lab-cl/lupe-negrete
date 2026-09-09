@@ -1,0 +1,188 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PhotoTriptych from '../../components/content/PhotoTriptych.astro';
+import SignupForm from '../../components/conversion/SignupForm.astro';
+import WhatsAppCTA from '../../components/conversion/WhatsAppCTA.astro';
+import { SITE_CONFIG } from '../../config/site';
+
+const triptych1 = [
+  {
+    src: '/images/candidate-border.png',
+    alt: 'Eagle Pass and the Rio Grande River at sunset',
+    caption: 'Deep border roots: the Rio Grande and Eagle Pass community.'
+  },
+  {
+    src: '/images/hero-candidate-walking.png',
+    alt: 'Lupe walking with neighbors',
+    caption: 'Continuous engagement with Precinct 4 families.'
+  },
+  {
+    src: '/images/candidate-listening.png',
+    alt: 'Lupe listening to local residents',
+    caption: 'Direct listening and honest dialogue with the community.'
+  }
+];
+
+const triptych2 = [
+  {
+    src: '/images/candidate-assembly.png',
+    alt: 'Lupe at neighborhood meeting in Loma Bonita',
+    caption: 'Grassroots meetings on the streets of our colonias.'
+  },
+  {
+    src: '/images/candidate-courthouse.png',
+    alt: 'Lupe in front of Maverick County Courthouse',
+    caption: 'A steadfast commitment to fiscal oversight in Commissioners Court.'
+  },
+  {
+    src: '/images/candidate-portrait-brown.png',
+    alt: 'Guadalupe Lupe Negrete',
+    caption: 'Experience, integrity, and honesty serving Maverick County.'
+  }
+];
+---
+
+<BaseLayout
+  title="Biography & Background · Guadalupe 'Lupe' Negrete"
+  description="Learn about the roots, values, and track record of Guadalupe 'Lupe' Negrete, candidate for County Commissioner, Precinct 4 in Maverick County, Texas."
+  lang="en"
+>
+  <!-- Hero Section -->
+  <section class="bg-navy-950 text-white py-14 md:py-20 border-b-4 border-red-cta">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div class="inline-block bg-red-cta/20 border border-red-cta/40 text-red-logo text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full">
+        Local History & Roots
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black font-heading text-white leading-tight">
+        His Story
+      </h1>
+      <p class="text-xl md:text-2xl font-black text-amber-400 font-heading">
+        "{SITE_CONFIG.candidate.positioningLine.en}"
+      </p>
+    </div>
+  </section>
+
+  <article class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    
+    <!-- Lead Portrait & Opening Paragraph -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-lg">
+      <div class="md:col-span-5">
+        <div class="rounded-2xl overflow-hidden shadow-md border border-slate-200 aspect-[4/5]">
+          <img
+            src="/images/candidate-portrait-navy.png"
+            alt="Guadalupe Lupe Negrete"
+            class="w-full h-full object-cover object-top"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+      <div class="md:col-span-7 space-y-4">
+        <h2 class="text-2xl font-black text-navy-950">
+          A dedicated citizen of the border serving his community
+        </h2>
+        <p class="text-base text-slate-700 leading-relaxed">
+          Guadalupe "Lupe" Negrete —also known warmly by many long-time residents as Lupe Navarrete— is a hardworking family man raised on traditional values of perseverance, integrity, and genuine community connection in Eagle Pass.
+        </p>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          His life and public commitments are anchored in our border reality, where keeping one's word and helping one's neighbor remain the ultimate foundation of trust.
+        </p>
+      </div>
+    </div>
+
+    <!-- ACT 1 · ROOTS -->
+    <div class="space-y-4">
+      <div class="border-b-2 border-slate-200 pb-2">
+        <span class="text-xs font-black uppercase tracking-widest text-red-cta">Act 1</span>
+        <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+          Roots & Upbringing on the Texas Border
+        </h2>
+      </div>
+
+      <div class="space-y-4 text-slate-800 text-base leading-relaxed">
+        <p>
+          Raising a family in Maverick County teaches the true value of honest labor. From an early age, Lupe learned that strong communities are built through hard work, faith, and mutual support between neighbors.
+        </p>
+        <p>
+          Across Precinct 4, families share the universal aspiration to see their children thrive in safe neighborhoods with reliable public lighting, well-paved streets, and responsive local government. Those daily realities drive his commitment to public service.
+        </p>
+      </div>
+
+      <!-- Triptych 1 -->
+      <PhotoTriptych photos={triptych1} />
+    </div>
+
+    <!-- ACT 2 · RECORD -->
+    <div class="space-y-4">
+      <div class="border-b-2 border-slate-200 pb-2">
+        <span class="text-xs font-black uppercase tracking-widest text-red-cta">Act 2</span>
+        <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+          Community Service, Planning & Leadership
+        </h2>
+      </div>
+
+      <div class="space-y-4 text-slate-800 text-base leading-relaxed">
+        <p>
+          Over the years, Lupe Negrete has demonstrated practical management skills, accountable leadership, and an unwavering willingness to listen to the concerns of everyday residents.
+        </p>
+        <p>
+          In contrast to an entrenched political establishment that has historically overlooked outlying colonias, Lupe has maintained an active role in demanding fiscal transparency and ensuring that the Commissioners Court accounts for every taxpayer dollar.
+        </p>
+      </div>
+    </div>
+
+    <!-- ACT 3 · WHY RUN NOW -->
+    <div class="space-y-4">
+      <div class="border-b-2 border-slate-200 pb-2">
+        <span class="text-xs font-black uppercase tracking-widest text-red-cta">Act 3</span>
+        <h2 class="text-2xl md:text-3xl font-black text-navy-950">
+          Why He Is Running for Precinct 4 Now
+        </h2>
+      </div>
+
+      <div class="space-y-4 text-slate-800 text-base leading-relaxed">
+        <p>
+          Precinct 4 cannot afford four more years of broken promises. Chronic dirt road conditions in Loma Bonita, dark unlit streets, and a lack of budget oversight require courageous, independent representation.
+        </p>
+        <p>
+          Lupe Negrete is running to be the voice of working families who pay their taxes and receive little in return. His sole commitment on the Commissioners Court is to ensure that county resources are invested where they are needed most.
+        </p>
+      </div>
+
+      <!-- Triptych 2 -->
+      <PhotoTriptych photos={triptych2} />
+    </div>
+
+    <!-- CLOSING HUMANIZING SENTENCE -->
+    <div class="bg-bone p-6 md:p-8 rounded-3xl border-2 border-navy-900/20 text-center space-y-3">
+      <p class="text-xl md:text-2xl font-black font-heading text-navy-950">
+        "My allegiance is not to political insiders; it is to every hardworking family in Eagle Pass who dreams of a safer and stronger future."
+      </p>
+      <p class="text-sm font-bold text-slate-600">
+        — Guadalupe "Lupe" Negrete
+      </p>
+    </div>
+
+    <!-- Bottom CTAs -->
+    <div class="pt-8 border-t border-slate-300 space-y-8">
+      <div class="max-w-xl mx-auto">
+        <SignupForm lang="en" formLocation="mid" />
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-4 pt-4">
+        <a
+          href="/en/issues/"
+          class="bg-navy-900 hover:bg-navy-950 text-white font-black px-6 py-3.5 rounded-xl text-sm shadow-md transition-all"
+        >
+          Explore his policy platform →
+        </a>
+        <a
+          href="/en/how-to-vote/"
+          class="bg-red-cta hover:bg-red-dark text-white font-black px-6 py-3.5 rounded-xl text-sm shadow-md transition-all"
+        >
+          Precinct 4 Voting Guide →
+        </a>
+      </div>
+    </div>
+
+  </article>
+</BaseLayout>

@@ -1,0 +1,128 @@
+---
+import { SITE_CONFIG } from '../config/site';
+import PoliticalDisclaimer from '../components/conversion/PoliticalDisclaimer.astro';
+import '../styles/global.css';
+
+const siteUrl = SITE_CONFIG.siteUrl;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guadalupe "Lupe" Negrete | Comisionado Precinto 4 · Maverick County</title>
+    <meta
+      name="description"
+      content="Sitio oficial de campaña de Guadalupe 'Lupe' Negrete para Comisionado del Condado, Precinto 4 en Maverick County, Texas. Información de votación, propuestas y contacto."
+    />
+    <link rel="canonical" href={siteUrl} />
+    <link rel="icon" type="image/png" href="/images/logo-es.png" />
+
+    <!-- Reciprocal hreflang & x-default -->
+    <link rel="alternate" hreflang="es" href={`${siteUrl}/es/`} />
+    <link rel="alternate" hreflang="en" href={`${siteUrl}/en/`} />
+    <link rel="alternate" hreflang="x-default" href={siteUrl} />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Public+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Client-side Smart Language Detection (Bots are unaffected, 200 OK served) -->
+    <script is:inline>
+      (function () {
+        try {
+          // If user manually switched before, respect localStorage
+          var saved = localStorage.getItem('preferred_lang');
+          if (saved === 'en') {
+            window.location.replace('/en/');
+            return;
+          } else if (saved === 'es') {
+            window.location.replace('/es/');
+            return;
+          }
+
+          // Otherwise detect browser language once per session
+          if (!sessionStorage.getItem('root_redirect_done')) {
+            sessionStorage.setItem('root_redirect_done', 'true');
+            var browserLang = navigator.language || navigator.userLanguage || '';
+            if (browserLang.toLowerCase().indexOf('es') === 0) {
+              window.location.replace('/es/');
+            } else {
+              window.location.replace('/en/');
+            }
+          }
+        } catch (e) {
+          // Fallback gracefully to static page below
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-navy-950 text-white min-h-screen flex flex-col justify-between items-center p-6 text-center antialiased">
+    <header class="w-full max-w-xl mx-auto pt-8">
+      <img
+        src="/images/logo-es.png"
+        alt="Guadalupe Lupe Negrete - Comisionado Precinto 4"
+        class="h-24 md:h-32 w-auto mx-auto object-contain bg-white/95 p-3 rounded-2xl shadow-xl"
+        width="280"
+        height="90"
+      />
+    </header>
+
+    <main class="w-full max-w-xl mx-auto my-8 space-y-8 bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-md shadow-2xl">
+      <div class="space-y-3">
+        <span class="text-xs font-black uppercase tracking-widest text-red-logo">
+          Elección Noviembre 2026 · Maverick County, Texas
+        </span>
+        <h1 class="text-3xl md:text-4xl font-black font-heading text-white">
+          Experiencia, Integridad y Honestidad
+        </h1>
+        <p class="text-slate-300 text-sm md:text-base">
+          Elige tu idioma para continuar / Select your preferred language to continue:
+        </p>
+      </div>
+
+      <!-- Two Big Language Selection Buttons -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <a
+          href="/es/"
+          class="flex flex-col items-center justify-center p-6 rounded-2xl bg-white text-navy-950 font-black text-xl hover:bg-slate-100 transition-all transform hover:-translate-y-1 shadow-lg border-2 border-transparent hover:border-red-cta focus:ring-4 focus:ring-red-cta"
+        >
+          <span class="text-2xl font-black text-red-cta mb-1">ESPAÑOL</span>
+          <span class="text-xs font-medium text-slate-600">Continuar en Español</span>
+        </a>
+        <a
+          href="/en/"
+          class="flex flex-col items-center justify-center p-6 rounded-2xl bg-navy-900 text-white font-black text-xl hover:bg-navy-800 transition-all transform hover:-translate-y-1 shadow-lg border-2 border-navy-700 hover:border-red-cta focus:ring-4 focus:ring-red-cta"
+        >
+          <span class="text-2xl font-black text-amber-400 mb-1">ENGLISH</span>
+          <span class="text-xs font-medium text-slate-300">Continue in English</span>
+        </a>
+      </div>
+
+      <!-- Quick Electoral Dates Snapshot -->
+      <div class="pt-4 border-t border-white/10 grid grid-cols-3 gap-2 text-xs text-slate-300">
+        <div>
+          <p class="font-bold text-white">5 OCT</p>
+          <p class="text-[11px] text-slate-400">Registro / Register</p>
+        </div>
+        <div>
+          <p class="font-bold text-amber-300">19–30 OCT</p>
+          <p class="text-[11px] text-slate-400">Early Voting</p>
+        </div>
+        <div>
+          <p class="font-bold text-white">3 NOV</p>
+          <p class="text-[11px] text-slate-400">Elección / Election</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="w-full max-w-xl mx-auto pb-4">
+      <PoliticalDisclaimer />
+    </footer>
+  </body>
+</html>

@@ -3,3 +3,15 @@ node_modules/
 dist/
 .DS_Store
 *.log
+
+# Variables de entorno: nunca al repositorio.
+.env
+.env.*
+!.env.example
+
+# Certificados locales para redes con inspección TLS (no son del proyecto).
+certs/
+
+# Material interno de campaña (presupuesto, grabaciones, fotos sin editar).
+# Este repositorio es público: se deja fuera a propósito.
+Campaña de marketing político _ Lupe Navarrete/

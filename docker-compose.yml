@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lupe}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lupe}
+      POSTGRES_DB: ${POSTGRES_DB:-lupe_negrete}
+    ports:
+      # Expuesto para poder usar Prisma Studio y psql desde el equipo.
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-lupe} -d ${POSTGRES_DB:-lupe_negrete}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Aplica las migraciones y termina. La app espera a que salga sin error.
+  # Usa la etapa `build`, que sí trae el CLI de Prisma.
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
+    command: npx prisma migrate deploy
+    environment:
+      # OJO: dentro de la red de compose el host es `db`, no `localhost`.
+      # DATABASE_URL en tu .env apunta a localhost porque sirve para correr la
+      # app fuera de Docker; por eso aquí se usa APP_DATABASE_URL.
+      DATABASE_URL: ${APP_DATABASE_URL:-postgresql://lupe:lupe@db:5432/lupe_negrete?schema=public}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: 'no'
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${APP_DATABASE_URL:-postgresql://lupe:lupe@db:5432/lupe_negrete?schema=public}
+      IP_HASH_SALT: ${IP_HASH_SALT:-cambiar-esto-en-produccion}
+      HOST: 0.0.0.0
+      PORT: 4321
+    ports:
+      - '4321:4321'
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  pgdata:

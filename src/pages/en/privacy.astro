@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../../config/site';
+---
+
+<BaseLayout
+  title="Privacy Policy & SMS Terms"
+  description="Official Privacy Policy and SMS text messaging terms (TCPA 10DLC compliant) for the Guadalupe 'Lupe' Negrete Campaign."
+  lang="en"
+>
+  <section class="bg-navy-950 text-white py-14 md:py-16 border-b-4 border-slate-700">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
+      <h1 class="text-3xl sm:text-4xl font-black font-heading text-white">
+        Privacy Policy & SMS Messaging Terms
+      </h1>
+      <p class="text-slate-400 text-sm">
+        Last updated: August 30, 2026 · Texas Ethics Commission and TCPA compliance
+      </p>
+    </div>
+  </section>
+
+  <article class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-slate space-y-8 text-slate-800 text-base leading-relaxed">
+    
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+      <h2 class="text-xl font-bold text-navy-950">1. Campaign Privacy Commitment</h2>
+      <p>
+        The campaign committee for <strong>{SITE_CONFIG.committee.legalName}</strong> deeply respects the privacy of voters and residents in Maverick County, Texas. Information collected through this website is used solely for civic communication, voter turnout updates, and grassroots organizing.
+      </p>
+      <p class="font-bold text-navy-950">
+        We never sell, rent, or trade your personal information to third-party commercial advertisers or unrelated organizations.
+      </p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+      <h2 class="text-xl font-bold text-navy-950">2. SMS Text Messaging Terms (TCPA / 10DLC)</h2>
+      <p>
+        By voluntarily providing your mobile phone number on any of our forms, you provide explicit consent to receive informational campaign updates and election reminders via SMS from the Guadalupe "Lupe" Negrete Campaign.
+      </p>
+      <ul class="list-disc pl-5 space-y-1 text-sm text-slate-700">
+        <li><strong>Message Frequency:</strong> Periodic and varies based on the election calendar (higher volume during Early Voting).</li>
+        <li><strong>Data Rates:</strong> Message & data rates may apply depending on your cellular provider.</li>
+        <li><strong>Opt-Out:</strong> You can cancel SMS alerts at any time by replying <strong>STOP</strong> to any message.</li>
+        <li><strong>Assistance:</strong> Reply <strong>HELP</strong> for assistance or contact us at <a href={`mailto:${SITE_CONFIG.committee.email}`} class="text-navy-900 underline">{SITE_CONFIG.committee.email}</a>.</li>
+      </ul>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+      <h2 class="text-xl font-bold text-navy-950">3. Information Collected</h2>
+      <p>
+        We only gather information you submit directly (name, email, phone number, volunteer preferences) and campaign UTM tracking tags to monitor digital outreach efficiency.
+      </p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+      <h2 class="text-xl font-bold text-navy-950">4. Official Inquiries</h2>
+      <p>
+        For inquiries regarding this policy or to request removal from our contact database, email <a href={`mailto:${SITE_CONFIG.committee.email}`} class="text-navy-900 font-bold underline">{SITE_CONFIG.committee.email}</a> or mail {SITE_CONFIG.committee.address}.
+      </p>
+    </div>
+
+  </article>
+</BaseLayout>

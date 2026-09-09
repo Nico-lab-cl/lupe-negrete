@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../../config/site';
+---
+
+<BaseLayout
+  title="Declaración de Accesibilidad Web (WCAG 2.2 AA)"
+  description="Declaración de accesibilidad web y compromiso de inclusión digital de la campaña de Guadalupe 'Lupe' Negrete."
+  lang="es"
+>
+  <section class="bg-navy-950 text-white py-14 md:py-16 border-b-4 border-slate-700">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
+      <h1 class="text-3xl sm:text-4xl font-black font-heading text-white">
+        Declaración de Accesibilidad Web
+      </h1>
+      <p class="text-slate-400 text-sm">
+        Compromiso con las pautas de accesibilidad para el contenido web (WCAG 2.2 Nivel AA)
+      </p>
+    </div>
+  </section>
+
+  <article class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-slate space-y-8 text-slate-800 text-base leading-relaxed">
+    
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+      <h2 class="text-xl font-bold text-navy-950">1. Compromiso de Inclusión Digital</h2>
+      <p>
+        La campaña de <strong>Guadalupe "Lupe" Negrete</strong> tiene como objetivo garantizar que todos los residentes y votantes del Precinto 4 y del Condado de Maverick, independientemente de sus capacidades o tecnología de navegación, puedan acceder plenamente a la información electoral y propuestas cívicas de este sitio web.
+      </p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+      <h2 class="text-xl font-bold text-navy-950">2. Medidas Técnicas Implementadas</h2>
+      <ul class="list-disc pl-5 space-y-2 text-sm text-slate-700">
+        <li><strong>Navegación por teclado:</strong> Enlace de salto rápido ("Saltar al contenido principal") y focos visuales visibles y gruesos en todos los elementos interactivos.</li>
+        <li><strong>Contraste visual de alto nivel:</strong> Relación de contraste mínima de 4.5:1 para texto normal y 3:1 para elementos de interfaz y texto grande.</li>
+        <li><strong>Estructura semántica HTML5:</strong> Jerarquía ordenada de encabezados (un solo H1 por página, sin saltos de niveles), etiquetas descriptivas en formularios y atributos <code>aria-live</code> para validación de errores.</li>
+        <li><strong>Compatibilidad móvil y táctil:</strong> Objetivos táctiles mínimos de 44×44 px adaptados para uso con una sola mano y soporte de zoom al 200 % sin pérdida de información ni desplazamiento horizontal.</li>
+        <li><strong>Texto alternativo en imágenes:</strong> Descripciones contextuales precisas en fotografías reales y atributos nulos (<code>alt=""</code>) en gráficos decorativos.</li>
+      </ul>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+      <h2 class="text-xl font-bold text-navy-950">3. Comentarios y Asistencia</h2>
+      <p>
+        Si encuentras alguna barrera de accesibilidad o necesitas asistencia para consultar algún contenido electoral, por favor contáctanos al correo <a href={`mailto:${SITE_CONFIG.committee.email}`} class="text-navy-900 font-bold underline">{SITE_CONFIG.committee.email}</a>.
+      </p>
+    </div>
+
+  </article>
+</BaseLayout>

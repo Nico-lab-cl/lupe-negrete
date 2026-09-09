@@ -1,0 +1,71 @@
+/* ALIMIN — color tokens. Every value extracted from aliminspa.cl/minipie source. */
+:root {
+  /* ── Brand core ── */
+  --azul-profundo: #325366;   /* deep slate blue — seriousness, premium anchor */
+  --verde-solido: #4ba646;    /* solid brand green */
+  --verde-suave: #6ac28f;     /* soft green — gradients, details */
+  --verde-lima: #76d845;      /* lime accent — CTAs, highlights, live dots */
+  --verde-lima-text: #b8f07a; /* lime tint used for text on dark pills */
+
+  /* ── Dark surfaces (the page's default world) ── */
+  --navy-950: #0a1520;
+  --navy-900: #0e1a24;        /* main dark section bg + sticky hero bg */
+  --navy-870: #12253a;
+  --navy-850: #1a2b3d;        /* heading color on light bg / quote card end */
+  --surface-dark-card: rgba(14, 26, 36, .75);   /* glass card on dark */
+  --surface-dark-chip: rgba(0, 0, 0, .35);      /* price chip on video */
+  --surface-dark-glass: rgba(10, 18, 28, .82);  /* blurred badge on media */
+  --overlay-scrim: rgba(10, 21, 32, .6);        /* photo scrim base */
+
+  /* ── Light surfaces ── */
+  --bg-white: #ffffff;
+  --verde-bg-1: #f5f9f0;      /* testimonials section */
+  --verde-bg-2: #edf7e0;      /* marquee band */
+  --verde-bg-3: #eaf7d8;      /* FAQ section gradient start / selected banner */
+  --verde-bg-open: #f0f7e4;   /* FAQ item open state */
+
+  /* ── Text ── */
+  --text-body: #2C3E50;               /* default body on light */
+  --text-heading-light: #1a2b3d;      /* headings on light bg */
+  --text-secondary: #4B5563;          /* paragraph on light cards */
+  --text-muted: #94A3B8;              /* meta, timestamps */
+  --text-soft: #64748B;
+  --text-on-dark: #ffffff;
+  --text-on-dark-65: rgba(255, 255, 255, .65);  /* hero subcopy */
+  --text-on-dark-55: rgba(255, 255, 255, .55);  /* section subcopy */
+  --text-on-dark-45: rgba(255, 255, 255, .45);  /* labels, meta */
+  --text-on-dark-35: rgba(255, 255, 255, .35);  /* fine print */
+
+  /* ── Borders ── */
+  --border-lima-45: rgba(118, 216, 69, .45);  /* card frame strong */
+  --border-lima-40: rgba(118, 216, 69, .4);   /* media frame */
+  --border-lima-35: rgba(118, 216, 69, .35);
+  --border-lima-30: rgba(118, 216, 69, .3);
+  --border-lima-25: rgba(118, 216, 69, .25);  /* pills, FAQ */
+  --border-light-card: #eef3ec;               /* review card on light */
+  --border-faq: #e0eecc;
+  --border-input: #E5E7EB;
+  --border-white-12: rgba(255, 255, 255, .12);
+  --border-white-18: rgba(255, 255, 255, .18);
+
+  /* ── Semantic / third-party ── */
+  --whatsapp: #25D366;
+  --whatsapp-dark: #1aad54;
+  --star-gold: #FBBC04;             /* Google review stars */
+  --urgency-red: #FCA5A5;           /* promo badge text */
+  --urgency-red-bg: rgba(239, 68, 68, .18);
+  --urgency-red-border: rgba(239, 68, 68, .4);
+  --price-strike: rgba(255, 100, 100, .8);   /* struck-through old price */
+
+  /* ── Gradients (@kind other, all of them) ── */
+  --grad-cta: linear-gradient(135deg, #76d845 0%, #4ba646 100%); /* @kind other */
+  --grad-deep: linear-gradient(135deg, #325366, #4ba646); /* @kind other */
+  --grad-deep-lima: linear-gradient(135deg, #325366, #76d845); /* @kind other */
+  --grad-whatsapp: linear-gradient(135deg, #25D366, #1aad54); /* @kind other */
+  --grad-nav-green: linear-gradient(135deg, #3a9e48 0%, #4ba646 40%, #62c247 100%); /* @kind other */
+  --grad-quote: linear-gradient(155deg, #325366 0%, #1a2b3d 100%); /* @kind other */
+  --grad-light-band: linear-gradient(160deg, #eaf7d8 0%, #f2fce8 50%, #e4f5d4 100%); /* @kind other */
+  --grad-rule: linear-gradient(90deg, #76d845, #4ba646); /* @kind other */
+  --grad-shimmer: linear-gradient(90deg, #76d845, #4ba646, #76d845); /* @kind other */
+  --grad-scrim-up: linear-gradient(to top, rgba(10, 18, 28, .92) 0%, rgba(10, 18, 28, .3) 45%, transparent 100%); /* @kind other */
+}
