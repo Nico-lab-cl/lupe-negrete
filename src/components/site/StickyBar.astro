@@ -1,0 +1,30 @@
+---
+// Barra fija inferior que aparece al bajar. Compartida por todas las páginas.
+import type { Lang } from '../../lib/i18n';
+import { COPY } from '../../lib/home-copy';
+import { anchorBase, routes, diasRestantes } from './SiteChrome';
+
+interface Props {
+  lang: Lang;
+  isHome?: boolean;
+}
+
+const { lang, isHome = false } = Astro.props;
+const t = COPY[lang];
+const b = anchorBase(lang, isHome);
+const R = routes(lang);
+const dias = diasRestantes();
+---
+
+<div data-bar style="position:fixed;left:0;right:0;bottom:0;z-index:1200;background:#06132B;border-top:3px solid #FF3131;transform:translateY(130%);transition:transform .55s cubic-bezier(.16,1,.3,1);box-shadow:0 -12px 40px rgba(0,0,0,.42)">
+<div style="max-width:1280px;margin:0 auto;padding:10px clamp(14px,4vw,24px) calc(10px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 12px">
+<div style="display:flex;align-items:center;gap:12px;min-width:0">
+<span style="width:8px;height:8px;border-radius:50%;background:#FF3131;animation:lnPulse 2s infinite;flex:none"></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:800;letter-spacing:.02em;text-transform:uppercase;color:#fff;font-size:clamp(16px,4.2vw,21px)">{t.barPre} <span data-days style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:#FF3131">{dias}</span> {t.barPost}</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:9px;flex:1;justify-content:flex-end;min-width:0">
+<a href={`${b}#votar`} class="h-ghost-10" style="border:1.5px solid rgba(255,255,255,.35);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:17px;letter-spacing:.03em;text-transform:uppercase;padding:10px 18px;border-radius:4px;white-space:nowrap">{t.navVote}</a>
+<a href={isHome ? '#top' : `${R.home}#sumate`} class="h-cta" style="background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:17px;letter-spacing:.03em;text-transform:uppercase;padding:10px 18px;border-radius:4px;white-space:nowrap;box-shadow:0 6px 18px rgba(211,21,29,.4)">{t.joinArrow}</a>
+</div>
+</div>
+</div>

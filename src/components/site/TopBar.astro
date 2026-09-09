@@ -1,0 +1,61 @@
+---
+// Barra roja de anuncio + selector de idioma. Compartida por todas las páginas.
+import { getEquivalentPath, type Lang } from '../../lib/i18n';
+import { COPY } from '../../lib/home-copy';
+import { anchorBase, diasRestantes } from './SiteChrome';
+import FlagIcon from '../home/FlagIcon.astro';
+
+interface Props {
+  lang: Lang;
+  isHome?: boolean;
+  showCountdown?: boolean;
+}
+
+const { lang, isHome = false, showCountdown = true } = Astro.props;
+const t = COPY[lang];
+const b = anchorBase(lang, isHome);
+const dias = diasRestantes();
+
+// El cambio de idioma lleva a la página equivalente, no siempre a la portada:
+// desde /es/biografia/ debe caer en /en/about/.
+const aqui = Astro.url.pathname;
+
+const langOptions = [
+  {
+    code: 'es' as const,
+    label: 'ES',
+    flag: 'mx' as const,
+    href: getEquivalentPath(aqui, 'es'),
+    name: 'Español',
+    current: lang === 'es'
+  },
+  {
+    code: 'en' as const,
+    label: 'EN',
+    flag: 'us' as const,
+    href: getEquivalentPath(aqui, 'en'),
+    name: 'English',
+    current: lang === 'en'
+  }
+];
+---
+
+<div style="background:#D3151D;color:#fff">
+<div style="max-width:1280px;margin:0 auto;padding:9px clamp(14px,4vw,24px);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px clamp(12px,2.5vw,22px);font-size:clamp(11px,2.6vw,12.5px);font-weight:600;letter-spacing:.06em;text-transform:uppercase">
+<span style="display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:#fff;animation:lnPulse 2s infinite"></span>{t.barEarly}</span>
+<span style="opacity:.45">/</span>
+<span>{t.barGeneral}</span>
+{showCountdown && (
+<span style="display:flex;align-items:center;gap:7px;background:rgba(6,19,43,.28);padding:3px 11px;border-radius:3px"><span data-days style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;letter-spacing:0">{dias}</span><span style="font-size:11px;letter-spacing:.08em">{t.days}</span></span>
+)}
+<a href={`${b}#votar`} style="color:#fff;border-bottom:1.5px solid rgba(255,255,255,.55);padding-bottom:1px">{t.howToVoteArrow}</a>
+<span style="opacity:.45">/</span>
+<span style="display:flex;align-items:center;gap:2px;background:rgba(6,19,43,.28);padding:2px;border-radius:3px">
+{langOptions.map((o) => o.current ? (
+<span aria-current="true" style="display:flex;align-items:center;gap:6px;padding:2px 9px;border-radius:2px;background:#fff;color:#06132B;font-size:11.5px;font-weight:700;letter-spacing:.06em"><FlagIcon country={o.flag} />{o.label}</span>
+) : (
+<a href={o.href} data-lang-switch={o.code} lang={o.code} hreflang={o.code} aria-label={o.name} class="h-lang" style="display:flex;align-items:center;gap:6px;padding:2px 9px;border-radius:2px;color:rgba(255,255,255,.72);font-size:11.5px;font-weight:600;letter-spacing:.06em"><FlagIcon country={o.flag} />{o.label}</a>
+))}
+</span>
+</div>
+</div>

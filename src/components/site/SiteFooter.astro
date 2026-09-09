@@ -1,0 +1,62 @@
+---
+// Pie de página. Compartido por todas las páginas.
+import type { Lang } from '../../lib/i18n';
+import { COPY } from '../../lib/home-copy';
+import { SITE_CONFIG } from '../../config/site';
+import { anchorBase, routes, LOGO } from './SiteChrome';
+
+interface Props {
+  lang: Lang;
+  isHome?: boolean;
+}
+
+const { lang, isHome = false } = Astro.props;
+const t = COPY[lang];
+const b = anchorBase(lang, isHome);
+const R = routes(lang);
+
+const nav = [
+  { href: `${b}#conoce`, label: t.navMeet },
+  { href: `${b}#propuestas`, label: t.navIssues },
+  { href: `${b}#votar`, label: t.navVote },
+  { href: `${b}#precinto`, label: t.navPrecinct }
+];
+---
+
+<footer id="footer" style="background:#06132B;color:#fff;border-top:4px solid #102D66">
+<div style="max-width:1280px;margin:0 auto;padding:clamp(44px,7vw,64px) clamp(16px,4vw,24px) clamp(112px,18vw,124px)">
+<div data-rv="0" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:44px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.12)">
+<div>
+<span style="display:inline-block;background:rgba(255,255,255,.96);padding:10px 14px;border-radius:6px;margin-bottom:18px"><img src={LOGO.src} alt={t.logoAlt} loading="lazy" width={LOGO.w} height={LOGO.h} style="width:230px;height:auto;display:block" /></span>
+<p style="margin:0 0 12px;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:#fff">{t.footMotto}</p>
+<p style="margin:0;font-size:14px;line-height:1.68;color:rgba(255,255,255,.62);max-width:400px">{t.footDesc}</p>
+</div>
+<div>
+<p style="margin:0 0 16px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45)">{t.footNav}</p>
+<div style="display:flex;flex-direction:column;gap:10px">
+{nav.map((n) => (
+<a href={n.href} class="h-red-logo" style="font-size:14px;font-weight:500;color:rgba(255,255,255,.85)">{n.label}</a>
+))}
+<a href={R.privacy} class="h-white-soft" style="font-size:12.5px;color:rgba(255,255,255,.5)">{t.privacy}</a>
+<a href={R.accessibility} class="h-white-soft" style="font-size:12.5px;color:rgba(255,255,255,.5)">{t.accessibility}</a>
+</div>
+</div>
+<div>
+<p style="margin:0 0 16px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45)">{t.footContact}</p>
+<div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:rgba(255,255,255,.8)">
+<span>{SITE_CONFIG.committee.address}</span>
+<a href={`mailto:${SITE_CONFIG.committee.email}`} class="h-red-logo" style="color:rgba(255,255,255,.8)">{SITE_CONFIG.committee.email}</a>
+<span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px">{SITE_CONFIG.committee.phone}</span>
+</div>
+<a href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer" class="h-navy" style="display:inline-flex;align-items:center;gap:9px;margin-top:18px;background:#102D66;border:1px solid rgba(255,255,255,.16);color:#fff;font-size:12.5px;font-weight:600;padding:10px 14px;border-radius:5px">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.688 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"></path></svg>
+<span>{t.fbOfficial}</span>
+</a>
+</div>
+</div>
+<div style="padding-top:26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px">
+<p style="margin:0;font-size:12px;letter-spacing:.02em;color:rgba(255,255,255,.55);text-transform:uppercase;font-weight:600">{SITE_CONFIG.committee.disclaimerTextEn}</p>
+<p style="margin:0;font-size:12px;color:rgba(255,255,255,.45)">{t.copyright}</p>
+</div>
+</div>
+</footer>
