@@ -3,6 +3,7 @@
 // marcado como formLocation "contact".
 import './site-chrome';
 import { submitLead } from '../lib/leads';
+import { thanksUrl } from '../lib/thanks-url';
 
 const form = document.querySelector<HTMLFormElement>('[data-volunteer]');
 
@@ -33,5 +34,5 @@ form?.addEventListener('submit', async (e) => {
     lang
   });
 
-  form.closest('[data-form-wrap]')?.setAttribute('data-sent', '');
+  window.location.assign(thanksUrl());
 });

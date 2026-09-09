@@ -15,7 +15,8 @@ export const ROUTE_MAP: Record<string, RoutePair> = {
   about: { es: '/es/biografia/', en: '/en/about/' },
   contact: { es: '/es/contacto/', en: '/en/contact/' },
   privacy: { es: '/es/privacidad/', en: '/en/privacy/' },
-  accessibility: { es: '/es/accesibilidad/', en: '/en/accessibility/' }
+  accessibility: { es: '/es/accesibilidad/', en: '/en/accessibility/' },
+  thanks: { es: '/es/gracias/', en: '/en/thank-you/' }
 };
 
 export function getEquivalentPath(currentPath: string, targetLang: Lang): string {

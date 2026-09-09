@@ -23,7 +23,8 @@ export function routes(lang: Lang) {
         audit: '/es/propuestas/auditoria/',
         vote: '/es/como-votar/',
         privacy: '/es/privacidad/',
-        accessibility: '/es/accesibilidad/'
+        accessibility: '/es/accesibilidad/',
+        thanks: '/es/gracias/'
       }
     : {
         home: '/en/',
@@ -36,7 +37,8 @@ export function routes(lang: Lang) {
         audit: '/en/issues/audit/',
         vote: '/en/how-to-vote/',
         privacy: '/en/privacy/',
-        accessibility: '/en/accessibility/'
+        accessibility: '/en/accessibility/',
+        thanks: '/en/thank-you/'
       };
 }
 

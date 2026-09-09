@@ -34,7 +34,11 @@ export const SITE_CONFIG = {
     disclaimerTextEn: 'Political advertising paid for by Guadalupe Lupe Negrete Campaign Committee',
     address: 'Eagle Pass, TX 78852', // {{PENDIENTE_CAMPAÑA: dirección postal física}}
     phone: '(830) 352-5867',
-    email: 'contacto@lupenegrete.com', // {{PENDIENTE_CAMPAÑA: correo oficial}}
+    // Buzón por idioma: el equipo responde en el idioma en el que escriben.
+    email: {
+      es: 'contacto@lupenegrete.com',
+      en: 'contact@lupenegrete.com'
+    },
     whatsappNumber: '18303525867' // wa.me exige solo dígitos, con código de país
   },
   social: {

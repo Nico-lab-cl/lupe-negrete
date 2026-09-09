@@ -1,0 +1,11 @@
+---
+import LandingLayout from '../../layouts/LandingLayout.astro';
+import ThanksPage from '../../components/site/ThanksPage.astro';
+import { THANKS_COPY } from '../../lib/thanks-copy';
+
+const t = THANKS_COPY.es;
+---
+
+<LandingLayout title={t.metaTitle} description={t.metaDesc} lang="es" noindex>
+  <ThanksPage lang="es" />
+</LandingLayout>

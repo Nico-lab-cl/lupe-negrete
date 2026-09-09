@@ -3,6 +3,7 @@
 // cabecera, barra fija, menú, idioma) vive en site-chrome.
 import './site-chrome';
 import { submitLead } from '../lib/leads';
+import { thanksUrl } from '../lib/thanks-url';
 
 const isEs = document.documentElement.lang !== 'en';
 
@@ -132,7 +133,7 @@ form?.addEventListener('submit', async (e) => {
     formLocation: 'hero',
     lang
   });
-  form.closest('[data-form-wrap]')?.setAttribute('data-sent', '');
+  window.location.assign(thanksUrl());
 });
 
 /* ---------- Mapa satelital del Precinto 4 ---------- */
