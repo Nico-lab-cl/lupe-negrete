@@ -33,12 +33,13 @@ export const SITE_CONFIG = {
     legalName: 'Guadalupe Lupe Negrete Campaign Committee', // {{PENDIENTE_CAMPAÑA: confirmar nombre legal exacto}}
     disclaimerTextEn: 'Political advertising paid for by Guadalupe Lupe Negrete Campaign Committee',
     address: 'Eagle Pass, TX 78852', // {{PENDIENTE_CAMPAÑA: dirección postal física}}
-    phone: '(830) 000-0000', // {{PENDIENTE_CAMPAÑA: teléfono oficial}}
+    phone: '(830) 352-5867',
     email: 'contacto@lupenegrete.com', // {{PENDIENTE_CAMPAÑA: correo oficial}}
-    whatsappNumber: '18300000000' // {{PENDIENTE_CAMPAÑA: número de WhatsApp sin + ni guiones}}
+    whatsappNumber: '18303525867' // wa.me exige solo dígitos, con código de país
   },
   social: {
-    facebook: 'https://facebook.com/lupenegreteprecinct4' // {{PENDIENTE_CAMPAÑA: página oficial}}
+    facebook:
+      'https://www.facebook.com/people/Guadalupe-Lupe-Negrete-for-commissioner-precinct-4/61593650286694/'
   },
   analytics: {
     gtmId: 'GTM-PENDIENTE',

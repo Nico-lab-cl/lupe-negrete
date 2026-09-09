@@ -37,7 +37,12 @@ const etiqueta =
 const datos = [
   { label: t.infoAddress, value: SITE_CONFIG.committee.address, href: null, mono: false },
   { label: t.infoEmail, value: SITE_CONFIG.committee.email, href: `mailto:${SITE_CONFIG.committee.email}`, mono: false },
-  { label: t.infoPhone, value: SITE_CONFIG.committee.phone, href: null, mono: true },
+  {
+    label: t.infoPhone,
+    value: SITE_CONFIG.committee.phone,
+    href: `tel:+${SITE_CONFIG.committee.whatsappNumber}`,
+    mono: true
+  },
   { label: t.infoCommittee, value: SITE_CONFIG.committee.legalName, href: null, mono: false }
 ];
 ---
