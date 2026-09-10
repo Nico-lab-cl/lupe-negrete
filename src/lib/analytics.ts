@@ -4,6 +4,7 @@ export type AnalyticsEvent =
   | 'vote_info_view'
   | 'polling_place_click'
   | 'issue_view'
+  | 'video_play'
   | 'language_switch'
   | 'scroll_75';
 

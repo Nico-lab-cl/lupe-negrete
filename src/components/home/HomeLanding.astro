@@ -26,6 +26,34 @@ const R = routes(lang);
 
 // Valor renderizado en build; el script del cliente lo recalcula al cargar.
 const diasRestantes = calcDias();
+
+// Los videos son verticales (9:16): se grabaron para redes. Las versiones
+// "horizontales" que entregó la campaña son el mismo material con barras
+// desenfocadas a los lados, así que se usan solo los verticales y se abren en
+// un lightbox, donde el 9:16 se ve completo sin relleno.
+const videos = [
+  {
+    src: '/videos/spot-principal.mp4',
+    poster: '/videos/spot-principal-poster.webp',
+    portada: '/videos/spot-principal-thumb.webp',
+    alt: 'Lupe Negrete con micrófono hablando ante vecinos en una reunión comunitaria',
+    titulo: t.vid1,
+    duracion: '0:39'
+  },
+  {
+    src: '/videos/voces-precinto-4.mp4',
+    poster: '/videos/voces-precinto-4-poster.webp',
+    portada: '/videos/voces-precinto-4-thumb.webp',
+    alt: 'Un vecino instalando un letrero de campaña de Lupe Negrete',
+    titulo: t.vid2,
+    duracion: '0:29'
+  }
+];
+
+const uiVideo =
+  lang === 'es'
+    ? { reproducir: 'Reproducir video', cerrar: 'Cerrar video' }
+    : { reproducir: 'Play video', cerrar: 'Close video' };
 ---
 
 <div style="min-height:100vh;background:#F7F5F0">
@@ -126,28 +154,26 @@ const diasRestantes = calcDias();
 <p style="margin:0 0 8px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.vidKicker}</p>
 <h2 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(32px,3.8vw,54px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;color:#06132B">{t.vidH2}</h2>
 </div>
-</div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:20px">
-<div data-rv="0" style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC">
-<img src="/images/candidate-assembly.png" alt="Lupe Negrete en asamblea vecinal" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:.5" />
-<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.86),rgba(6,19,43,.4))">
-<span style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
-<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{t.vid1}</span>
-</div>
-</div>
-<div data-rv="0.13" style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC">
-<img src="/images/candidate-listening.png" alt="Lupe Negrete escuchando a vecinos" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:.5" />
-<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.86),rgba(6,19,43,.4))">
-<span style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
-<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{t.vid2}</span>
-</div>
-</div>
-<div data-rv="0.26" style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC">
-<img src="/images/candidate-border.png" alt="Lupe Negrete con vista al Río Bravo y Eagle Pass al atardecer" loading="lazy" style="width:100%;height:100%;object-fit:cover;opacity:.5" />
-<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.86),rgba(6,19,43,.4))">
-<span style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
-<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{t.vid3}</span>
-</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:20px;max-width:900px">
+{videos.map((v, i) => (
+<button
+  type="button"
+  data-video={v.src}
+  data-poster={v.poster}
+  data-titulo={v.titulo}
+  data-rv={String(i * 0.13)}
+  aria-label={`${uiVideo.reproducir}: ${v.titulo}`}
+  class="h-video"
+  style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC;padding:0;cursor:pointer;display:block;width:100%;font:inherit;color:inherit;text-align:inherit;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s"
+>
+<img src={v.portada} alt={v.alt} loading="lazy" width="720" height="450" style="width:100%;height:100%;object-fit:cover" />
+<span style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.82) 0%,rgba(6,19,43,.5) 45%,rgba(6,19,43,.22) 100%)">
+<span data-play style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff;transition:background .3s,border-color .3s,transform .3s"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{v.titulo}</span>
+<span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)">{v.duracion}</span>
+</span>
+</button>
+))}
 </div>
 </div>
 </div>
@@ -368,6 +394,19 @@ const diasRestantes = calcDias();
 <SiteFooter lang={lang} isHome />
 
 <StickyBar lang={lang} isHome />
+
+<!-- Lightbox de video. <dialog> nativo: trae cierre con Esc, foco atrapado y
+     el resto de la página inerte sin escribir nada de eso a mano. El <video>
+     no tiene src hasta que alguien abre uno, así que no se descarga nada. -->
+<dialog data-lightbox aria-label={uiVideo.reproducir}>
+<div data-lb-caja>
+<button type="button" data-lb-close aria-label={uiVideo.cerrar} title={uiVideo.cerrar}>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+<video data-lb-video controls playsinline preload="none" aria-label={uiVideo.reproducir}></video>
+<p data-lb-titulo></p>
+</div>
+</dialog>
 
 </div>
 

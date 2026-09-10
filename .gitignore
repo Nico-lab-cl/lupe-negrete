@@ -22,5 +22,7 @@ INVENTARIO-ASSETS.md
 CONTENIDO-PENDIENTE.md
 src/_legacy-home/
 
-# Videos de origen sin optimizar (218 MB). Solo suben los convertidos.
-videos/
+# Videos de origen sin optimizar (218 MB). Solo suben los convertidos, que
+# viven en public/videos. La barra inicial ancla el patron a la raiz: sin
+# ella tambien tapaba public/videos y el sitio quedaba sin videos.
+/videos/

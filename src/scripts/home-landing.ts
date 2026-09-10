@@ -2,6 +2,7 @@
 // y el mapa satelital. Lo compartido con el resto del sitio (reveal, parallax,
 // cabecera, barra fija, menú, idioma) vive en site-chrome.
 import './site-chrome';
+import './video-lightbox';
 import { submitLead } from '../lib/leads';
 import { thanksUrl } from '../lib/thanks-url';
 
