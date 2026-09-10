@@ -1,9 +1,26 @@
 ---
 import { SITE_CONFIG } from '../config/site';
 import PoliticalDisclaimer from '../components/conversion/PoliticalDisclaimer.astro';
+import { buildGraph } from '../lib/schema';
 import '../styles/global.css';
 
 const siteUrl = SITE_CONFIG.siteUrl;
+
+// La raiz es el selector de idioma. Si repite el title de /es/ compiten
+// entre si en resultados, asi que se diferencia explicitamente.
+const metaTitle = 'Lupe Negrete · Precinto 4 | Español / English';
+const metaDesc =
+  "Sitio oficial de campaña de Lupe Negrete para Comisionado del Condado, Precinto 4 en Maverick County, Texas. Elige idioma para continuar.";
+
+// Esta es la puerta de entrada del sitio y a la que apunta el x-default, así
+// que también lleva los datos estructurados del candidato y del comité.
+const jsonLdGraph = buildGraph({
+  lang: 'es',
+  pageType: 'WebPage',
+  title: metaTitle,
+  description: metaDesc,
+  url: '/'
+});
 ---
 
 <!DOCTYPE html>
@@ -11,11 +28,8 @@ const siteUrl = SITE_CONFIG.siteUrl;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Guadalupe "Lupe" Negrete | Comisionado Precinto 4 · Maverick County</title>
-    <meta
-      name="description"
-      content="Sitio oficial de campaña de Guadalupe 'Lupe' Negrete para Comisionado del Condado, Precinto 4 en Maverick County, Texas. Información de votación, propuestas y contacto."
-    />
+    <title>{metaTitle}</title>
+    <meta name="description" content={metaDesc} />
     <link rel="canonical" href={siteUrl} />
     <link rel="icon" type="image/png" href="/images/logo-es.png" />
 
@@ -23,6 +37,24 @@ const siteUrl = SITE_CONFIG.siteUrl;
     <link rel="alternate" hreflang="es" href={`${siteUrl}/es/`} />
     <link rel="alternate" hreflang="en" href={`${siteUrl}/en/`} />
     <link rel="alternate" hreflang="x-default" href={siteUrl} />
+
+    <!-- Open Graph / Facebook: esta es la URL que se comparte al postear el dominio -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:title" content={metaTitle} />
+    <meta property="og:description" content={metaDesc} />
+    <meta property="og:image" content={`${siteUrl}/images/banner-campaign.png`} />
+    <meta property="og:locale" content="es_US" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={siteUrl} />
+    <meta name="twitter:title" content={metaTitle} />
+    <meta name="twitter:description" content={metaDesc} />
+    <meta name="twitter:image" content={`${siteUrl}/images/banner-campaign.png`} />
+
+    <!-- Datos estructurados Schema.org -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph)} />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

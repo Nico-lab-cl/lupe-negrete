@@ -4,7 +4,7 @@
 
 export const THANKS_COPY = {
   es: {
-    metaTitle: '¡Gracias por sumarte! · Guadalupe "Lupe" Negrete',
+    metaTitle: '¡Gracias por sumarte! · Lupe Negrete',
     metaDesc:
       'Tu registro con la campaña de Lupe Negrete para Comisionado del Precinto 4 quedó confirmado.',
 
@@ -48,7 +48,7 @@ export const THANKS_COPY = {
   },
 
   en: {
-    metaTitle: 'Thank you for stepping up! · Guadalupe "Lupe" Negrete',
+    metaTitle: 'Thank you for stepping up! · Lupe Negrete',
     metaDesc:
       'Your sign-up with the Lupe Negrete campaign for Precinct 4 County Commissioner is confirmed.',
 

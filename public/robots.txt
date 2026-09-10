@@ -1,0 +1,15 @@
+# Sitio de campaña · Guadalupe "Lupe" Negrete
+# Comisionado del Condado, Precinto 4 — Maverick County, Texas
+
+User-agent: *
+Allow: /
+
+# Páginas post-conversión: quien llega ahí ya dejó sus datos. No aportan nada
+# en resultados de búsqueda y confunden a quien llega en frío desde Google.
+Disallow: /es/gracias/
+Disallow: /en/thank-you/
+
+# Endpoints de servidor: no son páginas.
+Disallow: /api/
+
+Sitemap: https://lupenegrete.com/sitemap-index.xml

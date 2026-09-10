@@ -1,6 +1,7 @@
 ---
 import { SITE_CONFIG } from '../config/site';
 import { getEquivalentPath, type Lang } from '../lib/i18n';
+import { buildGraph, type Breadcrumb, type PageType } from '../lib/schema';
 import SkipLink from '../components/layout/SkipLink.astro';
 import UrgencyBar from '../components/conversion/UrgencyBar.astro';
 import Header from '../components/layout/Header.astro';
@@ -13,6 +14,10 @@ interface Props {
   lang: Lang;
   ogImage?: string;
   jsonLd?: Record<string, any>[];
+  /** Tipo de pagina para Schema.org. */
+  pageType?: PageType;
+  /** Migas de pan; el layout antepone la portada del idioma. */
+  breadcrumbs?: Breadcrumb[];
 }
 
 const {
@@ -20,7 +25,9 @@ const {
   description,
   lang,
   ogImage = '/images/banner-campaign.png',
-  jsonLd = []
+  jsonLd = [],
+  pageType = 'WebPage',
+  breadcrumbs = []
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
@@ -29,52 +36,29 @@ const canonicalUrl = `${siteUrl}${currentPath}`;
 const esPath = lang === 'es' ? currentPath : getEquivalentPath(currentPath, 'es');
 const enPath = lang === 'en' ? currentPath : getEquivalentPath(currentPath, 'en');
 
+// Google corta el title sobre los ~60-65 caracteres. No repetimos la marca
+// cuando el propio titulo ya la incluye: son 15 caracteres que se comen el
+// final de la frase justo donde va lo distintivo de cada pagina.
+const tituloCompleto = /negrete/i.test(title) ? title : title + ' | Lupe Negrete';
+
 const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
 
 // Base Schema.org JSON-LD for Candidate & Committee
-const defaultJsonLd = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: SITE_CONFIG.candidate.name,
-    alternateName: [SITE_CONFIG.candidate.alternateName, 'Lupe Negrete', 'Lupe Navarrete', 'Guadalupe Negrete'],
-    jobTitle: SITE_CONFIG.candidate.office[lang],
-    description: SITE_CONFIG.candidate.positioningLine[lang],
-    url: siteUrl,
-    image: `${siteUrl}/images/candidate-portrait-navy.png`,
-    affiliation: {
-      '@type': 'PoliticalParty',
-      name: SITE_CONFIG.candidate.party[lang]
-    },
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Eagle Pass',
-      addressRegion: 'TX',
-      postalCode: '78852',
-      addressCountry: 'US'
-    }
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: SITE_CONFIG.committee.legalName,
-    url: siteUrl,
-    logo: `${siteUrl}/images/logo-es.png`,
-    contactPoint: {
-      '@type': 'ContactPoint',
-      contactType: 'Campaign Office',
-      email: SITE_CONFIG.committee.email[lang],
-      availableLanguage: ['Spanish', 'English']
-    }
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Lupe Negrete · Comisionado Precinto 4',
-    url: siteUrl
-  },
-  ...jsonLd
-];
+const inicio = lang === 'es' ? '/es/' : '/en/';
+const migas: Breadcrumb[] = breadcrumbs.length
+  ? [{ name: lang === 'es' ? 'Inicio' : 'Home', href: inicio }, ...breadcrumbs]
+  : [];
+
+const jsonLdGraph = buildGraph({
+  lang,
+  pageType,
+  title,
+  description,
+  url: currentPath,
+  image: ogImage,
+  breadcrumbs: migas,
+  extra: jsonLd
+});
 ---
 
 <!DOCTYPE html>
@@ -82,7 +66,7 @@ const defaultJsonLd = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} | Lupe Negrete</title>
+    <title>{tituloCompleto}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
 
@@ -97,7 +81,7 @@ const defaultJsonLd = [
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:title" content={`${title} | Lupe Negrete`} />
+    <meta property="og:title" content={`${tituloCompleto}`} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={fullOgImage} />
     <meta property="og:locale" content={lang === 'es' ? 'es_US' : 'en_US'} />
@@ -105,7 +89,7 @@ const defaultJsonLd = [
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={canonicalUrl} />
-    <meta name="twitter:title" content={`${title} | Lupe Negrete`} />
+    <meta name="twitter:title" content={`${tituloCompleto}`} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={fullOgImage} />
 
@@ -118,7 +102,7 @@ const defaultJsonLd = [
     />
 
     <!-- Schema.org JSON-LD Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify(defaultJsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph)} />
 
     <!-- UTM capture on client load -->
     <script>

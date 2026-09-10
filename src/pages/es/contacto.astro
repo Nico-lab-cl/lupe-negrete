@@ -6,6 +6,12 @@ import { CONTACT_COPY } from '../../lib/contact-copy';
 const t = CONTACT_COPY.es;
 ---
 
-<LandingLayout title={t.metaTitle} description={t.metaDesc} lang="es">
+<LandingLayout
+  title={t.metaTitle}
+  description={t.metaDesc}
+  lang="es"
+  pageType="ContactPage"
+  breadcrumbs={[{ name: 'Contacto', href: '/es/contacto/' }]}
+>
   <ContactPage lang="es" />
 </LandingLayout>

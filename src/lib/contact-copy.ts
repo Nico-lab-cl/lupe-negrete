@@ -3,7 +3,7 @@
 
 export const CONTACT_COPY = {
   es: {
-    metaTitle: "Contacto y Voluntariado · Guadalupe 'Lupe' Negrete",
+    metaTitle: 'Contacto y Voluntariado · Lupe Negrete',
     metaDesc:
       'Ponte en contacto con la campaña de Lupe Negrete para Comisionado del Precinto 4 en Maverick County. Súmate como voluntario o comunícate por WhatsApp.',
 
@@ -72,7 +72,7 @@ export const CONTACT_COPY = {
   },
 
   en: {
-    metaTitle: "Contact & Volunteer · Guadalupe 'Lupe' Negrete",
+    metaTitle: 'Contact & Volunteer · Lupe Negrete',
     metaDesc:
       'Get in touch with the Lupe Negrete campaign for County Commissioner, Precinct 4 in Maverick County. Join as a volunteer or reach out via WhatsApp.',
 

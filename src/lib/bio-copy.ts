@@ -4,7 +4,7 @@
 
 export const BIO_COPY = {
   es: {
-    metaTitle: "Biografía y Trayectoria · Guadalupe 'Lupe' Negrete",
+    metaTitle: 'Biografía y Trayectoria · Lupe Negrete',
     metaDesc:
       "Conoce la historia, raíces y trayectoria de Guadalupe 'Lupe' Negrete, candidato a Comisionado del Precinto 4 en Maverick County, Texas.",
 
@@ -68,7 +68,7 @@ export const BIO_COPY = {
   },
 
   en: {
-    metaTitle: "Biography & Background · Guadalupe 'Lupe' Negrete",
+    metaTitle: 'Biography & Background · Lupe Negrete',
     metaDesc:
       "Learn about the roots, values, and track record of Guadalupe 'Lupe' Negrete, candidate for County Commissioner, Precinct 4 in Maverick County, Texas.",
 

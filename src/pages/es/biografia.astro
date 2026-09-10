@@ -6,6 +6,12 @@ import { BIO_COPY } from '../../lib/bio-copy';
 const t = BIO_COPY.es;
 ---
 
-<LandingLayout title={t.metaTitle} description={t.metaDesc} lang="es">
+<LandingLayout
+  title={t.metaTitle}
+  description={t.metaDesc}
+  lang="es"
+  pageType="AboutPage"
+  breadcrumbs={[{ name: 'Biografía', href: '/es/biografia/' }]}
+>
   <BioPage lang="es" />
 </LandingLayout>
