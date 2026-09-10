@@ -2,6 +2,7 @@
 import { SITE_CONFIG } from '../config/site';
 import PoliticalDisclaimer from '../components/conversion/PoliticalDisclaimer.astro';
 import { buildGraph } from '../lib/schema';
+import Analytics from '../components/site/Analytics.astro';
 import '../styles/global.css';
 
 const siteUrl = SITE_CONFIG.siteUrl;
@@ -52,6 +53,8 @@ const jsonLdGraph = buildGraph({
     <meta name="twitter:title" content={metaTitle} />
     <meta name="twitter:description" content={metaDesc} />
     <meta name="twitter:image" content={`${siteUrl}/images/banner-campaign.png`} />
+
+    <Analytics />
 
     <!-- Datos estructurados Schema.org -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph)} />

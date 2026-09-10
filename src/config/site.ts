@@ -47,7 +47,7 @@ export const SITE_CONFIG = {
   },
   analytics: {
     gtmId: 'GTM-PENDIENTE',
-    ga4Id: 'G-PENDIENTE',
+    ga4Id: 'G-38JNQBV4B7',
     pixelId: 'PIXEL-PENDIENTE',
     clarityId: 'CLARITY-PENDIENTE'
   },

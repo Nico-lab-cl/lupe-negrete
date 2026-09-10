@@ -1,0 +1,37 @@
+---
+// Google Analytics 4 (gtag.js). Va en el <head> de los tres shells del sitio:
+// LandingLayout, BaseLayout y la raíz.
+//
+// Solo se carga en producción: si se cargara también en `astro dev`, cada
+// recarga durante el desarrollo entraría como visita real y ensuciaría los
+// informes de la campaña.
+//
+// El id vive en src/config/site.ts. Si falta o sigue con el valor de relleno
+// no se emite nada, para no dejar un tag roto en producción.
+import { SITE_CONFIG } from '../../config/site';
+
+const id = SITE_CONFIG.analytics.ga4Id;
+
+// El id se interpola dentro de un script, así que se valida su forma antes de
+// escribirlo: solo la que usa GA4 (G- seguido de alfanuméricos).
+const idValido = /^G-[A-Z0-9]+$/.test(id ?? '');
+const activo = import.meta.env.PROD && idValido;
+---
+
+{
+  activo && (
+    <>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${id}`} />
+      {/* Sin define:vars a propósito: envuelve el código en una función y
+          dejaría gtag() fuera del ámbito global, que es donde Google lo
+          declara para que otros scripts puedan llamarlo. */}
+      <script
+        is:inline
+        set:html={`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${id}');`}
+      />
+    </>
+  )
+}

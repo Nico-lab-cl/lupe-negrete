@@ -6,6 +6,7 @@
 import { SITE_CONFIG } from '../config/site';
 import { getEquivalentPath, type Lang } from '../lib/i18n';
 import { buildGraph, type Breadcrumb, type PageType } from '../lib/schema';
+import Analytics from '../components/site/Analytics.astro';
 
 interface Props {
   title: string;
@@ -96,6 +97,8 @@ const jsonLdGraph = buildGraph({
       rel="stylesheet"
     />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <Analytics />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph)} />
 
