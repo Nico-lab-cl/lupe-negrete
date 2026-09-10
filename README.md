@@ -103,13 +103,26 @@ imagen en CI.
 
 ### El `package-lock.json` se genera en Linux
 
-El árbol de dependencias opcionales de Tailwind 4 no es igual en Windows y en
-Linux, y `npm ci` dentro del contenedor rechaza un lockfile generado en Windows.
-Si agregas dependencias desde Windows, regenera el lockfile así:
+npm en Windows omite del lockfile las dependencias de pares del binario wasm de
+Tailwind 4 (`@emnapi/core`, `@emnapi/wasi-threads`) que npm en Linux sí
+necesita. Cualquier `npm install` hecho desde Windows deja el lockfile
+inválido para el build del contenedor.
+
+El `Dockerfile` lo tolera: intenta `npm ci` y, si el lockfile está
+desincronizado, resuelve el árbol de cero mostrando este aviso en el log:
+
+```
+>>> AVISO: lockfile desincronizado con Linux, resolviendo el árbol de cero
+```
+
+Si ves ese aviso, el build funciona pero perdió la instalación reproducible.
+Para recuperarla, regenera el lockfile en Linux y súbelo:
 
 ```bash
 docker run --rm -v "${PWD}:/w" -w /w node:24-bookworm-slim npm install --package-lock-only
 ```
+
+Hazlo cada vez que agregues o actualices una dependencia desde Windows.
 
 ---
 
