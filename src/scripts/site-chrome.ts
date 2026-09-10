@@ -123,7 +123,12 @@ function tick() {
       const sp = parseFloat(el.getAttribute('data-px') || '0') || 0;
       const base = el.getAttribute('data-pxb') || '';
       const r = el.getBoundingClientRect();
-      const off = (r.top + r.height / 2 - vh / 2) * -sp;
+      let off = (r.top + r.height / 2 - vh / 2) * -sp;
+      // El desplazamiento crece con la distancia al centro de la pantalla, y en
+      // el diseño apilado de móvil llega a sacar la imagen de su contenedor
+      // (que recorta). data-pxmax limita cuánto puede moverse un elemento.
+      const max = parseFloat(el.getAttribute('data-pxmax') || '');
+      if (isFinite(max)) off = Math.max(-max, Math.min(max, off));
       el.style.transform = base + ' translate3d(0,' + off.toFixed(1) + 'px,0)';
     });
   }
