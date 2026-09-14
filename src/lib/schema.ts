@@ -20,12 +20,7 @@ export function personSchema(lang: Lang) {
     '@type': 'Person',
     '@id': `${SITE}/#candidato`,
     name: SITE_CONFIG.candidate.name,
-    alternateName: [
-      SITE_CONFIG.candidate.alternateName,
-      'Lupe Negrete',
-      'Lupe Navarrete',
-      'Guadalupe Negrete'
-    ],
+    alternateName: [SITE_CONFIG.candidate.shortName, SITE_CONFIG.candidate.alternateName],
     jobTitle: SITE_CONFIG.candidate.office[lang],
     description: SITE_CONFIG.candidate.positioningLine[lang],
     url: abs(lang === 'es' ? '/es/' : '/en/'),

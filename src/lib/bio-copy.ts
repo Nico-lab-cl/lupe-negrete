@@ -14,7 +14,7 @@ export const BIO_COPY = {
     positioning: 'Servicio real · Trabajo de palabra · Compromiso local',
     lead: 'Un ciudadano de la frontera al servicio de su comunidad',
     leadP1:
-      'Guadalupe "Lupe" Negrete —conocido también con aprecio por muchos vecinos como Lupe Navarrete— es un hombre de trabajo formado en los valores tradicionales de esfuerzo, integridad y cercanía que caracterizan a las familias de Eagle Pass.',
+      'Guadalupe "Lupe" Negrete es un hombre de trabajo formado en los valores tradicionales de esfuerzo, integridad y cercanía que caracterizan a las familias de Eagle Pass.',
     leadP2:
       'Su vida y su trayectoria han estado profundamente ligadas a la realidad de nuestra región fronteriza, donde la palabra empeñada y el servicio a los demás son el pilar de la confianza.',
 
@@ -78,7 +78,7 @@ export const BIO_COPY = {
     positioning: 'Real service · A man of his word · Rooted right here',
     lead: 'A dedicated citizen of the border serving his community',
     leadP1:
-      'Guadalupe "Lupe" Negrete —also known warmly by many long-time residents as Lupe Navarrete— is a hardworking family man raised on traditional values of perseverance, integrity, and genuine community connection in Eagle Pass.',
+      'Guadalupe "Lupe" Negrete is a hardworking family man raised on traditional values of perseverance, integrity, and genuine community connection in Eagle Pass.',
     leadP2:
       "His life and public commitments are anchored in our border reality, where keeping one's word and helping one's neighbor remain the ultimate foundation of trust.",
 

@@ -3,7 +3,7 @@ export const SITE_CONFIG = {
   candidate: {
     name: 'Guadalupe "Lupe" Negrete',
     shortName: 'Lupe Negrete',
-    alternateName: 'Guadalupe "Lupe" Navarrete',
+    alternateName: 'Guadalupe Negrete',
     office: {
       es: 'Comisionado del Condado, Precinto 4',
       en: 'County Commissioner, Precinct 4'
