@@ -1,27 +1,34 @@
 ---
-// Google Analytics 4 (gtag.js). Va en el <head> de los tres shells del sitio:
-// LandingLayout, BaseLayout y la raíz.
+// Medición del sitio: Google Analytics 4 (gtag.js) y Microsoft Clarity
+// (mapas de calor y grabación de sesión). Va en el <head> de los dos shells
+// del sitio: LandingLayout y BaseLayout, así que cubre todas las páginas.
 //
-// Solo se carga en producción: si se cargara también en `astro dev`, cada
+// Solo se cargan en producción: si se cargaran también en `astro dev`, cada
 // recarga durante el desarrollo entraría como visita real y ensuciaría los
-// informes de la campaña.
+// informes de la campaña — en Clarity, además, llenaría las grabaciones de
+// sesiones de desarrollo.
 //
-// El id vive en src/config/site.ts. Si falta o sigue con el valor de relleno
-// no se emite nada, para no dejar un tag roto en producción.
+// Los ids viven en src/config/site.ts. Si falta alguno o sigue con el valor
+// de relleno no se emite ese tag, para no dejar un script roto en producción.
 import { SITE_CONFIG } from '../../config/site';
 
-const id = SITE_CONFIG.analytics.ga4Id;
+const ga4 = SITE_CONFIG.analytics.ga4Id;
+const clarity = SITE_CONFIG.analytics.clarityId;
 
-// El id se interpola dentro de un script, así que se valida su forma antes de
-// escribirlo: solo la que usa GA4 (G- seguido de alfanuméricos).
-const idValido = /^G-[A-Z0-9]+$/.test(id ?? '');
-const activo = import.meta.env.PROD && idValido;
+// Los ids se interpolan dentro de un script, así que se valida su forma antes
+// de escribirlos: la de GA4 (G- y alfanuméricos) y la de Clarity (el id de
+// proyecto, alfanumérico en minúsculas).
+const ga4Valido = /^G-[A-Z0-9]+$/.test(ga4 ?? '');
+const clarityValido = /^[a-z0-9]+$/.test(clarity ?? '');
+
+const ga4Activo = import.meta.env.PROD && ga4Valido;
+const clarityActivo = import.meta.env.PROD && clarityValido;
 ---
 
 {
-  activo && (
+  ga4Activo && (
     <>
-      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${id}`} />
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4}`} />
       {/* Sin define:vars a propósito: envuelve el código en una función y
           dejaría gtag() fuera del ámbito global, que es donde Google lo
           declara para que otros scripts puedan llamarlo. */}
@@ -30,8 +37,23 @@ const activo = import.meta.env.PROD && idValido;
         set:html={`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', '${id}');`}
+gtag('config', '${ga4}');`}
       />
     </>
+  )
+}
+
+{
+  clarityActivo && (
+    /* Igual que en GA4, sin define:vars: Clarity declara window.clarity en el
+       ámbito global para poder recibir llamadas desde otros scripts. */
+    <script
+      is:inline
+      set:html={`(function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "${clarity}");`}
+    />
   )
 }

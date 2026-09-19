@@ -49,7 +49,7 @@ export const SITE_CONFIG = {
     gtmId: 'GTM-PENDIENTE',
     ga4Id: 'G-38JNQBV4B7',
     pixelId: 'PIXEL-PENDIENTE',
-    clarityId: 'CLARITY-PENDIENTE'
+    clarityId: 'ykmxx2kc52'
   },
   flags: {
     enableDonations: false
