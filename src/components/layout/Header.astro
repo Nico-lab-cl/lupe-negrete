@@ -1,6 +1,6 @@
 ---
 import { NAV_LINKS, type Lang } from '../../lib/i18n';
-import LanguageSwitcher from './LanguageSwitcher.astro';
+import LangSelect from '../site/LangSelect.astro';
 
 interface Props {
   lang: Lang;
@@ -59,12 +59,12 @@ const logoSrc = isEs ? '/images/logo-es.png' : '/images/logo-en.png';
         })}
 
         <!-- Language Switcher -->
-        <LanguageSwitcher lang={lang} currentPath={currentPath} />
+        <LangSelect lang={lang} variant="light" />
       </nav>
 
       <!-- Mobile Controls: Language Switcher & Hamburger -->
       <div class="flex md:hidden items-center gap-2">
-        <LanguageSwitcher lang={lang} currentPath={currentPath} />
+        <LangSelect lang={lang} variant="light" />
         <button
           type="button"
           id="mobile-menu-btn"

@@ -1,9 +1,9 @@
 ---
 // Barra roja de anuncio + selector de idioma. Compartida por todas las páginas.
-import { getEquivalentPath, type Lang } from '../../lib/i18n';
+import type { Lang } from '../../lib/i18n';
 import { COPY } from '../../lib/home-copy';
 import { anchorBase, diasRestantes } from './SiteChrome';
-import FlagIcon from '../home/FlagIcon.astro';
+import LangSelect from './LangSelect.astro';
 
 interface Props {
   lang: Lang;
@@ -16,28 +16,6 @@ const t = COPY[lang];
 const b = anchorBase(lang, isHome);
 const dias = diasRestantes();
 
-// El cambio de idioma lleva a la página equivalente, no siempre a la portada:
-// desde /es/biografia/ debe caer en /en/about/.
-const aqui = Astro.url.pathname;
-
-const langOptions = [
-  {
-    code: 'es' as const,
-    label: 'ES',
-    flag: 'mx' as const,
-    href: getEquivalentPath(aqui, 'es'),
-    name: 'Español',
-    current: lang === 'es'
-  },
-  {
-    code: 'en' as const,
-    label: 'EN',
-    flag: 'us' as const,
-    href: getEquivalentPath(aqui, 'en'),
-    name: 'English',
-    current: lang === 'en'
-  }
-];
 ---
 
 <div style="background:#D3151D;color:#fff">
@@ -50,12 +28,6 @@ const langOptions = [
 )}
 <a href={`${b}#votar`} style="color:#fff;border-bottom:1.5px solid rgba(255,255,255,.55);padding-bottom:1px">{t.howToVoteArrow}</a>
 <span style="opacity:.45">/</span>
-<span style="display:flex;align-items:center;gap:2px;background:rgba(6,19,43,.28);padding:2px;border-radius:3px">
-{langOptions.map((o) => o.current ? (
-<span aria-current="true" style="display:flex;align-items:center;gap:6px;padding:2px 9px;border-radius:2px;background:#fff;color:#06132B;font-size:11.5px;font-weight:700;letter-spacing:.06em"><FlagIcon country={o.flag} />{o.label}</span>
-) : (
-<a href={o.href} data-lang-switch={o.code} lang={o.code} hreflang={o.code} aria-label={o.name} class="h-lang" style="display:flex;align-items:center;gap:6px;padding:2px 9px;border-radius:2px;color:rgba(255,255,255,.72);font-size:11.5px;font-weight:600;letter-spacing:.06em"><FlagIcon country={o.flag} />{o.label}</a>
-))}
-</span>
+<LangSelect lang={lang} variant="bar" />
 </div>
 </div>

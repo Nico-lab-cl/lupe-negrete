@@ -162,18 +162,8 @@ document.querySelectorAll('[data-menu-close]').forEach((el) => {
   });
 });
 
-/* ---------- Selector de idioma: recuerda la preferencia ---------- */
-document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((el) => {
-  el.addEventListener('click', () => {
-    const next = el.dataset.langSwitch === 'en' ? 'en' : 'es';
-    try {
-      localStorage.setItem('preferred_lang', next);
-      localStorage.setItem('ln-lang', next);
-    } catch (err) {
-      /* almacenamiento bloqueado: la navegación funciona igual */
-    }
-  });
-});
+/* El selector de idioma (memoria de la preferencia incluida) vive en
+   LangSelect.astro, que trae su propio script. */
 
 setupReveal();
 setupCount();
