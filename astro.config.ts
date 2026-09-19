@@ -60,11 +60,6 @@ function pesoDe(path: string): { priority: number; changefreq: 'daily' | 'weekly
     return { priority: 0.3, changefreq: 'yearly' };
   }
 
-  // La raíz es solo el selector de idioma: redirige, no tiene contenido propio.
-  if (path === '/') {
-    return { priority: 0.5, changefreq: 'monthly' };
-  }
-
   return { priority: 0.6, changefreq: 'monthly' };
 }
 
@@ -75,9 +70,17 @@ export default defineConfig({
   // leads) corren en el servidor y hablan con la base de datos.
   output: 'static',
   adapter: node({ mode: 'standalone' }),
+  // La portada del sitio es la versión en español. La raíz entra directo, sin
+  // preguntar idioma: el inglés sigue disponible en /en/ y en el conmutador
+  // de la cabecera.
+  redirects: {
+    '/': '/es/'
+  },
   integrations: [
     sitemap({
-      filter: (page) => !OCULTAS.some((p) => page.includes(p)),
+      // La raíz ya no tiene contenido propio: es solo una redirección a /es/,
+      // y una redirección no se declara en el sitemap.
+      filter: (page) => page !== `${SITE}/` && !OCULTAS.some((p) => page.includes(p)),
       lastmod: new Date(),
       serialize(item) {
         const path = new URL(item.url).pathname;
@@ -90,18 +93,13 @@ export default defineConfig({
         // empareja por ruta idéntica tras el prefijo de idioma, y las nuestras
         // están traducidas (/es/biografia/ ↔ /en/about/). Se resuelve con
         // ROUTE_MAP, que ya es la fuente de verdad del selector de idioma.
-        item.links =
-          path === '/'
-            ? [
-                { lang: 'es-US', url: `${SITE}/es/` },
-                { lang: 'en-US', url: `${SITE}/en/` },
-                { lang: 'x-default', url: `${SITE}/` }
-              ]
-            : [
-                { lang: 'es-US', url: `${SITE}${getEquivalentPath(path, 'es')}` },
-                { lang: 'en-US', url: `${SITE}${getEquivalentPath(path, 'en')}` },
-                { lang: 'x-default', url: `${SITE}/` }
-              ];
+        item.links = [
+          { lang: 'es-US', url: `${SITE}${getEquivalentPath(path, 'es')}` },
+          { lang: 'en-US', url: `${SITE}${getEquivalentPath(path, 'en')}` },
+          // El español es el idioma por defecto del sitio: quien llega sin
+          // preferencia declarada va a /es/, no a un selector.
+          { lang: 'x-default', url: `${SITE}/es/` }
+        ];
 
         return item;
       }
