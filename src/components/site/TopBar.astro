@@ -15,19 +15,177 @@ const { lang, isHome = false, showCountdown = true } = Astro.props;
 const t = COPY[lang];
 const b = anchorBase(lang, isHome);
 const dias = diasRestantes();
-
 ---
 
-<div style="background:#D3151D;color:#fff">
-<div style="max-width:1280px;margin:0 auto;padding:9px clamp(14px,4vw,24px);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px clamp(12px,2.5vw,22px);font-size:clamp(11px,2.6vw,12.5px);font-weight:600;letter-spacing:.06em;text-transform:uppercase">
-<span style="display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:#fff;animation:lnPulse 2s infinite"></span>{t.barEarly}</span>
-<span style="opacity:.45">/</span>
-<span>{t.barGeneral}</span>
-{showCountdown && (
-<span style="display:flex;align-items:center;gap:7px;background:rgba(6,19,43,.28);padding:3px 11px;border-radius:3px"><span data-days style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;letter-spacing:0">{dias}</span><span style="font-size:11px;letter-spacing:.08em">{t.days}</span></span>
-)}
-<a href={`${b}#votar`} style="color:#fff;border-bottom:1.5px solid rgba(255,255,255,.55);padding-bottom:1px">{t.howToVoteArrow}</a>
-<span style="opacity:.45">/</span>
-<LangSelect lang={lang} variant="bar" />
+<div class="tb">
+  <div class="tb__inner">
+    <div class="tb__main">
+      <span class="tb__item tb__early"><span class="tb__dot"></span>{t.barEarly}</span>
+      <span class="tb__sep" aria-hidden="true">/</span>
+      <span class="tb__item tb__general">{t.barGeneral}</span>
+      {showCountdown && (
+        <span class="tb__item tb__days"><span data-days class="tb__daysNum">{dias}</span><span class="tb__daysWord">{t.days}</span></span>
+      )}
+      <a href={`${b}#votar`} class="tb__item tb__vote">{t.howToVoteArrow}</a>
+      <span class="tb__sep" aria-hidden="true">/</span>
+    </div>
+    <div class="tb__lang"><LangSelect lang={lang} variant="bar" /></div>
+  </div>
 </div>
-</div>
+
+<style>
+  .tb {
+    background: #d3151d;
+    color: #fff;
+  }
+
+  .tb__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 9px clamp(14px, 4vw, 24px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 7px clamp(12px, 2.5vw, 22px);
+    font-size: clamp(11px, 2.6vw, 12.5px);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* En escritorio todo va en una sola línea centrada: el grupo de texto no
+     forma caja propia, se funde con la fila del contenedor. */
+  .tb__main {
+    display: contents;
+  }
+
+  .tb__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tb__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #fff;
+    animation: lnPulse 2s infinite;
+    flex: none;
+  }
+
+  .tb__sep {
+    opacity: 0.45;
+  }
+
+  .tb__days {
+    gap: 7px;
+    background: rgba(6, 19, 43, 0.28);
+    padding: 3px 11px;
+    border-radius: 3px;
+  }
+  .tb__daysNum {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0;
+  }
+  .tb__daysWord {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .tb__vote {
+    color: #fff;
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.55);
+    padding-bottom: 1px;
+  }
+
+  .tb__lang {
+    display: flex;
+    align-items: center;
+  }
+
+  /* ---------- Móvil: exactamente dos líneas ----------
+     Con el ajuste de línea automático la barra caía en tres renglones y el
+     aviso se leía a trompicones. Aquí el texto se reparte en una rejilla de
+     dos filas fijas y el selector de idioma se queda a la derecha, alineado
+     con las dos. */
+  @media (max-width: 640px) {
+    .tb__inner {
+      display: grid;
+      grid-template-columns: minmax(0, auto) auto;
+      align-items: center;
+      justify-content: center;
+      gap: 6px clamp(6px, 2.2vw, 10px);
+      font-size: clamp(8.5px, 2.75vw, 11px);
+      letter-spacing: 0.03em;
+      padding: 8px clamp(8px, 2.6vw, 14px);
+    }
+
+    .tb__main {
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-template-areas:
+        'early days'
+        'general vote';
+      justify-content: start;
+      align-items: center;
+      gap: 5px clamp(6px, 2.2vw, 10px);
+      min-width: 0;
+    }
+
+    .tb__early {
+      grid-area: early;
+      gap: 6px;
+    }
+    .tb__general {
+      grid-area: general;
+    }
+    .tb__early,
+    .tb__general,
+    .tb__vote {
+      white-space: nowrap;
+    }
+
+    .tb__days {
+      grid-area: days;
+      padding: 2px 6px;
+      gap: 4px;
+    }
+    .tb__daysNum {
+      font-size: 1.15em;
+    }
+    .tb__daysWord {
+      font-size: 0.92em;
+      letter-spacing: 0.04em;
+    }
+
+    .tb__vote {
+      grid-area: vote;
+    }
+
+    /* Las barras separadoras solo tienen sentido cuando todo va en una línea. */
+    .tb__sep {
+      display: none;
+    }
+
+    .tb__dot {
+      width: 5px;
+      height: 5px;
+    }
+
+    /* El selector de idioma comparte la franja con dos renglones de texto:
+       aquí va en su versión más compacta, sin dejar de ser tocable. */
+    .tb__lang :global(.lang--bar .lang__btn) {
+      gap: 4px;
+      padding: 5px 6px;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+    }
+    .tb__lang :global(.lang__caret) {
+      display: none;
+    }
+  }
+</style>

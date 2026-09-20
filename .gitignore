@@ -26,3 +26,7 @@ src/_legacy-home/
 # viven en public/videos. La barra inicial ancla el patron a la raiz: sin
 # ella tambien tapaba public/videos y el sitio quedaba sin videos.
 /videos/
+
+# Copia local del Drive de la campana (fotos y videos en bruto, ~200 MB). Igual
+# que /videos/: al repositorio solo suben los archivos ya optimizados.
+/drive/

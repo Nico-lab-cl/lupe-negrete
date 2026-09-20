@@ -63,12 +63,18 @@ const uiVideo =
 
 <main id="main-content">
 
-<section id="top" style="position:relative;background:#06132B;overflow:hidden">
-<div data-px="0.14" style="position:absolute;top:-120px;right:-60px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(0,51,153,.5),transparent 68%);pointer-events:none"></div>
-<div data-px="0.07" data-pxb="skewX(-12deg)" style="position:absolute;left:52%;top:0;bottom:0;width:180px;background:#FF3131;opacity:.1;transform:skewX(-12deg);pointer-events:none"></div>
-<div style="position:relative;max-width:1280px;margin:0 auto;padding:0 clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:clamp(24px,4vw,48px);align-items:stretch">
+<section id="top" class="hero" style="position:relative;background:#06132B;overflow:hidden">
+<!-- Foto a sangre: el color plano sostiene el titular y, de la mitad del ancho
+     hacia la derecha, se disuelve en la foto del candidato (mascara en
+     degradado, sin recorte visible). El play vive sobre la foto. -->
+<div class="hero__foto">
+<img src="/images/lupe-hero.webp" alt={t.heroPhotoAlt} width="1000" height="1334" fetchpriority="high" decoding="async" />
+<span class="hero__tinte" aria-hidden="true"></span>
+</div>
+<div data-px="0.07" data-pxb="skewX(-12deg)" class="hero__franja" aria-hidden="true"></div>
+<div class="hero__inner">
 
-<div style="padding:clamp(38px,6vw,62px) 0 clamp(40px,6vw,74px);animation:lnUp .6s cubic-bezier(.16,1,.3,1) both">
+<div class="hero__texto" style="padding:clamp(38px,6vw,62px) 0 clamp(40px,6vw,74px);animation:lnUp .6s cubic-bezier(.16,1,.3,1) both">
 <div style="display:inline-flex;align-items:stretch;margin-bottom:28px;transform:skewX(-12deg);box-shadow:0 8px 22px rgba(0,0,0,.32)">
 <span style="display:flex;align-items:center;background:#FF3131;padding:8px 13px 7px"><span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:23px;line-height:1;letter-spacing:.02em;color:#fff">P4</span></span>
 <span style="display:flex;flex-direction:column;justify-content:center;gap:2px;background:#fff;padding:7px 15px 6px">
@@ -99,15 +105,30 @@ const uiVideo =
 <a href="#conoce" class="h-ghost" style="background:transparent;border:1.5px solid rgba(255,255,255,.34);color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:15px 26px;border-radius:5px">{t.navMeet}</a>
 </div>
 
-<p style="margin:34px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);font-size:12px;font-weight:500;letter-spacing:.03em;color:rgba(255,255,255,.5)">{t.heroId}</p>
+<div class="hero__lema">
+<span>{t.heroQuote}</span>
 </div>
 
-<div style="position:relative;display:flex;align-items:flex-end;justify-content:center;min-height:clamp(360px,52vw,560px);padding-bottom:clamp(24px,2.2vw,32px)">
-<div style="position:absolute;bottom:0;right:-24px;left:-24px;top:44px;background:#0B224E;clip-path:polygon(9% 0,100% 0,100% 100%,0 100%)"></div>
-<img data-px="-0.055" data-pxmax="20" src="/images/hero-candidate-walking.png" alt="Lupe Negrete caminando con vecinos en las calles del Precinto 4" style="position:relative;width:100%;max-width:490px;height:auto;display:block;filter:drop-shadow(0 24px 50px rgba(0,0,0,.5))" />
-<div style="position:absolute;bottom:26px;left:0;background:#FF3131;color:#fff;padding:11px 18px;transform:skewX(-12deg)">
-<span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;letter-spacing:.03em;text-transform:uppercase;font-size:clamp(15px,3.8vw,19px)">{t.heroQuote}</span>
+<p style="margin:34px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);font-size:12px;font-weight:500;letter-spacing:.03em;color:rgba(255,255,255,.5)">{t.heroId}</p>
 </div>
+<div class="hero__lado">
+<button
+  type="button"
+  data-video="/videos/quien-es-lupe.mp4"
+  data-poster="/videos/quien-es-lupe-poster.webp"
+  data-titulo={t.heroVideoTitle}
+  class="h-play hero__play"
+  aria-label={`${uiVideo.reproducir}: ${t.heroVideoTitle}`}
+>
+<span data-play class="hero__playCirculo">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+<span aria-hidden="true" class="h-play__ring"></span>
+</span>
+<span class="hero__playTexto">
+<span class="hero__playTitulo">{t.heroVideoTitle}</span>
+<span class="hero__playPie">{t.heroVideoHint}</span>
+</span>
+</button>
 </div>
 
 </div>
@@ -167,10 +188,10 @@ const uiVideo =
   style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC;padding:0;cursor:pointer;display:block;width:100%;font:inherit;color:inherit;text-align:inherit;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s"
 >
 <img src={v.portada} alt={v.alt} loading="lazy" width="720" height="450" style="width:100%;height:100%;object-fit:cover" />
-<span style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.82) 0%,rgba(6,19,43,.5) 45%,rgba(6,19,43,.22) 100%)">
-<span data-play style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff;transition:background .3s,border-color .3s,transform .3s"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
-<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff">{v.titulo}</span>
-<span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)">{v.duracion}</span>
+<span style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.6) 0%,rgba(6,19,43,.24) 46%,rgba(6,19,43,.05) 100%)">
+<span data-play style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.82);background:rgba(6,19,43,.34);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 8px 22px rgba(6,19,43,.3);transition:background .3s,border-color .3s,transform .3s"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff;text-shadow:0 2px 12px rgba(6,19,43,.85)">{v.titulo}</span>
+<span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8);text-shadow:0 2px 10px rgba(6,19,43,.85)">{v.duracion}</span>
 </span>
 </button>
 ))}
@@ -184,7 +205,17 @@ const uiVideo =
 <div style="position:relative">
 <div data-px="0.11" style="position:absolute;top:-28px;left:-40px;width:210px;height:210px;border-radius:50%;background:#003399;opacity:.1"></div>
 <div data-px="0.17" data-pxb="skewX(-12deg)" style="position:absolute;bottom:-30px;right:-18px;width:120px;height:120px;background:#FF3131;opacity:.14;transform:skewX(-12deg)"></div>
-<img src="/images/candidate-portrait-navy.png" alt="Retrato oficial de Guadalupe Lupe Negrete" loading="lazy" width="1080" height="1350" style="position:relative;width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 22px 54px rgba(6,19,43,.22)" />
+<img
+  src="/images/lupe-retrato-760.webp"
+  srcset="/images/lupe-retrato-520.webp 520w, /images/lupe-retrato-760.webp 760w, /images/lupe-retrato-1100.webp 1100w"
+  sizes="(max-width: 900px) calc(100vw - 32px), min(560px, 44vw)"
+  alt={t.meetPhotoAlt}
+  loading="lazy"
+  decoding="async"
+  width="760"
+  height="950"
+  style="position:relative;width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 22px 54px rgba(6,19,43,.22)"
+/>
 </div>
 <div data-rv="0.08">
 <p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.meetKicker}</p>
@@ -216,47 +247,61 @@ const uiVideo =
 
 <section id="propuestas" style="background:#F7F5F0;border-top:1px solid #E4E7EC">
 <div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px)">
-<div data-rv="0" style="max-width:820px;margin-bottom:44px">
+<div data-rv="0" style="max-width:820px;margin-bottom:clamp(28px,4vw,40px)">
 <p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.issuesKicker}</p>
 <h2 style="margin:0 0 16px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,5vw,74px);line-height:.86;letter-spacing:-.015em;text-transform:uppercase;color:#06132B">{t.issuesH2}</h2>
 <p style="margin:0;font-size:17px;line-height:1.68;color:#475467;text-wrap:pretty">{t.issuesSub}</p>
 </div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:24px">
 
-<article data-rv="0" class="h-card" style="background:#fff;border:1px solid #E4E7EC;border-top:5px solid #D3151D;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s">
-<div style="position:relative;aspect-ratio:16/10;overflow:hidden;background:#E4E7EC">
-<img src="/images/candidate-assembly.png" alt="Lupe Negrete en asamblea comunitaria en calle sin pavimentar" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
-<span style="position:absolute;top:12px;left:0;background:#D3151D;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px 6px 14px">{t.issueLabel1}</span>
-</div>
-<div style="padding:24px;display:flex;flex-direction:column;gap:12px;flex:1">
-<h3 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase;color:#06132B">{t.issue1H}</h3>
-<p style="margin:0;font-size:14.5px;line-height:1.66;color:#475467;flex:1">{t.issue1P}</p>
-<a href={R.paving} class="h-nav" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#06132B;padding-top:12px;border-top:1px solid #E4E7EC">{t.issue1Link}</a>
-</div>
+<!-- El video abre la seccion: explica la propuesta completa y debajo quedan
+     las tres promesas desglosadas. Dos archivos, horizontal y vertical, cada
+     uno con su poster; `preload="none"` para que entrar a la home no descargue
+     ningun video. -->
+<figure data-rv="0.08" class="prop-video">
+<video
+  class="prop-video__h"
+  controls
+  playsinline
+  preload="none"
+  poster="/videos/mas-luz-mas-seguridad-poster.webp"
+  aria-label={t.issuesVideoPlay}
+>
+<source src="/videos/mas-luz-mas-seguridad.mp4" type="video/mp4" />
+</video>
+<video
+  class="prop-video__v"
+  controls
+  playsinline
+  preload="none"
+  poster="/videos/mas-luz-mas-seguridad-poster-vertical.webp"
+  aria-label={t.issuesVideoPlay}
+>
+<source src="/videos/mas-luz-mas-seguridad-vertical.mp4" type="video/mp4" />
+</video>
+<figcaption class="prop-video__pie">
+<span class="prop-video__titulo">{t.issuesVideoTitulo}</span>
+<span class="prop-video__meta">{t.issuesVideoPie}</span>
+</figcaption>
+</figure>
+
+<div class="prop-grid">
+
+<article data-rv="0" class="prop" style="--prop-color:#D3151D">
+<span class="prop__etiqueta">{t.issueLabel1}</span>
+<h3 class="prop__h">{t.issue1H}</h3>
+<p class="prop__p">{t.issue1P}</p>
 </article>
 
-<article data-rv="0.13" class="h-card" style="background:#fff;border:1px solid #E4E7EC;border-top:5px solid #003399;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s">
-<div style="position:relative;aspect-ratio:16/10;overflow:hidden;background:#E4E7EC">
-<img src="/images/candidate-listening.png" alt="Lupe Negrete conversando con vecinos sobre seguridad" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
-<span style="position:absolute;top:12px;left:0;background:#003399;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px 6px 14px">{t.issueLabel2}</span>
-</div>
-<div style="padding:24px;display:flex;flex-direction:column;gap:12px;flex:1">
-<h3 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase;color:#06132B">{t.issue2H}</h3>
-<p style="margin:0;font-size:14.5px;line-height:1.66;color:#475467;flex:1">{t.issue2P}</p>
-<a href={R.lighting} class="h-nav" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#06132B;padding-top:12px;border-top:1px solid #E4E7EC">{t.issue2Link}</a>
-</div>
+<article data-rv="0.13" class="prop" style="--prop-color:#003399">
+<span class="prop__etiqueta">{t.issueLabel2}</span>
+<h3 class="prop__h">{t.issue2H}</h3>
+<p class="prop__p">{t.issue2P}</p>
 </article>
 
-<article data-rv="0.26" class="h-card" style="background:#fff;border:1px solid #E4E7EC;border-top:5px solid #06132B;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s">
-<div style="position:relative;aspect-ratio:16/10;overflow:hidden;background:#E4E7EC">
-<img src="/images/candidate-border.png" alt="Lupe Negrete con vista al Río Bravo y Eagle Pass al atardecer" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
-<span style="position:absolute;top:12px;left:0;background:#06132B;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px 6px 14px">{t.issueLabel3}</span>
-</div>
-<div style="padding:24px;display:flex;flex-direction:column;gap:12px;flex:1">
-<h3 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase;color:#06132B">{t.issue3H}</h3>
-<p style="margin:0;font-size:14.5px;line-height:1.66;color:#475467;flex:1">{t.issue3P}</p>
-<a href={R.audit} class="h-nav" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#06132B;padding-top:12px;border-top:1px solid #E4E7EC">{t.issue3Link}</a>
-</div>
+<article data-rv="0.26" class="prop" style="--prop-color:#06132B">
+<span class="prop__etiqueta">{t.issueLabel3}</span>
+<h3 class="prop__h">{t.issue3H}</h3>
+<p class="prop__p">{t.issue3P}</p>
 </article>
 
 </div>
@@ -413,3 +458,276 @@ const uiVideo =
 <script>
   import '../../scripts/home-landing';
 </script>
+
+<style>
+  /* ---------- Hero ----------
+     El titular se apoya en color plano; la foto del candidato entra a sangre
+     por la derecha y se disuelve en ese color con una mascara en degradado,
+     asi que no hay borde ni marco: el navy se convierte en foto. */
+  .hero__inner {
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 24px);
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 48px);
+    align-items: stretch;
+  }
+
+  .hero__foto {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(62%, 980px);
+    pointer-events: none;
+  }
+  .hero__foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 2%;
+    display: block;
+    /* La disolucion. Va sobre la imagen y sobre el tinte a la vez, por eso
+       la mascara se declara en el contenedor. */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, .3) 11%, rgba(0, 0, 0, .86) 27%, #000 40%);
+    mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, .3) 11%, rgba(0, 0, 0, .86) 27%, #000 40%);
+  }
+  /* Tinte navy sobre la zona de disolucion: la foto es de fondo claro y sin
+     esto el degradado saltaria de azul oscuro a blanco de golpe. */
+  .hero__tinte {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(6, 19, 43, .95) 0%, rgba(6, 19, 43, .66) 15%, rgba(6, 19, 43, .24) 31%, rgba(6, 19, 43, .04) 52%, rgba(6, 19, 43, 0) 70%);
+  }
+
+  /* Franja roja inclinada, a la altura de la disolucion. */
+  .hero__franja {
+    position: absolute;
+    left: 48%;
+    top: 0;
+    bottom: 0;
+    width: 170px;
+    background: #ff3131;
+    opacity: .09;
+    transform: skewX(-12deg);
+    pointer-events: none;
+  }
+
+  /* Columna derecha: no lleva contenido, solo reserva el aire de la foto y
+     sostiene el boton de play abajo a la derecha, como en el original. */
+  .hero__lado {
+    position: relative;
+    min-height: clamp(400px, 54vw, 620px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding-bottom: clamp(28px, 4vw, 56px);
+  }
+
+  .hero__play {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+  }
+  .hero__playCirculo {
+    position: relative;
+    flex: none;
+    width: clamp(72px, 7vw, 96px);
+    height: clamp(72px, 7vw, 96px);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d3151d;
+    box-shadow: 0 16px 40px rgba(6, 19, 43, .38);
+    transition: background .3s, transform .3s;
+  }
+  .hero__play:hover .hero__playCirculo {
+    background: #fff;
+    transform: scale(1.06);
+  }
+  .hero__playTexto {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    text-shadow: 0 2px 14px rgba(6, 19, 43, .55);
+  }
+  .hero__playTitulo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(17px, 1.6vw, 21px);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .hero__playPie {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .82);
+  }
+
+  /* Lema de campana, antes sobre la foto. */
+  .hero__lema {
+    display: inline-block;
+    margin-top: 30px;
+    background: #ff3131;
+    color: #fff;
+    padding: 10px 17px;
+    transform: skewX(-12deg);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .3);
+  }
+  .hero__lema span {
+    display: block;
+    transform: skewX(12deg);
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    font-size: clamp(15px, 3.8vw, 19px);
+  }
+
+  /* ---------- Propuestas ----------
+     El video encabeza la seccion; debajo, las tres promesas en texto. */
+  .prop-video {
+    margin: 0 0 clamp(32px, 5vw, 52px);
+  }
+  .prop-video video {
+    width: 100%;
+    max-width: 980px;
+    background: #06132b;
+    border-radius: 8px;
+    box-shadow: 0 24px 60px rgba(6, 19, 43, .22);
+  }
+  .prop-video__h {
+    display: block;
+    aspect-ratio: 16 / 9;
+  }
+  /* La version vertical solo existe en pantallas estrechas; en escritorio ni
+     se muestra ni se descarga (preload="none" y sin poster visible). */
+  .prop-video__v {
+    display: none;
+    aspect-ratio: 9 / 16;
+    max-width: min(100%, 420px);
+    margin: 0 auto;
+  }
+  .prop-video__pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    max-width: 980px;
+    margin-top: 14px;
+  }
+  .prop-video__titulo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(19px, 2.2vw, 24px);
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    color: #06132b;
+  }
+  .prop-video__meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #667085;
+  }
+
+  .prop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: clamp(20px, 3vw, 32px);
+  }
+  .prop {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 4px solid var(--prop-color);
+  }
+  .prop__etiqueta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--prop-color);
+  }
+  .prop__h {
+    margin: 0;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(26px, 2.6vw, 32px);
+    line-height: .95;
+    text-transform: uppercase;
+    color: #06132b;
+  }
+  .prop__p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.68;
+    color: #475467;
+  }
+
+  @media (max-width: 760px) {
+    .prop-video__h {
+      display: none;
+    }
+    .prop-video__v {
+      display: block;
+    }
+  }
+
+  /* ---------- Una sola columna ----------
+     La foto pasa a la franja inferior y la disolucion se vuelve vertical:
+     color plano arriba, donde esta el texto; foto abajo, con el play encima. */
+  /* ---------- Una sola columna ----------
+     Se invierte el orden: primero la foto de Lupe, que se disuelve hacia
+     abajo en el color, y debajo el titular y los botones. */
+  @media (max-width: 900px) {
+    .hero__inner {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+    .hero__lado {
+      order: -1;
+      min-height: clamp(300px, 74vw, 460px);
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding-bottom: clamp(20px, 5vw, 34px);
+    }
+    .hero__foto {
+      left: 0;
+      width: 100%;
+      bottom: auto;
+      height: clamp(340px, 82vw, 520px);
+    }
+    .hero__foto img {
+      object-position: 50% 2%;
+      -webkit-mask-image: linear-gradient(to bottom, #000 42%, rgba(0, 0, 0, .55) 72%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 42%, rgba(0, 0, 0, .55) 72%, transparent 100%);
+    }
+    .hero__tinte {
+      background: linear-gradient(to bottom, rgba(6, 19, 43, 0) 0%, rgba(6, 19, 43, .1) 46%, rgba(6, 19, 43, .6) 78%, rgba(6, 19, 43, .95) 100%);
+    }
+    .hero__franja {
+      display: none;
+    }
+    .hero__play {
+      gap: 12px;
+    }
+  }
+</style>
