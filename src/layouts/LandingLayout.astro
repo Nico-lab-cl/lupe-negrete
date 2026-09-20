@@ -4,14 +4,16 @@
 // propia escala tipográfica, y las reglas globales del sitio (max-width en
 // párrafos, font-family de headings, body flex) romperían la maqueta.
 import { SITE_CONFIG } from '../config/site';
-import { getEquivalentPath, type Lang } from '../lib/i18n';
+import type { Lang } from '../lib/i18n';
 import { buildGraph, type Breadcrumb, type PageType } from '../lib/schema';
 import Analytics from '../components/site/Analytics.astro';
+import SeoMeta from '../components/site/SeoMeta.astro';
 
 interface Props {
   title: string;
   description: string;
   lang: Lang;
+  /** Imagen para compartir; por defecto, la tarjeta del idioma. */
   ogImage?: string;
   jsonLd?: Record<string, any>[];
   /** Tipo de pagina para Schema.org. */
@@ -26,7 +28,7 @@ const {
   title,
   description,
   lang,
-  ogImage = '/images/banner-campaign.png',
+  ogImage,
   jsonLd = [],
   noindex = false,
   pageType = 'WebPage',
@@ -34,16 +36,15 @@ const {
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
-const siteUrl = SITE_CONFIG.siteUrl;
-const canonicalUrl = `${siteUrl}${currentPath}`;
-const esPath = lang === 'es' ? currentPath : getEquivalentPath(currentPath, 'es');
-const enPath = lang === 'en' ? currentPath : getEquivalentPath(currentPath, 'en');
 // Google corta el title sobre los ~60-65 caracteres. No repetimos la marca
 // cuando el propio titulo ya la incluye: son 15 caracteres que se comen el
 // final de la frase justo donde va lo distintivo de cada pagina.
 const tituloCompleto = /negrete/i.test(title) ? title : title + ' | Lupe Negrete';
 
-const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+// La misma imagen que SeoMeta pone en la tarjeta social, para que los datos
+// estructurados y Open Graph no se contradigan.
+const imagenSocial = ogImage ?? (lang === 'es' ? '/images/og-es.jpg' : '/images/og-en.jpg');
+
 
 const inicio = lang === 'es' ? '/es/' : '/en/';
 const migas: Breadcrumb[] = breadcrumbs.length
@@ -56,7 +57,7 @@ const jsonLdGraph = buildGraph({
   title,
   description,
   url: currentPath,
-  image: ogImage,
+  image: imagenSocial,
   breadcrumbs: migas,
   extra: jsonLd
 });
@@ -67,29 +68,13 @@ const jsonLdGraph = buildGraph({
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{tituloCompleto}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalUrl} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
-    <link rel="icon" type="image/png" href="/images/logo-es.png" />
-
-    <link rel="alternate" hreflang="es" href={`${siteUrl}${esPath}`} />
-    <link rel="alternate" hreflang="en" href={`${siteUrl}${enPath}`} />
-    <link rel="alternate" hreflang="x-default" href={`${siteUrl}/es/`} />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:title" content={`${tituloCompleto}`} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={fullOgImage} />
-    <meta property="og:locale" content={lang === 'es' ? 'es_US' : 'en_US'} />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content={canonicalUrl} />
-    <meta name="twitter:title" content={`${tituloCompleto}`} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={fullOgImage} />
-
+    <SeoMeta
+      title={tituloCompleto}
+      description={description}
+      lang={lang}
+      ogImage={ogImage}
+      noindex={noindex}
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -146,6 +131,13 @@ const jsonLdGraph = buildGraph({
   .h-ghost-10:hover { background: rgba(255, 255, 255, .1); color: #fff; }
   .h-navy:hover { background: #0B224E; color: #fff; }
   .h-wa:hover { background: #0F7267; color: #fff; }
+
+  /* Boton de play del hero */
+  .h-play:hover [data-play] { background: #B50E15; transform: scale(1.07); }
+  .h-play:focus-visible [data-play] { outline: 3px solid #FF3131; outline-offset: 4px; }
+  .h-play__ring { animation: lnRing 2.6s cubic-bezier(.16,1,.3,1) infinite; }
+  @keyframes lnRing { 0% { transform: scale(1); opacity: .75 } 70%, 100% { transform: scale(1.35); opacity: 0 } }
+  @media (prefers-reduced-motion: reduce) { .h-play__ring { animation: none } }
 
   /* Tarjetas de video */
   .h-video:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(6, 19, 43, .22); }

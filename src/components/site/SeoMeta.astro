@@ -1,0 +1,93 @@
+---
+// Metadatos de <head> compartidos por los dos layouts del sitio.
+//
+// Vivían duplicados en BaseLayout y LandingLayout, con el riesgo de que uno se
+// actualizara y el otro no: una tarjeta de WhatsApp distinta según la página
+// por la que te compartieran. Aquí se declaran una sola vez.
+import { SITE_CONFIG } from '../../config/site';
+import { getEquivalentPath, type Lang } from '../../lib/i18n';
+
+interface Props {
+  /** Título ya compuesto, tal cual va en la pestaña y en la tarjeta. */
+  title: string;
+  description: string;
+  lang: Lang;
+  /** Ruta o URL de la imagen para compartir; por defecto, la tarjeta del idioma. */
+  ogImage?: string;
+  /** Páginas post-conversión que no deben indexarse. */
+  noindex?: boolean;
+  /** `article` en fichas de contenido; el resto del sitio es `website`. */
+  ogType?: 'website' | 'article' | 'profile';
+}
+
+const { title, description, lang, ogImage, noindex = false, ogType = 'website' } = Astro.props;
+
+const esEs = lang === 'es';
+const siteUrl = SITE_CONFIG.siteUrl;
+const currentPath = Astro.url.pathname;
+const canonicalUrl = `${siteUrl}${currentPath}`;
+
+const esPath = esEs ? currentPath : getEquivalentPath(currentPath, 'es');
+const enPath = !esEs ? currentPath : getEquivalentPath(currentPath, 'en');
+
+// Cada idioma comparte su propia tarjeta: quien recibe el enlace en inglés no
+// debería ver una imagen en español.
+const imagen = ogImage ?? (esEs ? '/images/og-es.jpg' : '/images/og-en.jpg');
+const imagenAbs = imagen.startsWith('http') ? imagen : `${siteUrl}${imagen}`;
+const imagenTipo = imagenAbs.endsWith('.webp')
+  ? 'image/webp'
+  : imagenAbs.endsWith('.jpg') || imagenAbs.endsWith('.jpeg')
+    ? 'image/jpeg'
+    : 'image/png';
+
+// Solo las tarjetas generadas tienen medidas conocidas; si una página pasa otra
+// imagen, es mejor no declarar un tamaño que sería mentira.
+const esTarjetaPropia = imagen === '/images/og-es.jpg' || imagen === '/images/og-en.jpg';
+
+const imagenAlt = esEs
+  ? `${SITE_CONFIG.candidate.name}, candidato a ${SITE_CONFIG.candidate.office.es}`
+  : `${SITE_CONFIG.candidate.name}, candidate for ${SITE_CONFIG.candidate.office.en}`;
+
+const nombreSitio = esEs
+  ? 'Lupe Negrete · Comisionado Precinto 4'
+  : 'Lupe Negrete · Precinct 4 Commissioner';
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+{noindex && <meta name="robots" content="noindex, follow" />}
+<meta name="author" content={SITE_CONFIG.candidate.name} />
+
+{/* Color de marca: tiñe la barra del navegador en Android y la pestaña en
+    escritorio, y es el fondo del icono en la pantalla de inicio. */}
+<meta name="theme-color" content="#06132B" />
+
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<link rel="alternate" hreflang="es-US" href={`${siteUrl}${esPath}`} />
+<link rel="alternate" hreflang="en-US" href={`${siteUrl}${enPath}`} />
+<link rel="alternate" hreflang="x-default" href={`${siteUrl}/es/`} />
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={nombreSitio} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imagenAbs} />
+<meta property="og:image:type" content={imagenTipo} />
+{esTarjetaPropia && <meta property="og:image:width" content="1200" />}
+{esTarjetaPropia && <meta property="og:image:height" content="630" />}
+<meta property="og:image:alt" content={imagenAlt} />
+<meta property="og:locale" content={esEs ? 'es_US' : 'en_US'} />
+<meta property="og:locale:alternate" content={esEs ? 'en_US' : 'es_US'} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalUrl} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imagenAbs} />
+<meta name="twitter:image:alt" content={imagenAlt} />

@@ -24,7 +24,7 @@ export function personSchema(lang: Lang) {
     jobTitle: SITE_CONFIG.candidate.office[lang],
     description: SITE_CONFIG.candidate.positioningLine[lang],
     url: abs(lang === 'es' ? '/es/' : '/en/'),
-    image: abs('/images/candidate-portrait-navy.png'),
+    image: abs('/images/lupe-retrato-1100.webp'),
     email: `mailto:${SITE_CONFIG.committee.email[lang]}`,
     telephone: `+${SITE_CONFIG.committee.whatsappNumber}`,
     sameAs: [SITE_CONFIG.social.facebook],
@@ -125,7 +125,7 @@ export function pageSchema(opts: {
     inLanguage: opts.lang === 'es' ? 'es-US' : 'en-US',
     isPartOf: { '@id': `${SITE}/#sitio` },
     about: { '@id': `${SITE}/#candidato` },
-    primaryImageOfPage: abs(opts.image ?? '/images/banner-campaign.png')
+    primaryImageOfPage: abs(opts.image ?? '/images/og-es.jpg')
   };
 }
 
