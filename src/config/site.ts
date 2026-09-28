@@ -43,15 +43,14 @@ export const SITE_CONFIG = {
   },
   social: {
     facebook:
-      'https://www.facebook.com/people/Guadalupe-Lupe-Negrete-for-commissioner-precinct-4/61593650286694/'
+      'https://www.facebook.com/people/Guadalupe-Lupe-Negrete-for-commissioner-precinct-4/61593650286694/',
+    // El plugin de página de Facebook no acepta la URL /people/…; solo el ID.
+    facebookPluginHref: 'https://www.facebook.com/61593650286694'
   },
   analytics: {
     gtmId: 'GTM-PENDIENTE',
     ga4Id: 'G-38JNQBV4B7',
     pixelId: 'PIXEL-PENDIENTE',
     clarityId: 'ykmxx2kc52'
-  },
-  flags: {
-    enableDonations: false
   }
 };

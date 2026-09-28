@@ -182,3 +182,48 @@ function setupMap() {
 }
 
 setupMap();
+
+/* ---------- Publicaciones de Facebook ---------- */
+// Page Plugin por iframe, sin el SDK de Facebook. Se inserta al acercarse a la
+// vista para no cargar Meta en la primera pintura; el plugin solo acepta
+// anchos de 180 a 500 px y lo lee una vez, así que se calcula aquí.
+function setupFacebookFeed(): void {
+  const box = document.querySelector<HTMLElement>('[data-fb-feed]');
+  if (!box) return;
+  const mount = () => {
+    const width = Math.max(180, Math.min(500, Math.floor(box.clientWidth)));
+    const height = box.clientHeight;
+    const params = new URLSearchParams({
+      href: box.dataset.href ?? '',
+      tabs: 'timeline',
+      width: String(width),
+      height: String(height),
+      small_header: 'false',
+      adapt_container_width: 'true',
+      hide_cover: 'false',
+      show_facepile: 'false',
+      locale: box.dataset.locale ?? 'es_LA'
+    });
+    const frame = document.createElement('iframe');
+    frame.src = `https://www.facebook.com/plugins/page.php?${params}`;
+    frame.title = box.dataset.title ?? 'Facebook';
+    frame.width = String(width);
+    frame.height = String(height);
+    frame.style.cssText = 'display:block;border:0;overflow:hidden;margin:0 auto';
+    frame.setAttribute('scrolling', 'no');
+    frame.setAttribute('allow', 'encrypted-media; clipboard-write');
+    box.appendChild(frame);
+  };
+  if (!('IntersectionObserver' in window)) return mount();
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      mount();
+    },
+    { rootMargin: '400px 0px' }
+  );
+  io.observe(box);
+}
+
+setupFacebookFeed();
