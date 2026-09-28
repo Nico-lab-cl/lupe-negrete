@@ -183,47 +183,29 @@ function setupMap() {
 
 setupMap();
 
-/* ---------- Publicaciones de Facebook ---------- */
-// Page Plugin por iframe, sin el SDK de Facebook. Se inserta al acercarse a la
-// vista para no cargar Meta en la primera pintura; el plugin solo acepta
-// anchos de 180 a 500 px y lo lee una vez, así que se calcula aquí.
-function setupFacebookFeed(): void {
-  const box = document.querySelector<HTMLElement>('[data-fb-feed]');
-  if (!box) return;
-  const mount = () => {
-    const width = Math.max(180, Math.min(500, Math.floor(box.clientWidth)));
-    const height = box.clientHeight;
-    const params = new URLSearchParams({
-      href: box.dataset.href ?? '',
-      tabs: 'timeline',
-      width: String(width),
-      height: String(height),
-      small_header: 'false',
-      adapt_container_width: 'true',
-      hide_cover: 'false',
-      show_facepile: 'false',
-      locale: box.dataset.locale ?? 'es_LA'
-    });
-    const frame = document.createElement('iframe');
-    frame.src = `https://www.facebook.com/plugins/page.php?${params}`;
-    frame.title = box.dataset.title ?? 'Facebook';
-    frame.width = String(width);
-    frame.height = String(height);
-    frame.style.cssText = 'display:block;border:0;overflow:hidden;margin:0 auto';
-    frame.setAttribute('scrolling', 'no');
-    frame.setAttribute('allow', 'encrypted-media; clipboard-write');
-    box.appendChild(frame);
+/* ---------- Carrusel de publicaciones de Facebook ---------- */
+// El desplazamiento es scroll nativo; las flechas solo avanzan una tarjeta y
+// se apagan en los extremos.
+function setupFacebookCarousel(): void {
+  const track = document.querySelector<HTMLElement>('[data-fb-carrusel]');
+  const prev = document.querySelector<HTMLButtonElement>('[data-fb-prev]');
+  const next = document.querySelector<HTMLButtonElement>('[data-fb-next]');
+  if (!track || !prev || !next) return;
+  const step = () => {
+    const card = track.firstElementChild as HTMLElement | null;
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    return card ? card.offsetWidth + gap : track.clientWidth;
   };
-  if (!('IntersectionObserver' in window)) return mount();
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (!entries.some((e) => e.isIntersecting)) return;
-      io.disconnect();
-      mount();
-    },
-    { rootMargin: '400px 0px' }
-  );
-  io.observe(box);
+  const update = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    prev.disabled = track.scrollLeft <= 4;
+    next.disabled = track.scrollLeft >= max - 4;
+  };
+  prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+  next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+  track.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
 }
 
-setupFacebookFeed();
+setupFacebookCarousel();
