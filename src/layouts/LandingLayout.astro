@@ -172,7 +172,8 @@ const jsonLdGraph = buildGraph({
   }
   dialog[data-lightbox] video {
     /* El video es 9:16: se limita por alto para que nunca desborde. */
-    max-height: min(78vh, calc((100vw - 32px) * 16 / 9));
+    /* 70vh deja sitio al título y a la barra de compartir debajo. */
+    max-height: min(70vh, calc((100vw - 32px) * 16 / 9));
     max-width: 100%;
     aspect-ratio: 9 / 16;
     border-radius: 8px;
@@ -180,6 +181,66 @@ const jsonLdGraph = buildGraph({
     box-shadow: 0 24px 70px rgba(0, 0, 0, .6);
     display: block;
   }
+  /* Si el contenido no cabe (teléfono acostado), la caja se desplaza en vez
+     de cortar la barra de compartir. */
+  dialog[data-lightbox] [data-lb-caja] {
+    overflow-y: auto;
+    justify-content: safe center;
+  }
+  /* Entrevistas: 16:9, limitadas por ancho y por alto. */
+  dialog[data-lightbox][data-formato='entrevista'] video {
+    aspect-ratio: 16 / 9;
+    width: min(100%, 1100px);
+    max-height: min(70vh, calc((100vw - 32px) * 9 / 16));
+  }
+  /* Pantallas bajas: va después de las reglas de tamaño para ganarles. */
+  @media (max-height: 520px) {
+    dialog[data-lightbox] video,
+    dialog[data-lightbox][data-formato='entrevista'] video {
+      max-height: 62vh;
+    }
+    dialog[data-lightbox] [data-lb-caja] {
+      gap: 8px;
+    }
+  }
+  /* Barra de compartir bajo el video. */
+  dialog[data-lightbox] [data-lb-share] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  dialog[data-lightbox] [data-lb-share][hidden],
+  dialog[data-lightbox] [data-lb-share] [hidden] {
+    display: none;
+  }
+  dialog[data-lightbox] .lb-btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 15px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+    font: 600 13px/1 'IBM Plex Sans', system-ui, sans-serif;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  dialog[data-lightbox] .lb-btn:hover { background: rgba(255, 255, 255, .18); color: #fff; }
+  dialog[data-lightbox] .lb-btn--wa { background: #128C7E; border-color: #128C7E; }
+  dialog[data-lightbox] .lb-btn--wa:hover { background: #0F7267; }
+  dialog[data-lightbox] .lb-btn--fb { background: #102D66; }
+  dialog[data-lightbox] .lb-btn--bajar {
+    background: none;
+    border-color: transparent;
+    color: #F59E0B;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    font-size: 12.5px;
+  }
+  dialog[data-lightbox] .lb-btn--bajar:hover { background: rgba(245, 158, 11, .12); color: #F59E0B; }
   dialog[data-lightbox] [data-lb-titulo] {
     margin: 0;
     font-family: 'Saira Condensed', sans-serif;

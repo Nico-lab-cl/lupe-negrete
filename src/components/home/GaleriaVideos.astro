@@ -1,0 +1,683 @@
+---
+// Galería de videos sobre navy 900, justo después del hero.
+// Dos filas porque son dos formatos: los recorridos verticales en carrusel y
+// las entrevistas 16:9 en rejilla. Los filtros por tema ocultan tarjetas; el
+// clic en una tarjeta abre el lightbox de la portada (video-lightbox.ts).
+import { VIDEOS, type TemaVideo } from '../../config/videos';
+import type { Lang } from '../../lib/i18n';
+import { GALERIA_COPY, enlacesCompartir } from './galeria-copy';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = GALERIA_COPY[lang];
+
+const verticales = VIDEOS.filter((v) => v.formato === 'vertical');
+const entrevistas = VIDEOS.filter((v) => v.formato === 'entrevista');
+const temas: TemaVideo[] = ['pavimentacion', 'seguridad', 'transparencia', 'comunidad'];
+
+const tarjetas = (lista: typeof VIDEOS) =>
+  lista.map((v) => ({ v, share: enlacesCompartir(v, lang), titulo: v.titulo[lang] }));
+---
+
+<section id="videos" class="gv" data-galeria>
+<div aria-hidden="true" class="gv__franja"></div>
+<div class="gv__inner">
+
+<div class="gv__cab" data-rv="0">
+<div class="gv__intro">
+<p class="gv__kicker">{t.kicker}</p>
+<h2 class="gv__h2">{t.h2}</h2>
+<p class="gv__sub">{t.sub}</p>
+</div>
+<p class="gv__cuenta"><span data-gv-cuenta>{VIDEOS.length}</span><span>{t.videos}</span></p>
+</div>
+
+<div class="gv__filtros" role="group" aria-label={t.filtros}>
+<button type="button" class="gv__filtro" data-gv-filtro="todos" aria-pressed="true">{t.todos}</button>
+{temas.map((tema) => (
+<button type="button" class="gv__filtro" data-gv-filtro={tema} aria-pressed="false">{t.temas[tema]}</button>
+))}
+</div>
+
+<div class="gv__fila" data-gv-fila>
+<div class="gv__filaCab">
+<div class="gv__filaTit">
+<span class="gv__raya" aria-hidden="true"></span>
+<h3>{t.terreno}</h3>
+<span class="gv__meta">{t.terrenoMeta}</span>
+</div>
+<div class="gv__flechas">
+<button type="button" class="gv__flecha" data-gv-prev aria-label={t.anteriores}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+<button type="button" class="gv__flecha" data-gv-next aria-label={t.siguientes}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+</div>
+</div>
+<ul class="gv__carrusel" data-gv-carrusel>
+{tarjetas(verticales).map(({ v, share, titulo }) => (
+<li class="gv__card" data-gv-card data-temas={v.temas.join(' ')}>
+<button
+  type="button"
+  class="gv__thumb gv__thumb--v"
+  data-video={v.src}
+  data-poster={v.portada}
+  data-titulo={titulo}
+  data-formato={v.formato}
+  data-video-id={v.id}
+  data-url={share.url}
+  data-texto={share.texto}
+  aria-label={`${t.reproducir}: ${titulo}`}
+>
+<img src={v.portada} alt={v.alt[lang]} loading="lazy" decoding="async" width="540" height="960" />
+<span class="gv__velo" aria-hidden="true"></span>
+<span class="gv__tag" aria-hidden="true"><span>{v.etiqueta[lang]}</span></span>
+<span class="gv__play" data-play aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+<span class="gv__dur" aria-hidden="true">{v.duracion}</span>
+</button>
+<h4 class="gv__tit">{titulo}</h4>
+<div class="gv__share">
+<a class="gv__wa" href={share.whatsapp} target="_blank" rel="noopener noreferrer" data-gv-share="whatsapp" data-id={v.id}>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.174.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.82 9.82 0 016.988 2.896 9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.359.101 11.944c0 2.096.548 4.142 1.588 5.945L0 24l6.335-1.652a11.882 11.882 0 005.683 1.448h.005c6.582 0 11.941-5.359 11.944-11.945A11.86 11.86 0 0020.52 3.45"/></svg>
+<span>WhatsApp</span>
+</a>
+<a class="gv__icono" href={share.facebook} target="_blank" rel="noopener noreferrer" data-gv-share="facebook" data-id={v.id} aria-label={`${t.compartirEn} Facebook: ${titulo}`}>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8.2h2.8l.4-3.2h-3.2V8.5c0-.9.3-1.6 1.6-1.6h1.7V4.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.3v3.2h2.8V22h3.4z"/></svg>
+</a>
+<button type="button" class="gv__icono" data-gv-mas data-id={v.id} data-url={share.url} data-texto={share.texto} data-titulo={titulo} aria-label={`${t.masOpciones}: ${titulo}`} title={t.masOpciones}>
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg>
+</button>
+</div>
+</li>
+))}
+</ul>
+</div>
+
+<div class="gv__fila" data-gv-fila>
+<div class="gv__filaCab">
+<div class="gv__filaTit">
+<span class="gv__raya gv__raya--ambar" aria-hidden="true"></span>
+<h3>{t.entrevistas}</h3>
+<span class="gv__meta">{t.entrevistasMeta}</span>
+</div>
+</div>
+<ul class="gv__rejilla">
+{tarjetas(entrevistas).map(({ v, share, titulo }) => (
+<li class="gv__card" data-gv-card data-temas={v.temas.join(' ')}>
+<button
+  type="button"
+  class="gv__thumb gv__thumb--h"
+  data-video={v.src}
+  data-poster={v.portada}
+  data-titulo={titulo}
+  data-formato={v.formato}
+  data-video-id={v.id}
+  data-url={share.url}
+  data-texto={share.texto}
+  aria-label={`${t.reproducir}: ${titulo}`}
+>
+<img src={v.portada} alt={v.alt[lang]} loading="lazy" decoding="async" width="1280" height="720" />
+<span class="gv__velo gv__velo--plano" aria-hidden="true"></span>
+<span class="gv__tag gv__tag--doble" aria-hidden="true"><span class="gv__tagA"><span>{t.entrevista}</span></span><span class="gv__tagB"><span>{v.etiqueta[lang]}</span></span></span>
+<span class="gv__play" data-play aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+<span class="gv__dur" aria-hidden="true">{v.duracion}</span>
+</button>
+<div class="gv__pieH">
+<h4 class="gv__tit">{titulo}</h4>
+<div class="gv__share gv__share--compacto">
+<a class="gv__icono gv__icono--wa" href={share.whatsapp} target="_blank" rel="noopener noreferrer" data-gv-share="whatsapp" data-id={v.id} aria-label={`${t.compartirEn} WhatsApp: ${titulo}`}>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.174.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.82 9.82 0 016.988 2.896 9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.359.101 11.944c0 2.096.548 4.142 1.588 5.945L0 24l6.335-1.652a11.882 11.882 0 005.683 1.448h.005c6.582 0 11.941-5.359 11.944-11.945A11.86 11.86 0 0020.52 3.45"/></svg>
+</a>
+<a class="gv__icono" href={share.facebook} target="_blank" rel="noopener noreferrer" data-gv-share="facebook" data-id={v.id} aria-label={`${t.compartirEn} Facebook: ${titulo}`}>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8.2h2.8l.4-3.2h-3.2V8.5c0-.9.3-1.6 1.6-1.6h1.7V4.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.3v3.2h2.8V22h3.4z"/></svg>
+</a>
+<button type="button" class="gv__icono" data-gv-mas data-id={v.id} data-url={share.url} data-texto={share.texto} data-titulo={titulo} aria-label={`${t.masOpciones}: ${titulo}`} title={t.masOpciones}>
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg>
+</button>
+</div>
+</div>
+</li>
+))}
+</ul>
+</div>
+
+<p class="gv__nota">{t.nota}</p>
+
+</div>
+<p class="gv__aviso" role="status" aria-live="polite" data-gv-aviso></p>
+</section>
+
+<style>
+  .gv {
+    position: relative;
+    background: #0b224e;
+    border-top: 4px solid #ff3131;
+    color: #fff;
+    overflow: hidden;
+  }
+  .gv__franja {
+    position: absolute;
+    right: 9%;
+    top: 0;
+    bottom: 0;
+    width: 150px;
+    background: #ff3131;
+    opacity: 0.05;
+    transform: skewX(-12deg);
+    pointer-events: none;
+  }
+  .gv__inner {
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: clamp(48px, 7vw, 78px) clamp(16px, 4vw, 24px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(26px, 4vw, 36px);
+  }
+  .gv__cab {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px 40px;
+  }
+  .gv__intro {
+    max-width: 680px;
+  }
+  .gv__kicker {
+    margin: 0 0 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #ff3131;
+  }
+  .gv__h2 {
+    margin: 0 0 14px;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(40px, 5.4vw, 72px);
+    line-height: 0.86;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .gv__sub {
+    margin: 0;
+    font-size: 16.5px;
+    line-height: 1.66;
+    color: rgba(255, 255, 255, 0.72);
+  }
+  .gv__cuenta {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .gv__cuenta span:first-child {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 1;
+  }
+  .gv__cuenta span:last-child {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .gv__filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .gv__filtro {
+    min-height: 44px;
+    padding: 10px 18px;
+    border-radius: 100px;
+    border: 1.5px solid rgba(255, 255, 255, 0.34);
+    background: transparent;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .gv__filtro:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .gv__filtro[aria-pressed='true'] {
+    background: #fff;
+    border-color: #fff;
+    color: #06132b;
+  }
+
+  .gv__fila {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .gv__fila[hidden] {
+    display: none;
+  }
+  .gv__filaCab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .gv__filaTit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 14px;
+  }
+  .gv__filaTit h3 {
+    margin: 0;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .gv__raya {
+    flex: none;
+    width: 46px;
+    height: 4px;
+    background: #ff3131;
+    transform: skewX(-12deg);
+  }
+  .gv__raya--ambar {
+    background: #f59e0b;
+  }
+  .gv__meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .gv__flechas {
+    display: flex;
+    gap: 10px;
+  }
+  .gv__flecha {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  .gv__flecha:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.16);
+  }
+  .gv__flecha:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .gv__carrusel {
+    list-style: none;
+    margin: 0 calc(-1 * clamp(16px, 4vw, 24px));
+    padding: 4px clamp(16px, 4vw, 24px) 16px;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(16px, 4vw, 24px);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+    overscroll-behavior-x: contain;
+  }
+  .gv__carrusel .gv__card {
+    flex: 0 0 clamp(200px, 21vw, 232px);
+    scroll-snap-align: start;
+  }
+  .gv__rejilla {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+    gap: 20px;
+  }
+  .gv__card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+  .gv__card[hidden] {
+    display: none;
+  }
+
+  .gv__thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #06132b;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+  }
+  .gv__thumb--v {
+    aspect-ratio: 9 / 16;
+  }
+  .gv__thumb--h {
+    aspect-ratio: 16 / 9;
+  }
+  .gv__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .gv__thumb:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.45);
+  }
+  .gv__thumb:focus-visible {
+    outline: 3px solid #ff3131;
+    outline-offset: 3px;
+  }
+  .gv__velo {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(6, 19, 43, 0.55) 0%, rgba(6, 19, 43, 0) 40%);
+  }
+  .gv__velo--plano {
+    background: rgba(6, 19, 43, 0.22);
+  }
+  .gv__tag {
+    position: absolute;
+    top: 12px;
+    left: -5px;
+    display: flex;
+    align-items: stretch;
+    transform: skewX(-12deg);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.34);
+    background: #d3151d;
+    padding: 6px 11px 5px 15px;
+  }
+  .gv__tag span {
+    display: block;
+    transform: skewX(12deg);
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .gv__tag--doble {
+    background: none;
+    padding: 0;
+  }
+  .gv__tagA,
+  .gv__tagB {
+    display: flex;
+    align-items: center;
+  }
+  .gv__tagA {
+    background: #0b224e;
+    padding: 6px 11px 5px 15px;
+  }
+  .gv__tagA span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    color: #f59e0b;
+  }
+  .gv__tagB {
+    background: #d3151d;
+    padding: 6px 11px 5px;
+  }
+  .gv__play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d3151d;
+    box-shadow: 0 10px 28px rgba(6, 19, 43, 0.4);
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+  }
+  .gv__thumb:hover .gv__play {
+    background: #d3151d;
+    color: #fff;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  .gv__dur {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: rgba(6, 19, 43, 0.8);
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 11px;
+    color: #fff;
+    padding: 4px 7px;
+    border-radius: 3px;
+  }
+  .gv__tit {
+    margin: 0;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: #fff;
+    text-wrap: balance;
+  }
+  .gv__carrusel .gv__tit {
+    min-height: 40px;
+  }
+  .gv__pieH {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .gv__pieH .gv__tit {
+    font-size: 22px;
+  }
+
+  .gv__share {
+    display: flex;
+    gap: 6px;
+  }
+  .gv__share--compacto {
+    flex: none;
+  }
+  .gv__wa,
+  .gv__icono {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .gv__wa {
+    flex: 1 1 auto;
+    gap: 7px;
+    background: #128c7e;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .gv__wa:hover {
+    background: #0f7267;
+    color: #fff;
+  }
+  .gv__icono {
+    flex: none;
+    width: 44px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  .gv__icono:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+  }
+  .gv__icono--wa {
+    background: #128c7e;
+    border-color: #128c7e;
+  }
+  .gv__icono--wa:hover {
+    background: #0f7267;
+  }
+
+  .gv__nota {
+    margin: 0;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.62);
+  }
+  .gv__aviso {
+    position: fixed;
+    left: 50%;
+    bottom: 96px;
+    z-index: 1300;
+    transform: translateX(-50%);
+    margin: 0;
+    background: #fff;
+    color: #06132b;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 5px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .gv__aviso[data-open] {
+    opacity: 1;
+  }
+  .gv__filtro:focus-visible,
+  .gv__flecha:focus-visible,
+  .gv__wa:focus-visible,
+  .gv__icono:focus-visible {
+    outline: 3px solid #ff3131;
+    outline-offset: 3px;
+  }
+
+  /* ---------- Pantallas táctiles ----------
+     Sin mouse las flechas sobran: el carrusel se desliza con el dedo. */
+  @media (hover: none) {
+    .gv__flechas {
+      display: none;
+    }
+    .gv__thumb:hover {
+      transform: none;
+    }
+  }
+
+  /* ---------- Tablet ---------- */
+  @media (max-width: 900px) {
+    .gv__cuenta {
+      display: none;
+    }
+  }
+
+  /* ---------- Celular ---------- */
+  @media (max-width: 640px) {
+    .gv__inner {
+      gap: 24px;
+    }
+    .gv__sub {
+      font-size: 15.5px;
+    }
+    /* Los filtros van en una sola fila deslizable: en dos o tres renglones
+       empujaban los videos fuera de la primera pantalla. */
+    .gv__filtros {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin: 0 calc(-1 * clamp(16px, 4vw, 24px));
+      padding: 2px clamp(16px, 4vw, 24px) 6px;
+      scrollbar-width: none;
+    }
+    .gv__filtros::-webkit-scrollbar {
+      display: none;
+    }
+    .gv__filtro {
+      flex: none;
+      padding: 10px 15px;
+      font-size: 12px;
+    }
+    .gv__filaTit h3 {
+      font-size: 22px;
+    }
+    .gv__raya {
+      width: 32px;
+    }
+    /* Algo más de una tarjeta y media a la vista: se nota que hay más. */
+    .gv__carrusel {
+      gap: 14px;
+    }
+    .gv__carrusel .gv__card {
+      flex-basis: clamp(170px, 56vw, 220px);
+    }
+    .gv__tit {
+      font-size: 18px;
+    }
+    .gv__carrusel .gv__tit {
+      min-height: 36px;
+    }
+    .gv__pieH .gv__tit {
+      font-size: 20px;
+    }
+    .gv__play {
+      width: 50px;
+      height: 50px;
+    }
+    .gv__wa span {
+      font-size: 12px;
+    }
+  }
+
+  /* Teléfonos muy angostos (320 px): el botón de WhatsApp queda solo con
+     el ícono para que quepan los tres botones. */
+  @media (max-width: 360px) {
+    .gv__wa span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  }
+</style>

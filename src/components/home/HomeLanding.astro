@@ -14,6 +14,8 @@ import SiteHeader from '../site/SiteHeader.astro';
 import SiteFooter from '../site/SiteFooter.astro';
 import StickyBar from '../site/StickyBar.astro';
 import { routes, diasRestantes as calcDias } from '../site/SiteChrome';
+import GaleriaVideos from './GaleriaVideos.astro';
+import PrecintoSection from './PrecintoSection.astro';
 
 interface Props {
   lang: Lang;
@@ -43,33 +45,28 @@ const fbPosts = FACEBOOK_POSTS.map((p) => {
 // Valor renderizado en build; el script del cliente lo recalcula al cargar.
 const diasRestantes = calcDias();
 
-// Los videos son verticales (9:16): se grabaron para redes. Las versiones
-// "horizontales" que entregó la campaña son el mismo material con barras
-// desenfocadas a los lados, así que se usan solo los verticales y se abren en
-// un lightbox, donde el 9:16 se ve completo sin relleno.
-const videos = [
-  {
-    src: '/videos/spot-principal.mp4',
-    poster: '/videos/spot-principal-poster.webp',
-    portada: '/videos/spot-principal-thumb.webp',
-    alt: 'Lupe Negrete con micrófono hablando ante vecinos en una reunión comunitaria',
-    titulo: t.vid1,
-    duracion: '0:39'
-  },
-  {
-    src: '/videos/voces-precinto-4.mp4',
-    poster: '/videos/voces-precinto-4-poster.webp',
-    portada: '/videos/voces-precinto-4-thumb.webp',
-    alt: 'Un vecino instalando un letrero de campaña de Lupe Negrete',
-    titulo: t.vid2,
-    duracion: '0:29'
-  }
-];
-
+// Los videos de la campaña viven en config/videos.ts y los pinta la galería.
 const uiVideo =
   lang === 'es'
-    ? { reproducir: 'Reproducir video', cerrar: 'Cerrar video' }
-    : { reproducir: 'Play video', cerrar: 'Close video' };
+    ? {
+        reproducir: 'Reproducir video',
+        cerrar: 'Cerrar video',
+        compartir: 'Compartir este video',
+        copiar: 'Copiar enlace',
+        mas: 'Más…',
+        bajar: 'Descargar para tu estado'
+      }
+    : {
+        reproducir: 'Play video',
+        cerrar: 'Close video',
+        compartir: 'Share this video',
+        copiar: 'Copy link',
+        mas: 'More…',
+        bajar: 'Download for your status'
+      };
+
+// Súmate queda entre la galería (navy) y Conoce (blanco): va en claro.
+const sumate = { fondo: '#F7F5F0', borde: '1px solid #E4E7EC', kicker: '#D3151D', h2: '#06132B', sub: '#475467', sombra: '0 24px 60px rgba(6,19,43,.16);border:1px solid #E4E7EC' };
 ---
 
 <div style="min-height:100vh;background:#F7F5F0">
@@ -150,14 +147,16 @@ const uiVideo =
 </div>
 </section>
 
-<section id="sumate" style="background:#0B224E;border-top:4px solid #FF3131">
+<GaleriaVideos lang={lang} />
+
+<section id="sumate" style={`background:${sumate.fondo};border-top:${sumate.borde}`}>
 <div style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,56px) clamp(16px,4vw,24px) clamp(44px,6vw,60px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));gap:48px;align-items:center">
 <div data-rv="0">
-<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#FF3131">{t.signupKicker}</p>
-<h2 style="margin:0 0 14px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(34px,3.6vw,52px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;color:#fff">{t.signupH2}</h2>
-<p style="margin:0;font-size:15.5px;line-height:1.65;color:rgba(255,255,255,.68)">{t.signupSub}</p>
+<p style={`margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:${sumate.kicker}`}>{t.signupKicker}</p>
+<h2 style={`margin:0 0 14px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(34px,3.6vw,52px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;color:${sumate.h2}`}>{t.signupH2}</h2>
+<p style={`margin:0;font-size:15.5px;line-height:1.65;color:${sumate.sub}`}>{t.signupSub}</p>
 </div>
-<div data-rv="0.14" data-form-wrap style="background:#fff;border-radius:8px;padding:clamp(20px,4vw,30px);box-shadow:0 24px 60px rgba(0,0,0,.35)">
+<div data-rv="0.14" data-form-wrap style={`background:#fff;border-radius:8px;padding:clamp(20px,4vw,30px);box-shadow:${sumate.sombra}`}>
 <form data-signup data-lang={lang} novalidate>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:14px">
 <div style="display:flex;flex-direction:column;gap:6px">
@@ -184,37 +183,6 @@ const uiVideo =
 </div>
 </section>
 
-<section style="background:#F7F5F0;border-bottom:1px solid #E4E7EC">
-<div style="max-width:1280px;margin:0 auto;padding:clamp(44px,7vw,64px) clamp(16px,4vw,24px)">
-<div data-rv="0" style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px;flex-wrap:wrap">
-<div>
-<p style="margin:0 0 8px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.vidKicker}</p>
-<h2 style="margin:0;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(32px,3.8vw,54px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;color:#06132B">{t.vidH2}</h2>
-</div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:20px;max-width:900px">
-{videos.map((v, i) => (
-<button
-  type="button"
-  data-video={v.src}
-  data-poster={v.poster}
-  data-titulo={v.titulo}
-  data-rv={String(i * 0.13)}
-  aria-label={`${uiVideo.reproducir}: ${v.titulo}`}
-  class="h-video"
-  style="position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#0B224E;border:1px solid #E4E7EC;padding:0;cursor:pointer;display:block;width:100%;font:inherit;color:inherit;text-align:inherit;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s"
->
-<img src={v.portada} alt={v.alt} loading="lazy" width="720" height="450" style="width:100%;height:100%;object-fit:cover" />
-<span style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(to top,rgba(6,19,43,.6) 0%,rgba(6,19,43,.24) 46%,rgba(6,19,43,.05) 100%)">
-<span data-play style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.82);background:rgba(6,19,43,.34);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 8px 22px rgba(6,19,43,.3);transition:background .3s,border-color .3s,transform .3s"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
-<span style="font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:#fff;text-shadow:0 2px 12px rgba(6,19,43,.85)">{v.titulo}</span>
-<span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8);text-shadow:0 2px 10px rgba(6,19,43,.85)">{v.duracion}</span>
-</span>
-</button>
-))}
-</div>
-</div>
-</div>
-</section>
 
 <section id="conoce" style="background:#fff;overflow:hidden">
 <div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:clamp(32px,5vw,60px);align-items:center">
@@ -435,31 +403,7 @@ const uiVideo =
 </div>
 </section>
 
-<section id="precinto" style="background:#fff">
-<div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,78px) clamp(16px,4vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:clamp(32px,5vw,52px);align-items:center">
-<div data-rv="0">
-<p style="margin:0 0 10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D3151D">{t.terrKicker}</p>
-<h2 style="margin:0 0 16px;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4.6vw,66px);line-height:.88;letter-spacing:-.012em;text-transform:uppercase;color:#06132B">{t.terrH2}</h2>
-<p style="margin:0 0 24px;font-size:16.5px;line-height:1.7;color:#475467;text-wrap:pretty">{t.terrBody}</p>
-<div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:26px">
-<span style="background:#F7F5F0;border:1px solid #E4E7EC;font-size:12.5px;font-weight:500;color:#06132B;padding:8px 13px;border-radius:100px">Loma Bonita</span>
-<span style="background:#F7F5F0;border:1px solid #E4E7EC;font-size:12.5px;font-weight:500;color:#06132B;padding:8px 13px;border-radius:100px">Seco Mines</span>
-<span style="background:#F7F5F0;border:1px solid #E4E7EC;font-size:12.5px;font-weight:500;color:#06132B;padding:8px 13px;border-radius:100px">Eagle Pass</span>
-</div>
-<a href="#sumate" class="h-cta" style="display:inline-flex;align-items:center;gap:8px;background:#D3151D;color:#fff;font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;padding:14px 26px;border-radius:5px;box-shadow:0 8px 24px rgba(211,21,29,.28)">{t.joinArrow}</a>
-</div>
-<div data-rv="0.14">
-<div style="position:relative;border-radius:8px;overflow:hidden;border:1px solid #102D66;box-shadow:0 22px 54px rgba(6,19,43,.24)">
-<div data-map style="width:100%;aspect-ratio:4/3;min-height:330px;background:#0B224E"></div>
-<div style="position:absolute;top:0;left:0;z-index:600;display:flex;align-items:stretch;transform:skewX(-12deg) translateX(-6px);pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.34)">
-<span style="display:flex;align-items:center;background:#D3151D;padding:8px 12px 7px 18px"><span style="display:block;transform:skewX(12deg);font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:17px;line-height:1;letter-spacing:.04em;text-transform:uppercase;color:#fff">{t.mapTitle}</span></span>
-<span style="display:flex;align-items:center;background:#06132B;padding:8px 15px 7px"><span style="display:block;transform:skewX(12deg);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:10px;line-height:1;letter-spacing:.14em;text-transform:uppercase;color:#F59E0B">{t.mapSat}</span></span>
-</div>
-</div>
-<p style="margin:12px 0 0;font-size:12.5px;line-height:1.6;color:#5B6470">{t.mapNote}</p>
-</div>
-</div>
-</section>
+<PrecintoSection lang={lang} />
 
 </main>
 
@@ -477,6 +421,16 @@ const uiVideo =
 </button>
 <video data-lb-video controls playsinline preload="none" aria-label={uiVideo.reproducir}></video>
 <p data-lb-titulo></p>
+<div data-lb-share role="group" aria-label={uiVideo.compartir} hidden>
+<a data-lb-wa data-gv-share="whatsapp" class="lb-btn lb-btn--wa" href="#" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+<a data-lb-fb data-gv-share="facebook" class="lb-btn lb-btn--fb" href="#" target="_blank" rel="noopener noreferrer">Facebook</a>
+<button type="button" data-lb-copiar class="lb-btn">{uiVideo.copiar}</button>
+<button type="button" data-lb-mas class="lb-btn">{uiVideo.mas}</button>
+<a data-lb-bajar class="lb-btn lb-btn--bajar" href="#" download>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>
+<span>{uiVideo.bajar}</span>
+</a>
+</div>
 </div>
 </dialog>
 

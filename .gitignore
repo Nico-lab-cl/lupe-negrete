@@ -30,3 +30,7 @@ src/_legacy-home/
 # Copia local del Drive de la campana (fotos y videos en bruto, ~200 MB). Igual
 # que /videos/: al repositorio solo suben los archivos ya optimizados.
 /drive/
+
+# Videos de la campana en 16:9 y 9:16 tal como salen de edicion (~1 GB).
+# Los convertidos para la galeria viven en public/videos.
+/videos 16_9/

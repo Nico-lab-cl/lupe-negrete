@@ -5,6 +5,10 @@ export type AnalyticsEvent =
   | 'polling_place_click'
   | 'issue_view'
   | 'video_play'
+  | 'video_progress'
+  | 'video_share'
+  | 'video_download'
+  | 'filter_use'
   | 'language_switch'
   | 'scroll_75';
 
@@ -30,6 +34,15 @@ export function trackEvent(eventName: AnalyticsEvent, params: Record<string, any
     } else {
       (window as any).fbq('trackCustom', eventName, params);
     }
+  }
+
+  // 3. Microsoft Clarity: el evento queda como filtro en grabaciones y mapas
+  // de calor; el video y el canal van como etiquetas de la sesión.
+  const clarity = (window as any).clarity;
+  if (typeof clarity === 'function') {
+    clarity('event', eventName);
+    if (params.video) clarity('set', 'video', String(params.video));
+    if (params.canal) clarity('set', 'canal_compartir', String(params.canal));
   }
 
   // Debug log in non-production
