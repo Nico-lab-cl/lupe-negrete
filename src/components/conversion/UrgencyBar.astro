@@ -26,7 +26,7 @@ const link = lang === 'es' ? urgency.linkEs : urgency.linkEn;
         class="flex-1 flex items-center justify-center gap-2 hover:underline focus:outline-none focus:ring-2 focus:ring-amber-400 rounded py-0.5 text-center"
       >
         <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse" aria-hidden="true"></span>
-        <span>{message}</span>
+        <span data-va-barra>{message}</span>
         <span class="font-bold text-white ml-1 underline decoration-amber-400 underline-offset-2">
           {lang === 'es' ? 'Ver detalles →' : 'View details →'}
         </span>
@@ -46,6 +46,8 @@ const link = lang === 'es' ? urgency.linkEs : urgency.linkEn;
 )}
 
 <script>
+  // El mensaje se calcula en el navegador: el de arriba es el del build.
+  import '../../scripts/votacion-anticipada';
   const bar = document.getElementById('urgency-bar');
   const closeBtn = document.getElementById('close-urgency-bar');
 

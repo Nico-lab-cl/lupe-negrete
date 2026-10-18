@@ -1,61 +1,62 @@
 {
-  "lastVerified": "2026-08-30",
-  "verificationSource": "Oficina de Elecciones del Condado de Maverick / Maverick County Elections Office",
+  "lastVerified": "2026-10-18",
+  "verificationSource": "Maverick County Elections Department (830-757-4175) / Eagle Pass Business Journal, 27-sep-2026",
   "earlyVoting": [
     {
-      "id": "ev-1",
-      "nameEs": "Anexo del Palacio de Justicia del Condado de Maverick (Courthouse Annex)",
-      "nameEn": "Maverick County Courthouse Annex (Main Early Voting Center)",
-      "address": "501 E Main St, Eagle Pass, TX 78852",
-      "precinct": "Precinto 4 / Central",
-      "hoursEs": "Lunes a Viernes: 8:00 AM – 5:00 PM (Última semana: 7:00 AM – 7:00 PM)",
-      "hoursEn": "Monday to Friday: 8:00 AM – 5:00 PM (Final week: 7:00 AM – 7:00 PM)",
-      "mapsUrl": "https://maps.google.com/?q=501+E+Main+St,+Eagle+Pass,+TX+78852"
-    },
-    {
-      "id": "ev-2",
-      "nameEs": "Centro Comunitario Seco Mines (Sector Loma Bonita)",
-      "nameEn": "Seco Mines Community Center (Loma Bonita Sector)",
-      "address": "2989 N Veterans Blvd, Eagle Pass, TX 78852",
-      "precinct": "Precinto 4",
-      "hoursEs": "Lunes a Viernes: 8:00 AM – 5:00 PM",
-      "hoursEn": "Monday to Friday: 8:00 AM – 5:00 PM",
-      "mapsUrl": "https://maps.google.com/?q=Seco+Mines+Community+Center,+Eagle+Pass,+TX+78852"
+      "id": "ev-mpc",
+      "nameEs": "Multi-Purpose Center (Centro de Usos Múltiples)",
+      "nameEn": "Multi-Purpose Center",
+      "address": "480 S. Adams St., Eagle Pass, TX 78852",
+      "precinct": "Todo el condado / All precincts",
+      "hoursEs": "19–23 oct: 8 AM – 5 PM · Sáb 24: 7 AM – 7 PM · Dom 25: 9 AM – 3 PM · 26–30 oct: 7 AM – 7 PM",
+      "hoursEn": "Oct 19–23: 8 AM – 5 PM · Sat 24: 7 AM – 7 PM · Sun 25: 9 AM – 3 PM · Oct 26–30: 7 AM – 7 PM",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Multi-Purpose+Center+480+S+Adams+St+Eagle+Pass+TX+78852"
     }
   ],
   "electionDay": [
     {
       "id": "ed-4a",
-      "nameEs": "Casilla Precinto 4A — Centro Comunitario Seco Mines",
-      "nameEn": "Precinct 4A Polling Place — Seco Mines Community Center",
-      "address": "2989 N Veterans Blvd, Eagle Pass, TX 78852",
+      "nameEs": "Casilla 4A — Maverick County Courthouse",
+      "nameEn": "Precinct 4A — Maverick County Courthouse",
+      "address": "500 Quarry St., Eagle Pass, TX 78852",
       "hoursEs": "7:00 AM – 7:00 PM",
       "hoursEn": "7:00 AM – 7:00 PM",
-      "notesEs": "Sirve a los residentes de Loma Bonita y colonias norte del Precinto 4.",
-      "notesEn": "Serves residents of Loma Bonita and northern Precinct 4 colonias.",
-      "mapsUrl": "https://maps.google.com/?q=Seco+Mines+Community+Center,+Eagle+Pass,+TX+78852"
+      "notesEs": "Vota en la casilla que aparece en tu certificado de registro de votante.",
+      "notesEn": "Vote at the polling place shown on your voter registration certificate.",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=500+Quarry+St+Eagle+Pass+TX+78852"
     },
     {
       "id": "ed-4b",
-      "nameEs": "Casilla Precinto 4B — Centro Cívico / Salón Comunitario",
-      "nameEn": "Precinct 4B Polling Place — Civic Community Hall",
-      "address": "450 Quarry St, Eagle Pass, TX 78852",
+      "nameEs": "Casilla 4B — Eagle Pass High School (Girls Gym)",
+      "nameEn": "Precinct 4B — Eagle Pass High School Girls Gym",
+      "address": "2020 Second St., Eagle Pass, TX 78852",
       "hoursEs": "7:00 AM – 7:00 PM",
       "hoursEn": "7:00 AM – 7:00 PM",
-      "notesEs": "Sirve a vecindarios centrales y cuadrantes sur del Precinto 4.",
-      "notesEn": "Serves central and southern quadrants of Precinct 4.",
-      "mapsUrl": "https://maps.google.com/?q=450+Quarry+St,+Eagle+Pass,+TX+78852"
+      "notesEs": "Vota en la casilla que aparece en tu certificado de registro de votante.",
+      "notesEn": "Vote at the polling place shown on your voter registration certificate.",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Eagle+Pass+High+School+2020+Second+St+Eagle+Pass+TX+78852"
     },
     {
       "id": "ed-4c",
-      "nameEs": "Casilla Precinto 4C — Centro Multiusos del Condado de Maverick",
-      "nameEn": "Precinct 4C Polling Place — Maverick County Multipurpose Center",
-      "address": "480 E Main St, Eagle Pass, TX 78852",
+      "nameEs": "Casilla 4C — St. Joseph Parish Hall",
+      "nameEn": "Precinct 4C — St. Joseph Parish Hall",
+      "address": "800 Comal St., Eagle Pass, TX 78852",
       "hoursEs": "7:00 AM – 7:00 PM",
       "hoursEn": "7:00 AM – 7:00 PM",
-      "notesEs": "Ubicación céntrica con acceso preferencial para personas con movilidad reducida.",
-      "notesEn": "Central location with full ADA accessibility.",
-      "mapsUrl": "https://maps.google.com/?q=480+E+Main+St,+Eagle+Pass,+TX+78852"
+      "notesEs": "Vota en la casilla que aparece en tu certificado de registro de votante.",
+      "notesEn": "Vote at the polling place shown on your voter registration certificate.",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=800+Comal+St+Eagle+Pass+TX+78852"
+    },
+    {
+      "id": "ed-4d",
+      "nameEs": "Casilla 4D — Antigua Oficina Central de EPISD (Board Room)",
+      "nameEn": "Precinct 4D — Old EPISD Central Office Board Room",
+      "address": "1420 Eidson Rd., Eagle Pass, TX 78852",
+      "hoursEs": "7:00 AM – 7:00 PM",
+      "hoursEn": "7:00 AM – 7:00 PM",
+      "notesEs": "Vota en la casilla que aparece en tu certificado de registro de votante.",
+      "notesEn": "Vote at the polling place shown on your voter registration certificate.",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=1420+Eidson+Rd+Eagle+Pass+TX+78852"
     }
   ]
 }

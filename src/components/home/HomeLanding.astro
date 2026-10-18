@@ -16,6 +16,8 @@ import StickyBar from '../site/StickyBar.astro';
 import { routes, diasRestantes as calcDias } from '../site/SiteChrome';
 import GaleriaVideos from './GaleriaVideos.astro';
 import PrecintoSection from './PrecintoSection.astro';
+import VotacionAnticipada from './VotacionAnticipada.astro';
+import PopupVotacion from './PopupVotacion.astro';
 
 interface Props {
   lang: Lang;
@@ -146,6 +148,8 @@ const sumate = { fondo: '#F7F5F0', borde: '1px solid #E4E7EC', kicker: '#D3151D'
 
 </div>
 </section>
+
+<VotacionAnticipada lang={lang} />
 
 <GaleriaVideos lang={lang} />
 
@@ -410,6 +414,8 @@ const sumate = { fondo: '#F7F5F0', borde: '1px solid #E4E7EC', kicker: '#D3151D'
 <SiteFooter lang={lang} isHome />
 
 <StickyBar lang={lang} isHome />
+
+<PopupVotacion lang={lang} />
 
 <!-- Lightbox de video. <dialog> nativo: trae cierre con Esc, foco atrapado y
      el resto de la página inerte sin escribir nada de eso a mano. El <video>

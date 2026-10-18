@@ -20,7 +20,9 @@ const dias = diasRestantes();
 <div class="tb">
   <div class="tb__inner">
     <div class="tb__main">
-      <span class="tb__item tb__early"><span class="tb__dot"></span>{t.barEarly}</span>
+      {/* El texto más clicado de la home según Clarity: lleva a la franja de
+          votación anticipada y el cliente lo cambia por el aviso del día. */}
+      <a href={`${b}#anticipada`} class="tb__item tb__early" data-va-evento="early_vote_details" data-va-origen="barra"><span class="tb__dot"></span><span data-va-barra>{t.barEarly}</span><span class="tb__flecha" aria-hidden="true">→</span></a>
       <span class="tb__sep" aria-hidden="true">/</span>
       <span class="tb__item tb__general">{t.barGeneral}</span>
       {showCountdown && (
@@ -32,6 +34,10 @@ const dias = diasRestantes();
     <div class="tb__lang"><LangSelect lang={lang} variant="bar" /></div>
   </div>
 </div>
+
+<script>
+  import '../../scripts/votacion-anticipada';
+</script>
 
 <style>
   .tb {
@@ -77,6 +83,19 @@ const dias = diasRestantes();
 
   .tb__sep {
     opacity: 0.45;
+  }
+
+  .tb__early,
+  .tb__early:hover {
+    color: #fff;
+    font-weight: 700;
+  }
+  .tb__early [data-va-barra] {
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.55);
+    padding-bottom: 1px;
+  }
+  .tb__flecha {
+    margin-left: -3px;
   }
 
   .tb__days {
@@ -168,6 +187,11 @@ const dias = diasRestantes();
 
     /* Las barras separadoras solo tienen sentido cuando todo va en una línea. */
     .tb__sep {
+      display: none;
+    }
+
+    /* En dos renglones no cabe la flecha: el subrayado ya marca el enlace. */
+    .tb__flecha {
       display: none;
     }
 

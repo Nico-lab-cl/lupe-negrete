@@ -45,12 +45,12 @@ const { earlyVoting, electionDay, lastVerified, verificationSource } = pollingDa
       <div>
         <strong>{isEs ? 'Ventaja de la Votación Temprana:' : 'Early Voting Advantage:'}</strong>{' '}
         {isEs
-          ? 'Durante el 19 al 30 de octubre, cualquier votante registrado de Maverick County puede votar en cualquiera de estos centros, sin importar su casilla específica.'
-          : 'Between October 19 and 30, any registered voter in Maverick County may cast their ballot at any designated early voting location.'}
+          ? 'Del 19 al 30 de octubre, cualquier votante registrado de Maverick County vota en el Multi-Purpose Center, sin importar cuál sea su casilla. Abre también el fin de semana del 24 y 25 de octubre.'
+          : 'From October 19 to 30, any registered Maverick County voter can vote at the Multi-Purpose Center, no matter their precinct. It is also open the weekend of October 24–25.'}
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class={`grid grid-cols-1 gap-4 ${earlyVoting.length > 1 ? 'md:grid-cols-2' : ''}`}>
       {earlyVoting.map((loc) => (
         <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-4">
           <div class="space-y-2">
@@ -104,7 +104,7 @@ const { earlyVoting, electionDay, lastVerified, verificationSource } = pollingDa
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {electionDay.map((loc) => (
         <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-4">
           <div class="space-y-2">

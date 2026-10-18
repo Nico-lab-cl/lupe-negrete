@@ -32,8 +32,8 @@ export const ELECTION_CONFIG = {
       dateFullEn: 'October 19–30, 2026',
       titleEs: 'Votación Temprana (Early Voting)',
       titleEn: 'Early Voting Period',
-      descEs: 'Período principal de movilización con horarios flexibles.',
-      descEn: 'Main mobilization window with flexible polling hours.'
+      descEs: 'En el Multi-Purpose Center, 480 S. Adams St. Abierto también el sábado 24 y el domingo 25.',
+      descEn: 'At the Multi-Purpose Center, 480 S. Adams St. Also open Saturday 24 and Sunday 25.'
     },
     {
       step: 3,

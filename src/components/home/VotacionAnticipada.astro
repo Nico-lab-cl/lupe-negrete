@@ -1,0 +1,507 @@
+---
+// Franja de votación anticipada, justo debajo del hero.
+//
+// Por qué aquí: en Clarity, el texto "Votación temprana 19–30 oct" de la barra
+// roja era lo más clicado de la home en móvil y solo cerca del 40 % de las
+// visitas bajaba hasta la sección "Cómo votar". Lo que todos ven es el hero, así
+// que el dónde y el cuándo van inmediatamente después.
+//
+// El HTML trae textos que valen para cualquier día; scripts/votacion-anticipada.ts
+// los cambia al cargar por el aviso que toca (abierto ahora, mañana abre…) y
+// marca en la tabla el horario de hoy.
+import type { Lang } from '../../lib/i18n';
+import { SITE_CONFIG } from '../../config/site';
+import { routes } from '../site/SiteChrome';
+import { SITIO_ANTICIPADA, TRAMOS_ANTICIPADA, rango } from '../../lib/votacion-anticipada';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const R = routes(lang);
+const es = lang === 'es';
+
+const enlace = `${SITE_CONFIG.siteUrl}/${lang}/#anticipada`;
+const t = es
+  ? {
+      kicker: 'Votación anticipada · 19–30 oct',
+      titulo: 'Ya puedes votar antes del 3 de noviembre',
+      detalle: `Del 19 al 30 de octubre se vota en el ${SITIO_ANTICIPADA.nombre}, sin importar tu casilla.`,
+      lugar: 'Dónde votar',
+      llegar: 'Cómo llegar',
+      compartir: 'Avisar por WhatsApp',
+      guia: 'Guía completa para votar →',
+      casillas: 'Ver mi casilla del 3 de noviembre →',
+      horario: 'Horario',
+      hoy: 'Hoy',
+      nota: 'Lleva una identificación con foto. Dudas: Departamento de Elecciones, 830-757-4175.',
+      videoTitulo: 'Lupe: vota anticipado',
+      videoPie: 'Mira el mensaje · 1:46',
+      videoAlt: 'Lupe Negrete invita a votar en la votación anticipada',
+      mensaje: `La votación anticipada es del 19 al 30 de octubre en el ${SITIO_ANTICIPADA.nombre} (${SITIO_ANTICIPADA.direccion}, Eagle Pass). Horarios y cómo llegar:`
+    }
+  : {
+      kicker: 'Early voting · Oct 19–30',
+      titulo: 'You can vote before November 3',
+      detalle: `From October 19 to 30, vote at the ${SITIO_ANTICIPADA.nombre}, no matter your precinct.`,
+      lugar: 'Where to vote',
+      llegar: 'Get directions',
+      compartir: 'Share on WhatsApp',
+      guia: 'Full voting guide →',
+      casillas: 'Find my Nov 3 polling place →',
+      horario: 'Hours',
+      hoy: 'Today',
+      nota: 'Bring a photo ID. Questions: Maverick County Elections Department, 830-757-4175.',
+      videoTitulo: 'Lupe: vote early',
+      videoPie: 'Watch the message · 1:46',
+      videoAlt: 'Lupe Negrete encourages voters to vote early',
+      mensaje: `Early voting runs October 19–30 at the ${SITIO_ANTICIPADA.nombre} (${SITIO_ANTICIPADA.direccion}, Eagle Pass). Hours and directions:`
+    };
+
+const whatsapp = `https://wa.me/?text=${encodeURIComponent(`${t.mensaje} ${enlace}`)}`;
+---
+
+<section id="anticipada" class="va" data-va-root aria-labelledby="va-titulo">
+<div class="va__franja" aria-hidden="true"></div>
+<div class="va__grid">
+
+<div class="va__cabeza">
+<p class="va__kicker"><span class="va__punto" aria-hidden="true"></span>{t.kicker}</p>
+<h2 id="va-titulo" class="va__titulo" data-va-titulo>{t.titulo}</h2>
+<p class="va__detalle" data-va-detalle>{t.detalle}</p>
+</div>
+
+<div class="va__lugar" data-va-solo-anticipada>
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.1 7-12a7 7 0 10-14 0c0 5.9 7 12 7 12z"></path><circle cx="12" cy="10" r="2.6"></circle></svg>
+<div>
+<p class="va__lugarEtiqueta">{t.lugar}</p>
+<p class="va__lugarNombre">{SITIO_ANTICIPADA.nombre}</p>
+<p class="va__lugarDir">{SITIO_ANTICIPADA.direccion} · {SITIO_ANTICIPADA.ciudad}</p>
+</div>
+</div>
+
+<div class="va__acciones">
+<a href={SITIO_ANTICIPADA.maps} target="_blank" rel="noopener noreferrer" class="va__btn va__btn--blanco" data-va-solo-anticipada data-va-evento="early_vote_directions" data-va-origen="franja">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"></path></svg>
+<span>{t.llegar}</span>
+</a>
+<a href={whatsapp} target="_blank" rel="noopener noreferrer" class="va__btn va__btn--borde" data-va-evento="early_vote_share" data-va-origen="franja">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.04 21.5h-.01a9.4 9.4 0 01-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36a9.43 9.43 0 1117.43-5.02c0 5.2-4.23 9.44-9.44 9.44zm8.03-17.47A11.3 11.3 0 0012.04.75C5.8.75.72 5.83.72 12.07c0 2 .52 3.94 1.51 5.66L.62 23.25l5.66-1.48a11.3 11.3 0 005.76 1.47h.01c6.24 0 11.32-5.08 11.32-11.32 0-3.02-1.18-5.87-3.31-8z"></path></svg>
+<span>{t.compartir}</span>
+</a>
+<a href={R.vote} class="va__enlace" data-va-evento="early_vote_details" data-va-origen="franja">
+<span data-va-solo-anticipada>{t.guia}</span>
+<span data-va-solo-eleccion>{t.casillas}</span>
+</a>
+</div>
+
+<button
+  type="button"
+  class="va__video"
+  data-video="/videos/votacion-anticipada.mp4"
+  data-poster="/videos/votacion-anticipada-poster.webp"
+  data-titulo={t.videoTitulo}
+  data-formato="vertical"
+  data-video-id="votacion-anticipada"
+  data-url={enlace}
+  data-texto={t.mensaje}
+  aria-label={`${es ? 'Reproducir video' : 'Play video'}: ${t.videoTitulo}`}
+>
+<span class="va__poster">
+<img src="/videos/votacion-anticipada-poster.webp" alt={t.videoAlt} width="480" height="848" loading="lazy" decoding="async" />
+<span class="va__play" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+</span>
+<span class="va__videoTexto">
+<span class="va__videoTitulo">{t.videoTitulo}</span>
+<span class="va__videoPie">{t.videoPie}</span>
+</span>
+</button>
+
+<div class="va__tramos" data-va-solo-anticipada>
+<p class="va__tramosTitulo">{t.horario}</p>
+<ul>
+{TRAMOS_ANTICIPADA.map((tr) => (
+  <li class="va__tramo" data-va-tramo data-desde={tr.desde} data-hasta={tr.hasta}>
+    <span class="va__tramoDia">{es ? tr.es : tr.en}</span>
+    <span class="va__tramoHora">{rango(tr.abre, tr.cierra)}</span>
+    <span class="va__hoy">{t.hoy}</span>
+  </li>
+))}
+</ul>
+<p class="va__nota">{t.nota}</p>
+</div>
+
+</div>
+</section>
+
+<style>
+  .va {
+    position: relative;
+    overflow: hidden;
+    background: #d3151d;
+    color: #fff;
+    border-top: 4px solid #ff3131;
+    /* La cabecera es fija: al saltar a #anticipada no debe tapar el titular. */
+    scroll-margin-top: 84px;
+  }
+  .va[hidden] {
+    display: none;
+  }
+  /* La misma franja inclinada del hero, en navy, para que se lea como
+     continuación de la portada y no como un anuncio pegado. */
+  .va__franja {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -12%;
+    width: 46%;
+    background: #b50e15;
+    transform: skewX(-12deg);
+    pointer-events: none;
+  }
+
+  .va__grid {
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: clamp(30px, 5vw, 56px) clamp(16px, 4vw, 24px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'cabeza'
+      'lugar'
+      'acciones'
+      'video'
+      'tramos';
+    gap: 20px;
+  }
+  @media (min-width: 900px) {
+    .va__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 250px;
+      grid-template-areas:
+        'cabeza cabeza video'
+        'lugar tramos video'
+        'acciones tramos video';
+      gap: 22px clamp(24px, 3.4vw, 44px);
+      align-items: start;
+    }
+  }
+
+  .va__cabeza { grid-area: cabeza; }
+  .va__lugar { grid-area: lugar; }
+  .va__acciones { grid-area: acciones; }
+  .va__video { grid-area: video; }
+  .va__tramos { grid-area: tramos; }
+
+  .va__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0 0 12px;
+    background: #06132b;
+    padding: 6px 12px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .va__punto {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f59e0b;
+    animation: lnPulse 1.6s infinite;
+    flex: none;
+  }
+  .va__titulo {
+    margin: 0 0 10px;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(34px, 6.6vw, 68px);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .va__detalle {
+    margin: 0;
+    max-width: 640px;
+    font-size: clamp(15px, 3.8vw, 18px);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .va__lugar {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: rgba(6, 19, 43, 0.32);
+    border-left: 4px solid #fff;
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .va__lugar svg {
+    flex: none;
+    margin-top: 2px;
+  }
+  .va__lugar p {
+    margin: 0;
+  }
+  .va__lugarEtiqueta {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
+  }
+  .va__lugarNombre {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(24px, 5vw, 30px);
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+  .va__lugarDir {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .va__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 12px;
+  }
+  .va__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 19px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 13px 20px;
+    border-radius: 5px;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+  }
+  .va__btn--blanco {
+    background: #fff;
+    color: #d3151d;
+    box-shadow: 0 8px 24px rgba(6, 19, 43, 0.28);
+  }
+  .va__btn--blanco:hover {
+    background: #06132b;
+    color: #fff;
+  }
+  .va__btn--borde {
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    color: #fff;
+  }
+  .va__btn--borde:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+  }
+  .va__enlace {
+    flex-basis: 100%;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .va__enlace:hover {
+    color: #fff;
+    text-decoration-thickness: 2px;
+  }
+  @media (max-width: 520px) {
+    .va__btn {
+      flex: 1 1 100%;
+    }
+  }
+
+  /* Video: en móvil, una fila con la miniatura a la izquierda para no ocupar
+     una pantalla entera; en escritorio, la tarjeta vertical completa. */
+  .va__video {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 10px;
+    background: #06132b;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    box-shadow: 0 14px 34px rgba(6, 19, 43, 0.35);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .va__video:hover {
+    transform: translateY(-3px);
+  }
+  .va__video:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+  }
+  .va__poster {
+    position: relative;
+    flex: none;
+    width: 84px;
+    aspect-ratio: 9 / 16;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #0b224e;
+  }
+  .va__poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .va__play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #d3151d;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  }
+  .va__videoTexto {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .va__videoTitulo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .va__videoPie {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #f59e0b;
+  }
+  @media (min-width: 900px) {
+    .va__video {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 10px 10px 14px;
+    }
+    .va__poster {
+      width: 100%;
+    }
+    .va__play {
+      width: 62px;
+      height: 62px;
+      margin: -31px 0 0 -31px;
+    }
+    .va__play svg {
+      width: 28px;
+      height: 28px;
+    }
+    .va__videoTexto {
+      padding: 0 4px;
+    }
+  }
+
+  .va__tramosTitulo {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
+  }
+  .va__tramos ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .va__tramo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 5px;
+    background: rgba(6, 19, 43, 0.32);
+  }
+  .va__tramoDia {
+    flex: 1 1 auto;
+    font-weight: 600;
+    font-size: 14.5px;
+  }
+  .va__tramoHora {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .va__hoy {
+    display: none;
+    background: #f59e0b;
+    color: #06132b;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 100px;
+  }
+  .va__tramo[data-hoy] {
+    background: #fff;
+    color: #06132b;
+    box-shadow: 0 8px 22px rgba(6, 19, 43, 0.3);
+  }
+  .va__tramo[data-hoy] .va__hoy {
+    display: inline-block;
+  }
+  .va__nota {
+    margin: 12px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Después del 30 de octubre ya no se vota en el Multi-Purpose Center: la
+     franja queda solo con el aviso del día de la elección. */
+  [data-va-solo-eleccion] {
+    display: none;
+  }
+  .va:is([data-fase='entre'], [data-fase='eleccion']) [data-va-solo-anticipada] {
+    display: none;
+  }
+  .va:is([data-fase='entre'], [data-fase='eleccion']) [data-va-solo-eleccion] {
+    display: inline;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .va__punto {
+      animation: none;
+    }
+    .va__video {
+      transition: none;
+    }
+  }
+</style>

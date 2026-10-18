@@ -10,7 +10,12 @@ export type AnalyticsEvent =
   | 'video_download'
   | 'filter_use'
   | 'language_switch'
-  | 'scroll_75';
+  | 'scroll_75'
+  | 'early_vote_popup'
+  | 'early_vote_popup_close'
+  | 'early_vote_directions'
+  | 'early_vote_share'
+  | 'early_vote_details';
 
 export function trackEvent(eventName: AnalyticsEvent, params: Record<string, any> = {}): void {
   if (typeof window === 'undefined') return;

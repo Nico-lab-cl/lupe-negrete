@@ -51,8 +51,8 @@ function buildIcs(): string {
       e: '20261031',
       t: isEs ? 'Votación temprana · Precinto 4' : 'Early voting · Precinct 4',
       d: isEs
-        ? 'Votación temprana del 19 al 30 de octubre en el Courthouse Annex o Seco Mines.'
-        : 'Early voting October 19–30 at the Courthouse Annex or Seco Mines.'
+        ? 'Votación temprana del 19 al 30 de octubre en el Multi-Purpose Center, 480 S. Adams St., Eagle Pass. 19-23 oct: 8 AM-5 PM; sáb 24: 7 AM-7 PM; dom 25: 9 AM-3 PM; 26-30 oct: 7 AM-7 PM.'
+        : 'Early voting October 19-30 at the Multi-Purpose Center, 480 S. Adams St., Eagle Pass. Oct 19-23: 8 AM-5 PM; Sat 24: 7 AM-7 PM; Sun 25: 9 AM-3 PM; Oct 26-30: 7 AM-7 PM.'
     },
     {
       uid: 'ln-eleccion',
